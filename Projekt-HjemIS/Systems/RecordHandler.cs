@@ -52,8 +52,10 @@ namespace Projekt_HjemIS.Systems
                                                   string.Empty};
 
 
+        // Skal fjernes
         List<string> recordList = new List<string>();
 
+        // Skal fjernes
         int[] POSTDISTArr = new int[9] { 3, 4, 4, 4, 4, 1, 12, 4, 20 };
 
 
