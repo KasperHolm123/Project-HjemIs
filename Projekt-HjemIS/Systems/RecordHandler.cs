@@ -39,19 +39,6 @@ namespace Projekt_HjemIS.Systems
             ReadRecordFromFile();
         }
 
-
-        private int RECORDTYPE = 3;
-        private int KOMKOD = 4;
-        private int VEJKOD = 4;
-        private int TIMESTAMP = 12;
-        private int TILKOMKOD = 4;
-        private int TILVEJKOD = 4;
-        private int FRAVEJKOD = 4;
-
-
-
-        private string tempRecord = "001001000701991092312000000000000000000190001010000Norge               Norge                                   ";
-
         private string tempRecordType = string.Empty;
         private string tempKOMKOD = string.Empty;
         private string tempvejkod = string.Empty;
@@ -86,7 +73,6 @@ namespace Projekt_HjemIS.Systems
                         case "003":
                             break;
                         case "004":
-                            Debug.WriteLine(currentCol);
                             SpliceRecord(sr.ReadLine(), POSTDISTArr);
                             break;
                         case "005":
