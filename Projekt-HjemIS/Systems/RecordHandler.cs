@@ -8,23 +8,16 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
-    public enum RecordType
-    {
-        AKTVEJ = 001,
-        BOLIG = 002,
-        BYNAVN = 003,
-        POSTVEJ = 004,
-        NOTATVEJ = 005,
-        BYFORNYDIST = 006,
-    }
-
+    /// <summary>
+    /// Handles record segmentation
+    /// </summary>
     public class RecordHandler
     {
-        private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>();
-
         public RecordHandler()
         {
             RecordTypeDict.Add("ATKVEJ", POSTDISTArr);
+
+            // yikes
             recordList.Add(tempRecordType);
             recordList.Add(tempKOMKOD);
             recordList.Add(tempvejkod);
@@ -36,9 +29,11 @@ namespace Projekt_HjemIS.Systems
             recordList.Add(temphaenstart);
             recordList.Add(tempvejadrnvn);
             recordList.Add(tempvejadrnvn);
+
             ReadRecordFromFile();
         }
 
+        // yikes
         private string tempRecordType = string.Empty;
         private string tempKOMKOD = string.Empty;
         private string tempvejkod = string.Empty;
@@ -51,12 +46,41 @@ namespace Projekt_HjemIS.Systems
         private string tempvejadrnvn = string.Empty;
         private string tempvejnvn = string.Empty;
 
+        // Er ikke helt sikker på om det er den bedste måde at gøre det på, men det ser 10x bedre ud lol
+        string[] RecordSegments = new string[11] {string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+                                                  string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+                                                  string.Empty};
 
 
         List<string> recordList = new List<string>();
 
         int[] POSTDISTArr = new int[9] { 3, 4, 4, 4, 4, 1, 12, 4, 20 };
 
+
+        // This dictionary holds all record types and their segment positional values.
+        private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
+        {
+            { "AKTVEJ", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } },
+            { "BOLIG", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} },
+            { "BYNAVN", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } },
+            { "POSTDIST", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }},
+            { "NOTATVEJ", new int[]{ 3, 4, 4, 2, 40, 12, 12 } },
+            { "BYFORNYDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 6, 30 } },
+            { "DIVDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } },
+            { "EVAKUERDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } },
+            { "KIRKEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "SKOLEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "BEFOLKDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+            { "SOCIALDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "SOGNEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
+            { "VALGDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "VARMEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+        };
+
+
+        /// <summary>
+        /// Read from .txt file
+        /// </summary>
         private void ReadRecordFromFile()
         {
             string rootPath = Directory.GetCurrentDirectory();
@@ -75,7 +99,7 @@ namespace Projekt_HjemIS.Systems
                             break;
                         case "004":
                             Debug.WriteLine(currentLine);
-                            SpliceRecord(currentLine, POSTDISTArr);
+                            SpliceRecord(currentLine, RecordTypeDict["POSTDIST"]);
                             break;
                         case "005":
                             break;
@@ -89,10 +113,15 @@ namespace Projekt_HjemIS.Systems
                             break;
                     }
                 }
-                
+
             }
         }
 
+        /// <summary>
+        /// Split a record into individual segments
+        /// </summary>
+        /// <param name="currentRecord"></param>
+        /// <param name="recordType"></param>
         private void SpliceRecord(string currentRecord, int[] recordType)
         {
             int currentCol = 0;
@@ -100,11 +129,11 @@ namespace Projekt_HjemIS.Systems
             {
                 if (currentRecord != null)
                 {
-                    recordList[i] = currentRecord.Substring(currentCol, recordType[i]);
+                    RecordSegments[i] = currentRecord.Substring(currentCol, recordType[i]);
                     currentCol += recordType[i];
                 }
             }
-            foreach (var item in recordList)
+            foreach (var item in RecordSegments)
             {
                 Debug.WriteLine(item);
             }
