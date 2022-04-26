@@ -60,11 +60,12 @@ namespace Projekt_HjemIS.Systems
         private void ReadRecordFromFile()
         {
             string rootPath = Directory.GetCurrentDirectory();
+            string currentLine = string.Empty;
             using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
             {
-                while (sr.ReadLine() != null)
+                while ((currentLine = sr.ReadLine()) != null)
                 {
-                    switch (sr.ReadLine().Substring(0, 3))
+                    switch (currentLine.Substring(0, 3))
                     {
                         case "001":
                             break;
@@ -73,7 +74,8 @@ namespace Projekt_HjemIS.Systems
                         case "003":
                             break;
                         case "004":
-                            SpliceRecord(sr.ReadLine(), POSTDISTArr);
+                            Debug.WriteLine(currentLine);
+                            SpliceRecord(currentLine, POSTDISTArr);
                             break;
                         case "005":
                             break;
@@ -87,6 +89,7 @@ namespace Projekt_HjemIS.Systems
                             break;
                     }
                 }
+                
             }
         }
 
