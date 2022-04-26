@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projekt_HjemIS.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
+            RecordHandler record = new RecordHandler();
+            record.SplitRecord(RecordType.AKTVEJ);
         }
     }
 }

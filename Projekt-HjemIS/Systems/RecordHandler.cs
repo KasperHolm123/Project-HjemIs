@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Projekt_HjemIS.Systems
+{
+    public enum RecordType
+    {
+        AKTVEJ = 001,
+        BOLIG = 002,
+        BYNAVN = 003,
+        POSTVEJ = 004,
+        NOTATVEJ = 005,
+        BYFORNYDIST = 006,
+    }
+
+    public class RecordHandler
+    {
+        private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>();
+
+        public RecordHandler()
+        {
+            RecordTypeDict.Add("ATKVEJ", AKTVEJArr);
+            recordList.Add(tempRecordType);
+            recordList.Add(tempKOMKOD);
+            recordList.Add(tempvejkod);
+            recordList.Add(temptimestamp);
+            recordList.Add(temptilkomkod);
+            recordList.Add(temptilvejkod);
+            recordList.Add(tempfrakomkod);
+            recordList.Add(tempfravejkod);
+            recordList.Add(temphaenstart);
+            recordList.Add(tempvejadrnvn);
+            recordList.Add(tempvejadrnvn);
+        }
+
+
+        private int RECORDTYPE = 3;
+        private int KOMKOD = 4;
+        private int VEJKOD = 4;
+        private int TIMESTAMP = 12;
+        private int TILKOMKOD = 4;
+        private int TILVEJKOD = 4;
+        private int FRAVEJKOD = 4;
+
+        private int currentCol = 0;
+
+        private string tempRecord = "001001000701991092312000000000000000000190001010000Norge               Norge                                   ";
+
+        private string tempRecordType = string.Empty;
+        private string tempKOMKOD = string.Empty;
+        private string tempvejkod = string.Empty;
+        private string temptimestamp = string.Empty;
+        private string temptilkomkod = string.Empty;
+        private string temptilvejkod = string.Empty;
+        private string tempfrakomkod = string.Empty;
+        private string tempfravejkod = string.Empty;
+        private string temphaenstart = string.Empty;
+        private string tempvejadrnvn = string.Empty;
+        private string tempvejnvn = string.Empty;
+
+        
+        
+        List<string> recordList = new List<string>();
+
+        int[] AKTVEJArr = new int[11] { 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40};
+
+        public void SplitRecord(RecordType recordType)
+        {
+            int colLength = 111;
+
+            switch (recordType)
+            {
+                case RecordType.AKTVEJ:
+                    Debug.WriteLine(tempRecord);
+                    SpliceRecord(AKTVEJArr);
+                    foreach (var item in recordList)
+                    {
+                        Debug.WriteLine(item);
+                    }
+                    break;
+                case RecordType.BOLIG:
+                    break;
+                case RecordType.BYNAVN:
+                    break;
+                case RecordType.POSTVEJ:
+                    break;
+                case RecordType.NOTATVEJ:
+                    break;
+                case RecordType.BYFORNYDIST:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void SpliceRecord(int[] recordType)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                recordList[i] = tempRecord.Substring(currentCol, recordType[i]);
+                currentCol += recordType[i];
+            }
+        }
+    }
+}
