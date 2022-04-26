@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,7 @@ namespace Projekt_HjemIS.Systems
             recordList.Add(temphaenstart);
             recordList.Add(tempvejadrnvn);
             recordList.Add(tempvejadrnvn);
+            ReadRecordFromFile();
         }
 
 
@@ -67,6 +69,40 @@ namespace Projekt_HjemIS.Systems
         List<string> recordList = new List<string>();
 
         int[] AKTVEJArr = new int[11] { 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40};
+
+        private void ReadRecordFromFile()
+        {
+            string rootPath = Directory.GetCurrentDirectory();
+            using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
+            {
+                while (sr.ReadLine() != null)
+                {
+                    switch (sr.ReadLine().Substring(0, 3))
+                    {
+                        case "001":
+                            SpliceRecord(AKTVEJArr);
+                            break;
+                        case "002":
+                            break;
+                        case "003":
+                            break;
+                        case "004":
+                            break;
+                        case "005":
+                            break;
+                        case "006":
+                            break;
+                        case "007":
+                            break;
+                        case "008":
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
 
         public void SplitRecord(RecordType recordType)
         {
