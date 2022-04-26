@@ -24,7 +24,7 @@ namespace Projekt_HjemIS.Systems
 
         public RecordHandler()
         {
-            RecordTypeDict.Add("ATKVEJ", AKTVEJArr);
+            RecordTypeDict.Add("ATKVEJ", POSTDISTArr);
             recordList.Add(tempRecordType);
             recordList.Add(tempKOMKOD);
             recordList.Add(tempvejkod);
@@ -48,7 +48,7 @@ namespace Projekt_HjemIS.Systems
         private int TILVEJKOD = 4;
         private int FRAVEJKOD = 4;
 
-        private int currentCol = 0;
+
 
         private string tempRecord = "001001000701991092312000000000000000000190001010000Norge               Norge                                   ";
 
@@ -64,11 +64,11 @@ namespace Projekt_HjemIS.Systems
         private string tempvejadrnvn = string.Empty;
         private string tempvejnvn = string.Empty;
 
-        
-        
+
+
         List<string> recordList = new List<string>();
 
-        int[] AKTVEJArr = new int[11] { 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40};
+        int[] POSTDISTArr = new int[9] { 3, 4, 4, 4, 4, 1, 12, 4, 20 };
 
         private void ReadRecordFromFile()
         {
@@ -80,13 +80,14 @@ namespace Projekt_HjemIS.Systems
                     switch (sr.ReadLine().Substring(0, 3))
                     {
                         case "001":
-                            SpliceRecord(AKTVEJArr);
                             break;
                         case "002":
                             break;
                         case "003":
                             break;
                         case "004":
+                            Debug.WriteLine(currentCol);
+                            SpliceRecord(sr.ReadLine(), POSTDISTArr);
                             break;
                         case "005":
                             break;
@@ -103,43 +104,23 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
-
-        public void SplitRecord(RecordType recordType)
+        private int currentCol = 0;
+        private void SpliceRecord(string currentRecord, int[] recordType)
         {
-            int colLength = 111;
-
-            switch (recordType)
+            currentCol = 0;
+            for (int i = 0; i < recordType.Length; i++)
             {
-                case RecordType.AKTVEJ:
-                    Debug.WriteLine(tempRecord);
-                    SpliceRecord(AKTVEJArr);
-                    foreach (var item in recordList)
-                    {
-                        Debug.WriteLine(item);
-                    }
-                    break;
-                case RecordType.BOLIG:
-                    break;
-                case RecordType.BYNAVN:
-                    break;
-                case RecordType.POSTVEJ:
-                    break;
-                case RecordType.NOTATVEJ:
-                    break;
-                case RecordType.BYFORNYDIST:
-                    break;
-                default:
-                    break;
+                if (currentRecord != null)
+                {
+                    recordList[i] = currentRecord.Substring(currentCol, recordType[i]);
+                    currentCol += recordType[i];
+                }
             }
-        }
-
-        private void SpliceRecord(int[] recordType)
-        {
-            for (int i = 0; i < 11; i++)
+            foreach (var item in recordList)
             {
-                recordList[i] = tempRecord.Substring(currentCol, recordType[i]);
-                currentCol += recordType[i];
+                Debug.WriteLine(item);
             }
+            Debug.WriteLine("\n\n");
         }
     }
 }

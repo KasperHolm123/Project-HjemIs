@@ -25,7 +25,6 @@ namespace Projekt_HjemIS
         {
             InitializeComponent();
             RecordHandler record = new RecordHandler();
-            record.SplitRecord(RecordType.AKTVEJ);
         }
     }
 }
