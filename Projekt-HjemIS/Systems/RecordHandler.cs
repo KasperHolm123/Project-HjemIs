@@ -90,10 +90,9 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
-        private int currentCol = 0;
         private void SpliceRecord(string currentRecord, int[] recordType)
         {
-            currentCol = 0;
+            int currentCol = 0;
             for (int i = 0; i < recordType.Length; i++)
             {
                 if (currentRecord != null)
