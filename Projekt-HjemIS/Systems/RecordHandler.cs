@@ -107,7 +107,10 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         private void ReadRecordFromFile()
         {
-            string rootPath = Directory.GetCurrentDirectory();
+            var rootPathChild = Directory.GetCurrentDirectory();
+            var rootPathParent = Directory.GetParent($"{rootPathChild}");
+            var rootPathFolder = Directory.GetParent($"{rootPathParent}");
+            var rootPath = rootPathFolder.ToString();
             string currentLine = string.Empty;
             using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
             {
