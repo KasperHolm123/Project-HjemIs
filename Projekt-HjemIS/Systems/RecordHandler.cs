@@ -51,6 +51,10 @@ namespace Projekt_HjemIS.Systems
                                                   string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
                                                   string.Empty};
 
+        Dictionary<string, string> RecordData = new Dictionary<string, string>()
+        {
+            { "RECORDTYPE", string.Empty},
+        };
 
         // Skal fjernes
         List<string> recordList = new List<string>();
@@ -62,6 +66,23 @@ namespace Projekt_HjemIS.Systems
         // This dictionary holds all record types and their segment positional values.
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
         {
+            { "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
+            { "002", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} }, // BOLIG
+            { "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
+            { "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
+            { "005", new int[]{ 3, 4, 4, 2, 40, 12, 12 } }, // NOTATVEJ
+            { "006", new int[]{ 3, 4, 4, 4, 4, 1, 12, 6, 30 } }, // BYFORNYDIST
+            { "007", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } },
+            { "008", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } },
+            { "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "010", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "011", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+            { "012", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "013", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
+            { "014", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
+            { "015", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+
+            /*
             { "AKTVEJ", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } },
             { "BOLIG", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} },
             { "BYNAVN", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } },
@@ -77,6 +98,7 @@ namespace Projekt_HjemIS.Systems
             { "SOGNEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
             { "VALGDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
             { "VARMEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+            */
         };
 
 
@@ -91,30 +113,36 @@ namespace Projekt_HjemIS.Systems
             {
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    switch (currentLine.Substring(0, 3))
-                    {
-                        case "001":
-                            break;
-                        case "002":
-                            break;
-                        case "003":
-                            break;
-                        case "004":
-                            Debug.WriteLine(currentLine);
-                            SpliceRecord(currentLine, RecordTypeDict["POSTDIST"]);
-                            break;
-                        case "005":
-                            break;
-                        case "006":
-                            break;
-                        case "007":
-                            break;
-                        case "008":
-                            break;
-                        default:
-                            break;
-                    }
+                    string tempLine = currentLine.Substring(0, 3);
+                    SpliceRecord(currentLine, RecordTypeDict[tempLine]);
                 }
+
+                //while ((currentLine = sr.ReadLine()) != null)
+                //{
+                //    switch (currentLine.Substring(0, 3))
+                //    {
+                //        case "001":
+                //            break;
+                //        case "002":
+                //            break;
+                //        case "003":
+                //            break;
+                //        case "004":
+                //            Debug.WriteLine(currentLine);
+                //            SpliceRecord(currentLine, RecordTypeDict["POSTDIST"]);
+                //            break;
+                //        case "005":
+                //            break;
+                //        case "006":
+                //            break;
+                //        case "007":
+                //            break;
+                //        case "008":
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
 
             }
         }
