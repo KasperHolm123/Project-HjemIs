@@ -10,26 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Projekt_HjemIS
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Create.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Create : Window
     {
-        public MainWindow()
+        public Create()
         {
             InitializeComponent();
-        }
-
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
-        {
-            Login login = new Login();
-            login.Show();
-            this.Close();
         }
     }
 }

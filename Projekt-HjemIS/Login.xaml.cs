@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class Login : Window
     {
-        public Window1()
+        public Login()
         {
             InitializeComponent();
         }
