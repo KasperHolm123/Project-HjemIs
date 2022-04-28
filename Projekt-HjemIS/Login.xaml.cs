@@ -22,6 +22,7 @@ namespace Projekt_HjemIS
         public Login()
         {
             InitializeComponent();
+            password.Password = "Password";
         }
     }
 }
