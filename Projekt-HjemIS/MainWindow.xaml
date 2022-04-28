@@ -28,7 +28,7 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="btnLogin" Content="Login" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0" Grid.Column="1" Height="40" Width="70"/>
+            <Button x:Name="btnLogin" Content="Login" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" Height="40" Width="70" Margin="203,50,203,0" Click="btnLogin_Click"/>
             <Button x:Name="btnCreate" Content="Create" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" Height="40" Width="70"/>
         </Grid>
         <!--<TextBox x:Name="username" Text="Username" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0"/>-->
