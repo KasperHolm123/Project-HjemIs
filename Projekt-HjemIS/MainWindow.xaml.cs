@@ -27,8 +27,15 @@ namespace Projekt_HjemIS
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            Login login = new Login();
-            login.Show();
+            dashboard dashboard = new dashboard();
+            dashboard.Show();
+            this.Close();
+        }
+
+        private void btnCreate_Click(object sender, RoutedEventArgs e)
+        {
+            Create create = new Create();
+            create.Show();
             this.Close();
         }
     }
