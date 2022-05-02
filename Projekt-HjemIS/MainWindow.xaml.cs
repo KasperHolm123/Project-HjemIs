@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,9 +30,41 @@ namespace Projekt_HjemIS
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            dashboard dashboard = new dashboard();
-            dashboard.Show();
-            this.Close();
+            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
+
+            try
+            {
+                if (connString.State == ConnectionState.Closed)
+                {
+                    connString.Open();
+
+                    string query = "SELECT COUNT(1) FROM Users WHERE username=@username AND [password]=@password";
+                    SqlCommand sqlCommand = new SqlCommand(query, connString);
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.Parameters.AddWithValue("@username", username.Text);
+                    sqlCommand.Parameters.AddWithValue("@password", password.Password);
+                    int count = Convert.ToInt32(sqlCommand.ExecuteScalar());
+
+                    if (count == 1)
+                    {
+                        dashboard dashbord = new dashboard();
+                        dashbord.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Username Or Password Is Incorrect, Please Try Again");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                connString.Close();
+            }
         }
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)

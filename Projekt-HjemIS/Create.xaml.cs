@@ -89,7 +89,6 @@ namespace Projekt_HjemIS
             {
                 connString.Close();
             }
-
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -97,7 +96,6 @@ namespace Projekt_HjemIS
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
             this.Close();
-
         }
     }
 }
