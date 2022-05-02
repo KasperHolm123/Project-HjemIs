@@ -13,94 +13,60 @@ namespace Projekt_HjemIS.Systems
     /// </summary>
     public class RecordHandler
     {
+
         public RecordHandler()
         {
-            RecordTypeDict.Add("ATKVEJ", POSTDISTArr);
-
-            // yikes
-            recordList.Add(tempRecordType);
-            recordList.Add(tempKOMKOD);
-            recordList.Add(tempvejkod);
-            recordList.Add(temptimestamp);
-            recordList.Add(temptilkomkod);
-            recordList.Add(temptilvejkod);
-            recordList.Add(tempfrakomkod);
-            recordList.Add(tempfravejkod);
-            recordList.Add(temphaenstart);
-            recordList.Add(tempvejadrnvn);
-            recordList.Add(tempvejadrnvn);
-
             ReadRecordFromFile();
         }
 
-        // yikes
-        private string tempRecordType = string.Empty;
-        private string tempKOMKOD = string.Empty;
-        private string tempvejkod = string.Empty;
-        private string temptimestamp = string.Empty;
-        private string temptilkomkod = string.Empty;
-        private string temptilvejkod = string.Empty;
-        private string tempfrakomkod = string.Empty;
-        private string tempfravejkod = string.Empty;
-        private string temphaenstart = string.Empty;
-        private string tempvejadrnvn = string.Empty;
-        private string tempvejnvn = string.Empty;
-
         // Er ikke helt sikker på om det er den bedste måde at gøre det på, men det ser 10x bedre ud lol
-        string[] RecordSegments = new string[11] {string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-                                                  string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-                                                  string.Empty};
+        //public string[] CurrentRecordSegments = new string[3] { string.Empty, string.Empty, string.Empty };
 
+        // måske er denne måde bedre, men så kræver det et dictionary
         Dictionary<string, string> RecordData = new Dictionary<string, string>()
         {
             { "RECORDTYPE", string.Empty},
         };
 
-        // Skal fjernes
-        List<string> recordList = new List<string>();
-
-        // Skal fjernes
-        int[] POSTDISTArr = new int[9] { 3, 4, 4, 4, 4, 1, 12, 4, 20 };
-
-
-        // This dictionary holds all record types and their segment positional values.
+        // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
         {
+            // VI SKAL BRUGE EN ANDEN MÅDE AT SE FORSKELLEN PÅ ENTRIES
+            // DE HAR SAMME VEJKODE OG KOMMUNEKODE
+            { "001", new int[] { 3, 4, 4 } }, // AKTVEJ
+            { "002", new int[] { 3, 4, 4 } }, // BOLIG
+            { "003", new int[] { 3, 4, 4 } }, // BYNAVN
+            { "004", new int[] { 3, 4, 4 } }, //POSTDIST
+            { "005", new int[] { 3, 4, 4 } }, // NOTATVEJ
+            { "006", new int[] { 3, 4, 4 } }, // BYFORNYDIST
+            { "007", new int[] { 3, 4, 4 } }, // DIVDIST
+            { "008", new int[] { 3, 4, 4 } }, // EVAKUERDIST
+            { "009", new int[] { 3, 4, 4 } }, // KIRKEDIST
+            { "010", new int[] { 3, 4, 4 } }, // SKOLEDIST
+            { "011", new int[] { 3, 4, 4 } }, // BEFOLKDIST
+            { "012", new int[] { 3, 4, 4 } }, // SOCIALDIST
+            { "013", new int[] { 3, 4, 4 } }, // SOGNEDIST
+            { "014", new int[] { 3, 4, 4 } }, // VALGDIST
+            { "015", new int[] { 3, 4, 4 } }, // VARMEDIST
+
+            /*
             { "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
             { "002", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} }, // BOLIG
             { "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
             { "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
             { "005", new int[]{ 3, 4, 4, 2, 40, 12, 12 } }, // NOTATVEJ
             { "006", new int[]{ 3, 4, 4, 4, 4, 1, 12, 6, 30 } }, // BYFORNYDIST
-            { "007", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } },
-            { "008", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } },
-            { "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "010", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "011", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
-            { "012", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "013", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
-            { "014", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "015", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
-
-            /*
-            { "AKTVEJ", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } },
-            { "BOLIG", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} },
-            { "BYNAVN", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } },
-            { "POSTDIST", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }},
-            { "NOTATVEJ", new int[]{ 3, 4, 4, 2, 40, 12, 12 } },
-            { "BYFORNYDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 6, 30 } },
-            { "DIVDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } },
-            { "EVAKUERDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } },
-            { "KIRKEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "SKOLEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "BEFOLKDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
-            { "SOCIALDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "SOGNEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
-            { "VALGDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
-            { "VARMEDIST", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+            { "007", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } }, // DIVDIST
+            { "008", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } }, // EVAKUERDIST
+            { "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // KIRKEDIST
+            { "010", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // SKOLEDIST
+            { "011", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } }, // BEFOLKDIST
+            { "012", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // SOCIALDIST
+            { "013", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } }, // SOGNEDIST
+            { "014", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // VALGDIST
+            { "015", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } }, // VARMEDIST
             */
         };
-
 
         /// <summary>
         /// Read from .txt file
@@ -116,37 +82,9 @@ namespace Projekt_HjemIS.Systems
             {
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    string tempLine = currentLine.Substring(0, 3);
-                    SpliceRecord(currentLine, RecordTypeDict[tempLine]);
+                    string currentLineRecordType = currentLine.Substring(0, 3);
+                    DatabaseHandler.AddData(SpliceRecord(currentLine, RecordTypeDict[currentLineRecordType]));
                 }
-
-                //while ((currentLine = sr.ReadLine()) != null)
-                //{
-                //    switch (currentLine.Substring(0, 3))
-                //    {
-                //        case "001":
-                //            break;
-                //        case "002":
-                //            break;
-                //        case "003":
-                //            break;
-                //        case "004":
-                //            Debug.WriteLine(currentLine);
-                //            SpliceRecord(currentLine, RecordTypeDict["POSTDIST"]);
-                //            break;
-                //        case "005":
-                //            break;
-                //        case "006":
-                //            break;
-                //        case "007":
-                //            break;
-                //        case "008":
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-
             }
         }
 
@@ -155,22 +93,27 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         /// <param name="currentRecord"></param>
         /// <param name="recordType"></param>
-        private void SpliceRecord(string currentRecord, int[] recordType)
+        private string[] SpliceRecord(string currentRecord, int[] recordType)
         {
-            int currentCol = 0;
+            string[] CurrentRecordSegments = new string[3] { string.Empty, string.Empty, string.Empty };
+            int currentSegment = 0;
+            
             for (int i = 0; i < recordType.Length; i++)
             {
                 if (currentRecord != null)
                 {
-                    RecordSegments[i] = currentRecord.Substring(currentCol, recordType[i]);
-                    currentCol += recordType[i];
+                    CurrentRecordSegments[i] = currentRecord.Substring(currentSegment, recordType[i]);
+                    currentSegment += recordType[i];
                 }
             }
-            foreach (var item in RecordSegments)
+
+            foreach (var item in CurrentRecordSegments)
             {
                 Debug.WriteLine(item);
             }
             Debug.WriteLine("\n\n");
+
+            return CurrentRecordSegments;
         }
     }
 }
