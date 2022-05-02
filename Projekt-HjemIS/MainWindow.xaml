@@ -39,13 +39,13 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1" Grid.Column="1">
-                    <TextBox x:Name="username" Text="Username" Width="150" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" FontWeight="Bold"/>
+                    <TextBox x:Name="username" Text="Username" Width="150" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" FontWeight="Bold" VerticalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="1">
-                    <PasswordBox x:Name="password" Width="150" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <PasswordBox x:Name="password" Width="150" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="3" Grid.Column="1">
-                    <Button x:Name="btnLogin" Content="Login" Width="100" Height="30" FontWeight="Bold" Click="btnLogin_Click">
+                    <Button x:Name="btnLogin" Content="Login" Width="100" Height="30" FontWeight="Bold" Click="btnLogin_Click" FontSize="15">
                         <Button.Background>
                             <SolidColorBrush Color="LimeGreen"/>
                         </Button.Background>
@@ -57,7 +57,7 @@
                     </Button>
                 </Grid>
                 <Grid Grid.Row="4" Grid.Column="1">
-                    <Button x:Name="btnCreate" Content="Create" Width="100" Height="30" FontWeight="Bold" Click="btnCreate_Click">
+                    <Button x:Name="btnCreate" Content="Create" Width="100" Height="30" FontWeight="Bold" Click="btnCreate_Click" FontSize="15">
                         <Button.Background>
                             <SolidColorBrush Color="Yellow"/>
                         </Button.Background>
