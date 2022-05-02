@@ -75,6 +75,8 @@ namespace Projekt_HjemIS
                         MessageBoxResult result = MessageBox.Show("User Has Been Created Succesfully", "User Record", MessageBoxButton.OK, MessageBoxImage.Information);
                         if (result == MessageBoxResult.OK)
                         {
+                            MainWindow mainWindow = new MainWindow();
+                            mainWindow.Show();
                             this.Close();
                         }
 
