@@ -20,7 +20,7 @@ namespace Projekt_HjemIS.Systems
         /// Execute SQL query to add data to designated database.
         /// </summary>
         /// <param name="record"></param>
-        public static void AddData(Location loc)
+        public static void AddData(string[] arr)
         {
             try
             {

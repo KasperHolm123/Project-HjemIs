@@ -26,6 +26,7 @@ namespace Projekt_HjemIS.Systems
             { "RECORDTYPE", string.Empty},
         };
         Dictionary<string, Location> recordsForSpecificStreet = new Dictionary<string, Location>();
+        List<string> RecordSegments = new List<string>();
         string currentStreet;
         // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
@@ -75,16 +76,28 @@ namespace Projekt_HjemIS.Systems
             var rootPathParent = Directory.GetParent($"{rootPathChild}");
             var rootPathFolder = Directory.GetParent($"{rootPathParent}");
             var rootPath = rootPathFolder.ToString();
+            Location model = new Location("", "");
             string currentLine = string.Empty;
             using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
             {
                 while ((currentLine = sr.ReadLine()) != null)
                 {
                     string tempLine = currentLine.Substring(0, 3);
-                    string[] tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
-                    if (tempLine == "001") recordsForSpecificStreet[currentStreet = tempList[1] + tempList[2]] = new Location(tempList[1], tempList[2]); //Hver gang der nås til recordtype 001 igen er der tale om en ny vej
-                    BuildLocation(recordsForSpecificStreet[currentStreet], tempList);
+                    List<string> tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
+                    if (tempLine == "001")
+                    {
+                        model = new Location(tempList[1], tempList[2]);
+                        currentStreet = tempList[1] + tempList[2];
+                    }
+                    BuildLocation(model, tempList);
+                    //if (tempLine == "001") recordsForSpecificStreet[currentStreet = tempList[1] + tempList[2]] = new Location(tempList[1], tempList[2]); //Hver gang der nås til recordtype 001 igen er der tale om en ny vej
+                    //BuildLocation(recordsForSpecificStreet[currentStreet], tempList); //Skal holde styr på hvilken vej der tilføjes data til
                 }
+                foreach (KeyValuePair<string,Location> street in recordsForSpecificStreet)
+                {
+                    DatabaseHandler.AddData(street.Value);
+                }
+                recordsForSpecificStreet.Clear();
             }
         }
 
@@ -93,29 +106,25 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         /// <param name="currentRecord"></param>
         /// <param name="recordType"></param>
-        private string[] SpliceRecord(string currentRecord, int[] recordType)
+        private List<string> SpliceRecord(string currentRecord, int[] recordType)
         {
-            string[] CurrentRecordSegments = new string[3] { string.Empty, string.Empty, string.Empty };
-            int currentSegment = 0;
-            
+            int currentCol = 0;
             for (int i = 0; i < recordType.Length; i++)
             {
                 if (currentRecord != null)
                 {
-                    CurrentRecordSegments[i] = currentRecord.Substring(currentSegment, recordType[i]);
-                    currentSegment += recordType[i];
+                    RecordSegments[i] = currentRecord.Substring(currentCol, recordType[i]);
+                    currentCol += recordType[i];
                 }
             }
-
-            foreach (var item in CurrentRecordSegments)
+            foreach (var item in RecordSegments)
             {
                 Debug.WriteLine(item);
             }
             Debug.WriteLine("\n\n");
-
-            return CurrentRecordSegments;
+            return RecordSegments;
         }
-        private void BuildLocation(Location loc, string[] record)
+        private void BuildLocation(Location loc, List<string> record)
         {
             switch (record[0])
             {
@@ -128,7 +137,7 @@ namespace Projekt_HjemIS.Systems
                     //Evt kan der medtages husnr, sidedør og etage fra denne recordtype
                     break;
                 case "003":
-                    loc.Bynavn = record[7]; //bynavn
+                    loc.Bynavn = record[7]; 
                     break;
                 case "004":
                     loc.PostNr = record[7];
