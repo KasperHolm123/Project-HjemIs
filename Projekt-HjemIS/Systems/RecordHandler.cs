@@ -20,9 +20,6 @@ namespace Projekt_HjemIS.Systems
             ReadRecordFromFile();
         }
 
-        // Er ikke helt sikker på om det er den bedste måde at gøre det på, men det ser 10x bedre ud lol
-        //public string[] CurrentRecordSegments = new string[3] { string.Empty, string.Empty, string.Empty };
-
         // måske er denne måde bedre, men så kræver det et dictionary
         Dictionary<string, string> RecordData = new Dictionary<string, string>()
         {
@@ -33,8 +30,7 @@ namespace Projekt_HjemIS.Systems
         // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
         {
-            // VI SKAL BRUGE EN ANDEN MÅDE AT SE FORSKELLEN PÅ ENTRIES
-            // DE HAR SAMME VEJKODE OG KOMMUNEKODE
+            // Husk at ændre app.config til jeres egen PC
             { "001", new int[] { 3, 4, 4 } }, // AKTVEJ
             { "002", new int[] { 3, 4, 4 } }, // BOLIG
             { "003", new int[] { 3, 4, 4 } }, // BYNAVN
