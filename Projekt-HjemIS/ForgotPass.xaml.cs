@@ -15,14 +15,25 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS
 {
     /// <summary>
-    /// Interaction logic for dashboard.xaml
+    /// Interaction logic for ForgotPass.xaml
     /// </summary>
-    public partial class dashboard : Window
+    public partial class ForgotPass : Window
     {
-        public dashboard()
+        public ForgotPass()
         {
             InitializeComponent();
-            lablUsername.Content = "Welcome " + User.Username.ToString();
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            //emulator.
         }
     }
 }

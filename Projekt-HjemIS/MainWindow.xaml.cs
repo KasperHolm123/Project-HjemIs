@@ -47,6 +47,7 @@ namespace Projekt_HjemIS
 
                     if (count == 1)
                     {
+                        User.Username = username.Text.ToString();
                         dashboard dashbord = new dashboard();
                         dashbord.Show();
                         this.Close();
@@ -71,6 +72,13 @@ namespace Projekt_HjemIS
         {
             Create create = new Create();
             create.Show();
+            this.Close();
+        }
+
+        private void btnForgot_Click(object sender, RoutedEventArgs e)
+        {
+            ForgotPass forgotPass = new ForgotPass();
+            forgotPass.Show();
             this.Close();
         }
     }
