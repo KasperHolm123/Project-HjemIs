@@ -26,7 +26,20 @@ namespace Projekt_HjemIS.Systems
             { "RECORDTYPE", string.Empty},
         };
         Dictionary<string, Location> recordsForSpecificStreet = new Dictionary<string, Location>();
-        List<string> RecordSegments = new List<string>();
+        List<string> RecordSegments = new List<string>()
+        {
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty
+        };
         string currentStreet;
         // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
@@ -72,12 +85,17 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         private void ReadRecordFromFile()
         {
+            // Keep count of how many record have been decoded and sent to the database.
+            int recordCount = 0;
+
             var rootPathChild = Directory.GetCurrentDirectory();
             var rootPathParent = Directory.GetParent($"{rootPathChild}");
             var rootPathFolder = Directory.GetParent($"{rootPathParent}");
             var rootPath = rootPathFolder.ToString();
+
             Location model = new Location("", "");
             string currentLine = string.Empty;
+
             using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
             {
                 while ((currentLine = sr.ReadLine()) != null)
@@ -86,17 +104,28 @@ namespace Projekt_HjemIS.Systems
                     List<string> tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
                     if (tempLine == "001")
                     {
+                        if (recordCount > 0)
+                            DatabaseHandler.AddData(model);
                         model = new Location(tempList[1], tempList[2]);
                         currentStreet = tempList[1] + tempList[2];
+                        recordCount++;
                     }
                     BuildLocation(model, tempList);
                     //if (tempLine == "001") recordsForSpecificStreet[currentStreet = tempList[1] + tempList[2]] = new Location(tempList[1], tempList[2]); //Hver gang der nås til recordtype 001 igen er der tale om en ny vej
                     //BuildLocation(recordsForSpecificStreet[currentStreet], tempList); //Skal holde styr på hvilken vej der tilføjes data til
+
+                    // Keep count of handled records and total records
+                    if (currentLine.Substring(0, 3) == "999")
+                    {
+                        Debug.WriteLine(currentLine + "\n" + recordCount);
+                        Debug.WriteLine((Int32.Parse(currentLine.Substring(4)) - 2) == recordCount);
+                    }
+
                 }
-                foreach (KeyValuePair<string,Location> street in recordsForSpecificStreet)
-                {
-                    DatabaseHandler.AddData(street.Value);
-                }
+                //foreach (KeyValuePair<string, Location> street in recordsForSpecificStreet)
+                //{
+                //    DatabaseHandler.AddData(street.Value);
+                //}
                 recordsForSpecificStreet.Clear();
             }
         }
@@ -117,11 +146,6 @@ namespace Projekt_HjemIS.Systems
                     currentCol += recordType[i];
                 }
             }
-            foreach (var item in RecordSegments)
-            {
-                Debug.WriteLine(item);
-            }
-            Debug.WriteLine("\n\n");
             return RecordSegments;
         }
         private void BuildLocation(Location loc, List<string> record)
@@ -137,7 +161,7 @@ namespace Projekt_HjemIS.Systems
                     //Evt kan der medtages husnr, sidedør og etage fra denne recordtype
                     break;
                 case "003":
-                    loc.Bynavn = record[7]; 
+                    loc.Bynavn = record[7];
                     break;
                 case "004":
                     loc.PostNr = record[7];

@@ -16,6 +16,8 @@ namespace Projekt_HjemIS.Models
         public string VejNavn { get; set; }
         public string Distrikt { get; set; }
         public bool IsCompleted { get; set; }
+        
+
         public Location(string postnr, string bynavn, string postdistrikt, string vejkode, string kommunekode)
         {
             PostNr = postnr;
