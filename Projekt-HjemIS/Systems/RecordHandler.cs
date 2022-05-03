@@ -82,7 +82,6 @@ namespace Projekt_HjemIS.Systems
                 {
                     string tempLine = currentLine.Substring(0, 3);
                     string[] tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
-                    DatabaseHandler.AddData(tempList);
                     if (tempLine == "001") recordsForSpecificStreet[currentStreet = tempList[1] + tempList[2]] = new Location(tempList[1], tempList[2]); //Hver gang der nås til recordtype 001 igen er der tale om en ny vej
                     BuildLocation(recordsForSpecificStreet[currentStreet], tempList);
                 }
