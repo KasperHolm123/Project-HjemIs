@@ -115,5 +115,37 @@ namespace Projekt_HjemIS.Systems
 
             return CurrentRecordSegments;
         }
+        private void BuildLocation(Location loc, List<string> record)
+        {
+            switch (record[0])
+            {
+                case "001":
+                    loc.Kommunekode = record[1]; //kommunekode
+                    loc.Vejkode = record[2]; //vejkode
+                    loc.VejNavn = record[10]; // 9 eller 10 er vejnavn
+                    break;
+                case "002":
+                    //Evt kan der medtages husnr, sidedør og etage fra denne recordtype
+                    break;
+                case "003":
+                    loc.Bynavn = record[7]; //bynavn
+                    break;
+                case "004":
+                    loc.PostNr = record[7];
+                    loc.Postdistrikt = record[8];
+                    break;
+                case "005":
+                    //Intet relevant
+                    break;
+                case "013":
+                    //Intet relevant
+                    break;
+                default:
+                    loc.Distrikt = record[8];
+                    break;
+
+
+            }
+        }
     }
 }
