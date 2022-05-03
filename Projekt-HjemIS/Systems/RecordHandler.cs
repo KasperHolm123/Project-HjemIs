@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Projekt_HjemIS.Models;
 
 namespace Projekt_HjemIS.Systems
 {
@@ -27,7 +28,8 @@ namespace Projekt_HjemIS.Systems
         {
             { "RECORDTYPE", string.Empty},
         };
-
+        Dictionary<string, Location> recordsForSpecificStreet = new Dictionary<string, Location>();
+        string currentStreet;
         // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
         {
@@ -82,8 +84,11 @@ namespace Projekt_HjemIS.Systems
             {
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    string currentLineRecordType = currentLine.Substring(0, 3);
-                    DatabaseHandler.AddData(SpliceRecord(currentLine, RecordTypeDict[currentLineRecordType]));
+                    string tempLine = currentLine.Substring(0, 3);
+                    string[] tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
+                    DatabaseHandler.AddData(tempList);
+                    if (tempLine == "001") recordsForSpecificStreet[currentStreet = tempList[1] + tempList[2]] = new Location(tempList[1], tempList[2]); //Hver gang der nås til recordtype 001 igen er der tale om en ny vej
+                    BuildLocation(recordsForSpecificStreet[currentStreet], tempList);
                 }
             }
         }
@@ -115,7 +120,7 @@ namespace Projekt_HjemIS.Systems
 
             return CurrentRecordSegments;
         }
-        private void BuildLocation(Location loc, List<string> record)
+        private void BuildLocation(Location loc, string[] record)
         {
             switch (record[0])
             {
