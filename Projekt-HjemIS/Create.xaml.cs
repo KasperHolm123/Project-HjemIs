@@ -32,10 +32,10 @@ namespace Projekt_HjemIS
             connString.Open();
             try
             {
-                if (Username.Text == "" || Username.Text == "Username" || Password.Password == "" || Password2.Password == "")
+                if (Username.Text == "" || Username.Text == "Username" || Password.Password == "" || Password2.Password == "" || Username.Text == "username")
                 {
                     MessageBox.Show("Please Fill Out The Required Fields");
-                    if (Username.Text == "" || Username.Text == "Username")
+                    if (Username.Text == "" || Username.Text == "Username" || Username.Text == "username")
                     {
                         Username.BorderBrush = Brushes.Red;
                     }
