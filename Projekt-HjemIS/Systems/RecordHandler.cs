@@ -20,12 +20,12 @@ namespace Projekt_HjemIS.Systems
             ReadRecordFromFile();
         }
 
-        List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
+        List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
         // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
-        {   
+        {
             { "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
             //{ "002", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} }, // BOLIG
             { "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
@@ -48,6 +48,9 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         private void ReadRecordFromFile()
         {
+            // Clear database tables to make room for a new data extraction.
+            DatabaseHandler.ClearTables();
+
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
 
@@ -56,36 +59,45 @@ namespace Projekt_HjemIS.Systems
             var rootPathFolder = Directory.GetParent($"{rootPathParent}");
             var rootPath = rootPathFolder.ToString();
 
-            Location model = new Location("", "");
+            Location model = new Location();
             string currentLine = string.Empty;
-
-            using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
+            Stopwatch sw = new Stopwatch();
+            List<Location> locationsList = new List<Location>();
+            using (StreamReader sr = File.OpenText(rootPath + @"\full.txt"))
             {
+                sw.Start();
                 List<string> tempList = new List<string>();
                 while ((currentLine = sr.ReadLine()) != null)
                 {
                     string tempLine = currentLine.Substring(0, 3);
                     if (RecordTypeDict.Keys.Contains(currentLine.Substring(0, 3)))
                         tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
-                    
+
                     // Instantiate a new Location object if the current line is a record of type "001".
                     if (tempLine == "001")
                     {
                         // The first record doesn't have any data yet.
                         if (recordCount > 0)
-                            DatabaseHandler.AddData(model);    
-                        recordCount++;
+                            locationsList.Add(model);
+                        model = new Location();
+                        //DatabaseHandler.AddData(model);   
                     }
+                    recordCount++;
 
-                    BuildLocation(model, tempList);
+                    if (currentLine.Substring(0, 3) != "000")
+                        BuildLocation(model, tempList);
 
                     // Keep count of handled records and total records
                     if (currentLine.Substring(0, 3) == "999")
                     {
-                        Debug.WriteLine(currentLine + "\n" + recordCount);
-                        Debug.WriteLine((Int32.Parse(currentLine.Substring(4)) - 2) == recordCount);
+                        Debug.WriteLine("Amount of locations added to database: " + locationsList.Count);
+                        Debug.WriteLine("Total records: " + Int32.Parse(currentLine.Substring(4)) + "\n" + "Amount of handled records: " + (recordCount - 2));
+                        Debug.WriteLine((Int32.Parse(currentLine.Substring(4))) == recordCount - 2);
                     }
                 }
+                DatabaseHandler.AddData(locationsList);
+                Debug.WriteLine(sw.Elapsed);
+                sw.Stop();
             }
         }
 
@@ -129,9 +141,11 @@ namespace Projekt_HjemIS.Systems
                     loc.PostNr = record[7];
                     loc.Postdistrikt = record[8];
                     break;
+                case "000":
                 case "002":
                 case "005":
                 case "013":
+                case "999":
                     //Intet relevant
                     break;
                 default:

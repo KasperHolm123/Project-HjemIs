@@ -15,30 +15,33 @@ namespace Projekt_HjemIS.Systems
     {
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
-        //ClearTables();
+
+
         /// <summary>
         /// Execute SQL query to add data to designated database.
         /// </summary>
         /// <param name="record"></param>
-        public static void AddData(Location loc)
+        public static void AddData(List<Location> locList)
         {
             try
             {
                 connection.Open();
-                
 
                 string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, PostalDistrict)" +
                                "VALUES (@streetcode, @countycode, @street, @postalcode, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.Add(CreateParameter("@streetcode", loc.Vejkode, SqlDbType.NVarChar));
-                command.Parameters.Add(CreateParameter("@countycode", loc.Kommunekode, SqlDbType.NVarChar));
-                command.Parameters.Add(CreateParameter("@street", loc.VejNavn, SqlDbType.NVarChar));
-                command.Parameters.Add(CreateParameter("@postalcode", loc.PostNr, SqlDbType.NVarChar));
-                //command.Parameters.Add(CreateParameter("@city", loc.Bynavn, SqlDbType.NVarChar));
-                command.Parameters.Add(CreateParameter("@postaldistrict", loc.Postdistrikt, SqlDbType.NVarChar));
 
+                foreach (var item in locList)
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.Add(CreateParameter("@streetcode", item.Vejkode, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@countycode", item.Kommunekode, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@street", item.VejNavn, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@postalcode", item.PostNr, SqlDbType.NVarChar));
+                    //command.Parameters.Add(CreateParameter("@city", loc.Bynavn, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@postaldistrict", item.Postdistrikt, SqlDbType.NVarChar));
+                    command.ExecuteNonQuery();
+                }
 
-                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -53,12 +56,23 @@ namespace Projekt_HjemIS.Systems
         /// <summary>
         /// Clear database tables to make room for new data.
         /// </summary>
-        private static void ClearTables()
+        public static void ClearTables()
         {
             string query = "DELETE FROM Locations;";
+            try
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(@query, connection);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
 
-            SqlCommand command = new SqlCommand(@query, connection);
-            command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         /// <summary>
