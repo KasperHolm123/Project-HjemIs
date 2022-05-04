@@ -17,6 +17,7 @@ namespace Projekt_HjemIS.Systems
 
         public RecordHandler()
         {
+            Task.Factory.StartNew(() => Pulse());
             ReadRecordFromFile();
         }
 
@@ -154,6 +155,15 @@ namespace Projekt_HjemIS.Systems
 
 
             }
+        }
+        private async void Pulse()
+        {
+            while (true)
+            {
+                ReadRecordFromFile();
+                await Task.Delay(10000);
+            }
+
         }
     }
 }
