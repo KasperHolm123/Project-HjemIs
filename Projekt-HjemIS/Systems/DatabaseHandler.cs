@@ -15,7 +15,7 @@ namespace Projekt_HjemIS.Systems
     {
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
-
+        //ClearTables();
         /// <summary>
         /// Execute SQL query to add data to designated database.
         /// </summary>
@@ -25,16 +25,16 @@ namespace Projekt_HjemIS.Systems
             try
             {
                 connection.Open();
-                ClearTables();
+                
 
-                string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict)" +
-                               "VALUES (@streetcode, @countycode, @street, @postalcode, @city, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
+                string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, PostalDistrict)" +
+                               "VALUES (@streetcode, @countycode, @street, @postalcode, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.Add(CreateParameter("@streetcode", loc.Vejkode, SqlDbType.NVarChar));
                 command.Parameters.Add(CreateParameter("@countycode", loc.Kommunekode, SqlDbType.NVarChar));
                 command.Parameters.Add(CreateParameter("@street", loc.VejNavn, SqlDbType.NVarChar));
                 command.Parameters.Add(CreateParameter("@postalcode", loc.PostNr, SqlDbType.NVarChar));
-                command.Parameters.Add(CreateParameter("@city", loc.Bynavn, SqlDbType.NVarChar));
+                //command.Parameters.Add(CreateParameter("@city", loc.Bynavn, SqlDbType.NVarChar));
                 command.Parameters.Add(CreateParameter("@postaldistrict", loc.Postdistrikt, SqlDbType.NVarChar));
 
 

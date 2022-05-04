@@ -21,64 +21,27 @@ namespace Projekt_HjemIS.Systems
             ReadRecordFromFile();
         }
 
-        // måske er denne måde bedre, men så kræver det et dictionary
-        Dictionary<string, string> RecordData = new Dictionary<string, string>()
-        {
-            { "RECORDTYPE", string.Empty},
-        };
-        Dictionary<string, Location> recordsForSpecificStreet = new Dictionary<string, Location>();
-        List<string> RecordSegments = new List<string>()
-        {
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty,
-            string.Empty
-        };
-        string currentStreet;
+        List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, 
+            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+
         // This dictionary holds all record types and their segment positional values. Refactor
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
-        {
-            // Husk at ændre app.config til jeres egen PC
-            { "001", new int[] { 3, 4, 4 } }, // AKTVEJ
-            { "002", new int[] { 3, 4, 4 } }, // BOLIG
-            { "003", new int[] { 3, 4, 4 } }, // BYNAVN
-            { "004", new int[] { 3, 4, 4 } }, //POSTDIST
-            { "005", new int[] { 3, 4, 4 } }, // NOTATVEJ
-            { "006", new int[] { 3, 4, 4 } }, // BYFORNYDIST
-            { "007", new int[] { 3, 4, 4 } }, // DIVDIST
-            { "008", new int[] { 3, 4, 4 } }, // EVAKUERDIST
-            { "009", new int[] { 3, 4, 4 } }, // KIRKEDIST
-            { "010", new int[] { 3, 4, 4 } }, // SKOLEDIST
-            { "011", new int[] { 3, 4, 4 } }, // BEFOLKDIST
-            { "012", new int[] { 3, 4, 4 } }, // SOCIALDIST
-            { "013", new int[] { 3, 4, 4 } }, // SOGNEDIST
-            { "014", new int[] { 3, 4, 4 } }, // VALGDIST
-            { "015", new int[] { 3, 4, 4 } }, // VARMEDIST
-
-            /*
+        {   
             { "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
-            { "002", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} }, // BOLIG
+            //{ "002", new int[]{ 3, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34} }, // BOLIG
             { "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
             { "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
-            { "005", new int[]{ 3, 4, 4, 2, 40, 12, 12 } }, // NOTATVEJ
-            { "006", new int[]{ 3, 4, 4, 4, 4, 1, 12, 6, 30 } }, // BYFORNYDIST
-            { "007", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } }, // DIVDIST
-            { "008", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } }, // EVAKUERDIST
+            //{ "005", new int[]{ 3, 4, 4, 2, 40, 12, 12 } }, // NOTATVEJ
+            //{ "006", new int[]{ 3, 4, 4, 4, 4, 1, 12, 6, 30 } }, // BYFORNYDIST
+            //{ "007", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 4, 30 } }, // DIVDIST
+            //{ "008", new int[]{ 3, 4, 4, 4, 4, 1, 12, 1, 30 } }, // EVAKUERDIST
             { "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // KIRKEDIST
-            { "010", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // SKOLEDIST
-            { "011", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } }, // BEFOLKDIST
-            { "012", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // SOCIALDIST
-            { "013", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } }, // SOGNEDIST
-            { "014", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // VALGDIST
-            { "015", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } }, // VARMEDIST
-            */
+            //{ "010", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // SKOLEDIST
+            //{ "011", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } }, // BEFOLKDIST
+            //{ "012", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // SOCIALDIST
+            //{ "013", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 20 } }, // SOGNEDIST
+            //{ "014", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // VALGDIST
+            //{ "015", new int[]{ 3, 4, 4, 4, 4, 1, 12, 4, 30 } }, // VARMEDIST
         };
 
         /// <summary>
@@ -99,21 +62,23 @@ namespace Projekt_HjemIS.Systems
 
             using (StreamReader sr = File.OpenText(rootPath + @"\tempRecords.txt"))
             {
+                List<string> tempList = new List<string>();
                 while ((currentLine = sr.ReadLine()) != null)
                 {
                     string tempLine = currentLine.Substring(0, 3);
-                    List<string> tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
+                    if (RecordTypeDict.Keys.Contains(currentLine.Substring(0, 3)))
+                        tempList = SpliceRecord(currentLine, RecordTypeDict[tempLine]);
+                    
+                    // Instantiate a new Location object if the current line is a record of type "001".
                     if (tempLine == "001")
                     {
+                        // The first record doesn't have any data yet.
                         if (recordCount > 0)
-                            DatabaseHandler.AddData(model);
-                        model = new Location(tempList[1], tempList[2]);
-                        currentStreet = tempList[1] + tempList[2];
+                            DatabaseHandler.AddData(model);    
                         recordCount++;
                     }
+
                     BuildLocation(model, tempList);
-                    //if (tempLine == "001") recordsForSpecificStreet[currentStreet = tempList[1] + tempList[2]] = new Location(tempList[1], tempList[2]); //Hver gang der nås til recordtype 001 igen er der tale om en ny vej
-                    //BuildLocation(recordsForSpecificStreet[currentStreet], tempList); //Skal holde styr på hvilken vej der tilføjes data til
 
                     // Keep count of handled records and total records
                     if (currentLine.Substring(0, 3) == "999")
@@ -121,13 +86,7 @@ namespace Projekt_HjemIS.Systems
                         Debug.WriteLine(currentLine + "\n" + recordCount);
                         Debug.WriteLine((Int32.Parse(currentLine.Substring(4)) - 2) == recordCount);
                     }
-
                 }
-                //foreach (KeyValuePair<string, Location> street in recordsForSpecificStreet)
-                //{
-                //    DatabaseHandler.AddData(street.Value);
-                //}
-                recordsForSpecificStreet.Clear();
             }
         }
 
@@ -149,6 +108,12 @@ namespace Projekt_HjemIS.Systems
             }
             return RecordSegments;
         }
+
+        /// <summary>
+        /// Fills a Location object with relevant data.
+        /// </summary>
+        /// <param name="loc"></param>
+        /// <param name="record"></param>
         private void BuildLocation(Location loc, List<string> record)
         {
             switch (record[0])
@@ -158,9 +123,6 @@ namespace Projekt_HjemIS.Systems
                     loc.Vejkode = record[2]; //vejkode
                     loc.VejNavn = record[10]; // 9 eller 10 er vejnavn
                     break;
-                case "002":
-                    //Evt kan der medtages husnr, sidedør og etage fra denne recordtype
-                    break;
                 case "003":
                     loc.Bynavn = record[7];
                     break;
@@ -168,9 +130,8 @@ namespace Projekt_HjemIS.Systems
                     loc.PostNr = record[7];
                     loc.Postdistrikt = record[8];
                     break;
+                case "002":
                 case "005":
-                    //Intet relevant
-                    break;
                 case "013":
                     //Intet relevant
                     break;
