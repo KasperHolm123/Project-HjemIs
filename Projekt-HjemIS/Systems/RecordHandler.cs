@@ -160,7 +160,7 @@ namespace Projekt_HjemIS.Systems
         {
             while (true)
             {
-                ReadRecordFromFile();
+                //ReadRecordFromFile();
                 await Task.Delay(10000);
             }
 
