@@ -99,5 +99,12 @@ namespace Projekt_HjemIS
             mainWindow.Show();
             this.Close();
         }
+
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
     }
 }

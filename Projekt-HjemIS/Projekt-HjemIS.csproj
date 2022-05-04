@@ -138,5 +138,8 @@
   <ItemGroup>
     <Resource Include="Pictures\hjemis-logo2.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Emulator\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

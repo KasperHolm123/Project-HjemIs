@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="0">
-            <Image Source="Pictures\hjemis-logo2.jpg"/>
+            <Image Source="Pictures\hjemis-logo2.jpg" MouseDown="Image_MouseDown"/>
         </Grid>
 
         <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gold" BorderThickness="5" CornerRadius="20">

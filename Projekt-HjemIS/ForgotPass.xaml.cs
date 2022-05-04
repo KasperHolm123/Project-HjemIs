@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +38,40 @@ namespace Projekt_HjemIS
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             //emulator.
+            string test = rUsername.Text;
+            MessageBox.Show(Database(test));
+        }
+        public string Database(string fUsername)
+        {
+            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
+            User pUser = new User();
+            try
+            {
+                if (connString.State == ConnectionState.Closed)
+                {
+                    connString.Open();
+
+                    string query = "SELECT [password] FROM Users WHERE username=@fUsername";
+                    SqlCommand sqlCommand = new SqlCommand(query, connString);
+                    sqlCommand.Parameters.AddWithValue("@fUsername", fUsername);
+                    using (SqlDataReader sqlReader = sqlCommand.ExecuteReader())
+                    {
+                        while(sqlReader.Read())
+                        {
+                            pUser.fPassword = sqlReader["password"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                connString.Close();
+            }
+            return pUser.fPassword;
         }
     }
 }

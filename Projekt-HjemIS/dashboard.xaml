@@ -7,7 +7,15 @@
         mc:Ignorable="d"
         Title="dashboard" Height="450" Width="800">
     <Grid>
-        <Label x:Name="lablUsername" FontSize="15" FontWeight="Bold" Height="30" Width="150"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="lablUsername" FontSize="15" Height="30" Width="150" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
     </Grid>
 </Window>
