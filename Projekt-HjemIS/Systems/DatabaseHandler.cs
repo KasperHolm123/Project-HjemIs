@@ -53,6 +53,38 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
+        public static void AddBulkData(DataTable dt)
+        {
+            connection.Open();
+            ClearTables();
+            string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict)" +
+                               "VALUES (@streetcode, @countycode, @street, @postalcode, @city, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
+
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+            {
+                bulkCopy.DestinationTableName = "Locations";
+                bulkCopy.ColumnMappings.Add("Vejkode", "StreetCode");
+                bulkCopy.ColumnMappings.Add("Kommunekode", "CountyCode");
+                bulkCopy.ColumnMappings.Add("VejNavn", "Street");
+                bulkCopy.ColumnMappings.Add("PostNr", "PostalCode");
+                bulkCopy.ColumnMappings.Add("Bynavn", "City");
+                bulkCopy.ColumnMappings.Add("Postdistrikt", "PostalDistrict");
+
+                try
+                {
+                    bulkCopy.WriteToServer(dt);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
         /// <summary>
         /// Clear database tables to make room for new data.
         /// </summary>

@@ -14,7 +14,6 @@ namespace Projekt_HjemIS.Models
         public string Vejkode { get; set; }
         public string Kommunekode { get; set; }
         public string VejNavn { get; set; }
-        public string Distrikt { get; set; }
         
         public Location()
         {

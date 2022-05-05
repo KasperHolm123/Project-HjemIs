@@ -41,7 +41,7 @@ namespace Projekt_HjemIS.Systems
         private void GetRecords()
         {
             Stopwatch sw = new Stopwatch();
-            
+
 
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
@@ -65,7 +65,7 @@ namespace Projekt_HjemIS.Systems
                         // The first record doesn't have any data yet.
                         if (recordCount > 1)
                             locationsList.Add(currentLocation);
-                        currentLocation = new Location(); 
+                        currentLocation = new Location();
                     }
 
                     if (RecordTypeDict.Keys.Contains(currentLine.Substring(0, 3)))
@@ -75,16 +75,20 @@ namespace Projekt_HjemIS.Systems
                     if (currentLine.Substring(0, 3) == "999")
                     {
                         Debug.WriteLine(
-                            "Amount of locations added to database: " + locationsList.Count + 
-                            "\nTotal records: " + Int32.Parse(currentLine.Substring(4)) + 
+                            "Amount of locations added to database: " + locationsList.Count +
+                            "\nTotal records: " + Int32.Parse(currentLine.Substring(4)) +
                             "\nAmount of handled records: " + (recordCount - 2));
                     }
 
                     recordCount++;
                 }
-                DatabaseHandler.AddData(CreateBulkDataTable(locationsList)); // DatabaseHandler mangler refactoring.
+                ListToDataTableConverter converter = new ListToDataTableConverter();
 
-                DatabaseHandler.AddData(locationsList);
+                DataTable dt = converter.ToDataTable(locationsList);
+
+                DatabaseHandler.AddBulkData(dt); // DatabaseHandler mangler refactoring.
+
+                //DatabaseHandler.AddData(locationsList);
 
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();
@@ -131,79 +135,8 @@ namespace Projekt_HjemIS.Systems
                     loc.PostNr = record[7];
                     loc.Postdistrikt = record[8];
                     break;
-                case "000":
-                case "002":
-                case "005":
-                case "013":
-                case "999":
-                    //Intet relevant
-                    break;
                 default:
-                    loc.Distrikt = record[8];
                     break;
-            }
-        }
-
-        private DataTable CreateBulkDataTable(List<Location> locationList)
-        {
-            DataTable locationTable = new DataTable();
-
-            CreateDataTableColumn(locationTable, "System.String", "StreetCode");
-            FillDataTable(locationTable, locationList, "StreetCode");
-            CreateDataTableColumn(locationTable, "System.String", "CountyCode");
-            FillDataTable(locationTable, locationList, "CountyCode");
-            CreateDataTableColumn(locationTable, "System.String", "Street");
-            FillDataTable(locationTable, locationList, "Street");
-            CreateDataTableColumn(locationTable, "System.String", "PostalCode");
-            FillDataTable(locationTable, locationList, "PostalCode");
-            CreateDataTableColumn(locationTable, "System.String", "City");
-            FillDataTable(locationTable, locationList, "City");
-            CreateDataTableColumn(locationTable, "System.String", "PostalDistrict");
-            FillDataTable(locationTable, locationList, "PostalDistrict");
-
-            return locationTable;
-        }
-
-        private void CreateDataTableColumn(DataTable dt, string type, string name)
-        {
-            DataColumn column = new DataColumn();
-            column.DataType = System.Type.GetType(type);
-            column.ColumnName = name;
-            column.AutoIncrement = false;
-            column.ReadOnly = false;
-            column.Unique = false;
-            dt.Columns.Add(column);
-        }
-
-        private void FillDataTable(DataTable dt, List<Location> list, string columnName)
-        {
-            var row = dt.NewRow();
-            foreach (var item in list)
-            {
-                switch (columnName)
-                {
-                    case "StreetCode":
-                        row[columnName] = item.Vejkode;
-                        break;
-                    case "CountyCode":
-                        row[columnName] = item.Kommunekode;
-                        break;
-                    case "Street":
-                        row[columnName] = item.VejNavn;
-                        break;
-                    case "PostalCode":
-                        row[columnName] = item.PostNr;
-                        break;
-                    case "City":
-                        row[columnName] = item.Bynavn;
-                        break;
-                    case "PostalDistrict":
-                        row[columnName] = item.Postdistrikt;
-                        break;
-                    default:
-                        break;
-                }
-                dt.Rows.Add(row);
             }
         }
 
@@ -220,7 +153,7 @@ namespace Projekt_HjemIS.Systems
             return rootPath;
         }
 
-        private async void Pulse() 
+        private async void Pulse()
         {
             while (true)
             {
