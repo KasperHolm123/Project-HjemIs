@@ -27,9 +27,9 @@ namespace Projekt_HjemIS.Systems
             {
                 connection.Open();
                 ClearTables();
-                string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, PostalDistrict)" +
-                               "VALUES (@streetcode, @countycode, @street, @postalcode, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
-
+                string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict)" +
+                               "VALUES (@streetcode, @countycode, @street, @postalcode, @city, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
+                
                 foreach (var item in locList)
                 {
                     SqlCommand command = new SqlCommand(query, connection);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -81,6 +82,8 @@ namespace Projekt_HjemIS.Systems
 
                     recordCount++;
                 }
+                DatabaseHandler.AddData(CreateBulkDataTable(locationsList)); // DatabaseHandler mangler refactoring.
+
                 DatabaseHandler.AddData(locationsList);
 
                 Debug.WriteLine(sw.Elapsed);
@@ -138,6 +141,69 @@ namespace Projekt_HjemIS.Systems
                 default:
                     loc.Distrikt = record[8];
                     break;
+            }
+        }
+
+        private DataTable CreateBulkDataTable(List<Location> locationList)
+        {
+            DataTable locationTable = new DataTable();
+
+            CreateDataTableColumn(locationTable, "System.String", "StreetCode");
+            FillDataTable(locationTable, locationList, "StreetCode");
+            CreateDataTableColumn(locationTable, "System.String", "CountyCode");
+            FillDataTable(locationTable, locationList, "CountyCode");
+            CreateDataTableColumn(locationTable, "System.String", "Street");
+            FillDataTable(locationTable, locationList, "Street");
+            CreateDataTableColumn(locationTable, "System.String", "PostalCode");
+            FillDataTable(locationTable, locationList, "PostalCode");
+            CreateDataTableColumn(locationTable, "System.String", "City");
+            FillDataTable(locationTable, locationList, "City");
+            CreateDataTableColumn(locationTable, "System.String", "PostalDistrict");
+            FillDataTable(locationTable, locationList, "PostalDistrict");
+
+            return locationTable;
+        }
+
+        private void CreateDataTableColumn(DataTable dt, string type, string name)
+        {
+            DataColumn column = new DataColumn();
+            column.DataType = System.Type.GetType(type);
+            column.ColumnName = name;
+            column.AutoIncrement = false;
+            column.ReadOnly = false;
+            column.Unique = false;
+            dt.Columns.Add(column);
+        }
+
+        private void FillDataTable(DataTable dt, List<Location> list, string columnName)
+        {
+            var row = dt.NewRow();
+            foreach (var item in list)
+            {
+                switch (columnName)
+                {
+                    case "StreetCode":
+                        row[columnName] = item.Vejkode;
+                        break;
+                    case "CountyCode":
+                        row[columnName] = item.Kommunekode;
+                        break;
+                    case "Street":
+                        row[columnName] = item.VejNavn;
+                        break;
+                    case "PostalCode":
+                        row[columnName] = item.PostNr;
+                        break;
+                    case "City":
+                        row[columnName] = item.Bynavn;
+                        break;
+                    case "PostalDistrict":
+                        row[columnName] = item.Postdistrikt;
+                        break;
+                    default:
+                        break;
+                }
+                dt.Rows.Add(row);
             }
         }
 
