@@ -13,24 +13,28 @@ namespace Projekt_HjemIS.Systems
         public DataTable ToDataTable<T>(List<T> items)
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
-            //Get all the properties
-            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            // typeof(T) works by checking the type of the passed-in List<T>
+            PropertyInfo[] Props = typeof(T).GetProperties(); // Get all the properties
+
             foreach (PropertyInfo prop in Props)
             {
-                //Setting column names as Property names
+                // Setting column names as Property names
                 dataTable.Columns.Add(prop.Name);
             }
+
             foreach (T item in items)
             {
+                // Values is an object array because it resembles each column in the DataTable/item
                 var values = new object[Props.Length];
                 for (int i = 0; i < Props.Length; i++)
                 {
-                    //inserting property values to datatable rows
-                    values[i] = Props[i].GetValue(item, null);
+                    // Inserting property values to datatable rows
+                    values[i] = Props[i].GetValue(item);
                 }
                 dataTable.Rows.Add(values);
             }
-            //put a breakpoint here and check datatable
+            
             return dataTable;
         }
     }

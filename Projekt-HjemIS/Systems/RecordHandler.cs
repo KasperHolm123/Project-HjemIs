@@ -85,8 +85,9 @@ namespace Projekt_HjemIS.Systems
                 ListToDataTableConverter converter = new ListToDataTableConverter();
 
                 DataTable dt = converter.ToDataTable(locationsList);
+                
 
-                DatabaseHandler.AddBulkData(dt); // DatabaseHandler mangler refactoring.
+                //DatabaseHandler.AddBulkData(dt); // DatabaseHandler mangler refactoring.
 
                 //DatabaseHandler.AddData(locationsList);
 
