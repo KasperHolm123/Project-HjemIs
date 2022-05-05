@@ -21,12 +21,12 @@ namespace Projekt_HjemIS.Systems
         /// Execute SQL query to add data to designated database.
         /// </summary>
         /// <param name="record"></param>
-        public static void AddData(List<Location> locList)
+        public static void AddData(IEnumerable<Location> locList)
         {
             try
             {
                 connection.Open();
-
+                ClearTables();
                 string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, PostalDistrict)" +
                                "VALUES (@streetcode, @countycode, @street, @postalcode, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
 
@@ -35,10 +35,10 @@ namespace Projekt_HjemIS.Systems
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.Add(CreateParameter("@streetcode", item.Vejkode, SqlDbType.NVarChar));
                     command.Parameters.Add(CreateParameter("@countycode", item.Kommunekode, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@street", item.VejNavn, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@postalcode", item.PostNr, SqlDbType.NVarChar));
-                    //command.Parameters.Add(CreateParameter("@city", loc.Bynavn, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@postaldistrict", item.Postdistrikt, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@street", DbValueExtensions.AsDbValue(item.VejNavn), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@postalcode", DbValueExtensions.AsDbValue(item.PostNr), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@city", DbValueExtensions.AsDbValue(item.Bynavn), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@postaldistrict", DbValueExtensions.AsDbValue(item.Postdistrikt), SqlDbType.NVarChar));
                     command.ExecuteNonQuery();
                 }
 
@@ -61,7 +61,7 @@ namespace Projekt_HjemIS.Systems
             string query = "DELETE FROM Locations;";
             try
             {
-                connection.Open();
+                //connection.Open();
                 SqlCommand command = new SqlCommand(@query, connection);
                 command.ExecuteNonQuery();
             }
@@ -71,7 +71,7 @@ namespace Projekt_HjemIS.Systems
             }
             finally
             {
-                connection.Close();
+                //connection.Close();
             }
         }
 
@@ -91,6 +91,22 @@ namespace Projekt_HjemIS.Systems
                 SqlDbType = type
             };
             return param;
+        }
+    }
+    public static class DbValueExtensions
+    {
+        // Used to convert values coming from the db
+        public static T As<T>(this object source)
+        {
+            return source == null || source == DBNull.Value
+                ? default(T)
+                : (T)source;
+        }
+
+        // Used to convert values going to the db
+        public static object AsDbValue(this object source)
+        {
+            return source ?? DBNull.Value;
         }
     }
 }

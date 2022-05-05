@@ -17,7 +17,7 @@ namespace Projekt_HjemIS.Systems
 
         public RecordHandler()
         {
-            Task.Factory.StartNew(() => Pulse());
+            Pulse();
             GetRecords();
         }
 
@@ -41,8 +41,6 @@ namespace Projekt_HjemIS.Systems
         {
             Stopwatch sw = new Stopwatch();
             
-            // Clear database tables to make room for a new data extraction.
-            DatabaseHandler.ClearTables();
 
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
@@ -83,7 +81,7 @@ namespace Projekt_HjemIS.Systems
 
                     recordCount++;
                 }
-                //DatabaseHandler.AddData(locationsList);
+                DatabaseHandler.AddData(locationsList);
 
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();
@@ -156,11 +154,11 @@ namespace Projekt_HjemIS.Systems
             return rootPath;
         }
 
-        private async void Pulse()
+        private async void Pulse() 
         {
             while (true)
             {
-                //ReadRecordFromFile();
+                //await Task.Run(()=>GetRecords()); //GetRecords() delegated to separate thread, await-es for ikke at blokere calling-thread
                 await Task.Delay(10000);
             }
 
