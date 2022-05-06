@@ -1,10 +1,6 @@
-﻿using Projekt_HjemIS.Models;
-using Projekt_HjemIS.Systems;
+﻿using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +27,7 @@ namespace Projekt_HjemIS
             RecordHandler record = new RecordHandler();
 
         }
-
+        //
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
