@@ -18,8 +18,6 @@ namespace Projekt_HjemIS.Systems
 
         public RecordHandler()
         {
-            Pulse();
-            GetRecords();
             ObserveDropZone();
         }
 
@@ -85,7 +83,7 @@ namespace Projekt_HjemIS.Systems
                 }
                 DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
 
-                DatabaseHandler.AddBulkData(dt);
+                //DatabaseHandler.AddBulkData(dt);
 
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();
@@ -139,7 +137,7 @@ namespace Projekt_HjemIS.Systems
 
         // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
         FileSystemWatcher watcher = new FileSystemWatcher();
-        
+
         /// <summary>
         /// Observes a folder for a new file.
         /// </summary>
@@ -170,14 +168,5 @@ namespace Projekt_HjemIS.Systems
             return rootPath;
         }
 
-        private async void Pulse()
-        {
-            while (true)
-            {
-                //await Task.Run(()=>GetRecords()); //GetRecords() delegated to separate thread, await-es for ikke at blokere calling-thread
-                await Task.Delay(1000);
-            }
-
-        }
     }
 }
