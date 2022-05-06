@@ -39,12 +39,12 @@ namespace Projekt_HjemIS
         {
             //emulator.
             string test = rUsername.Text;
-            MessageBox.Show(Database(test));
+            MessageBox.Show(RequestPass(test));
         }
-        public string Database(string fUsername)
+        public string RequestPass(string fUsername)
         {
             SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
-            User pUser = new User();
+            User fUser = new User();
             try
             {
                 if (connString.State == ConnectionState.Closed)
@@ -58,7 +58,7 @@ namespace Projekt_HjemIS
                     {
                         while(sqlReader.Read())
                         {
-                            pUser.fPassword = sqlReader["password"].ToString();
+                            fUser.fPassword = sqlReader["password"].ToString();
                         }
                     }
                 }
@@ -71,7 +71,28 @@ namespace Projekt_HjemIS
             {
                 connString.Close();
             }
-            return pUser.fPassword;
+            return fUser.fPassword;
+        }
+
+        public string ToFile(string f)
+        {
+            string fileName = @"Emulator\test.txt";
+            try
+            {
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+            }
+            catch
+            {
+                
+            }
+            finally
+            {
+
+            }
+            return f;
         }
     }
 }
