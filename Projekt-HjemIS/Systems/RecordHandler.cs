@@ -133,6 +133,7 @@ namespace Projekt_HjemIS.Systems
                 default:
                     break;
             }
+
         }
 
         // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
