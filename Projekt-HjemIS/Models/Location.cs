@@ -20,18 +20,5 @@ namespace Projekt_HjemIS.Models
 
         }
 
-        public Location(string postnr, string bynavn, string postdistrikt, string vejkode, string kommunekode)
-        {
-            PostalCode = postnr;
-            City = bynavn;
-            PostalDistrict = postdistrikt;
-            StreetCode = vejkode;
-            CountyCode = kommunekode;
-        }
-        public Location(string vejkode, string kommunekode)
-        {
-            StreetCode = vejkode;
-            CountyCode = kommunekode;
-        }
     }
 }

@@ -83,7 +83,9 @@ namespace Projekt_HjemIS.Systems
 
                     recordCount++;
                 }
-                //DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
+                DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
+
+                DatabaseHandler.AddBulkData(dt);
 
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();

@@ -60,13 +60,6 @@ namespace Projekt_HjemIS.Systems
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
                 bulkCopy.DestinationTableName = "Locations";
-                bulkCopy.ColumnMappings.Add("StreetCode", "StreetCode");
-                bulkCopy.ColumnMappings.Add("CountyCode", "CountyCode");
-                bulkCopy.ColumnMappings.Add("Street", "Street");
-                bulkCopy.ColumnMappings.Add("PostalCode", "PostalCode");
-                bulkCopy.ColumnMappings.Add("City", "City");
-                bulkCopy.ColumnMappings.Add("PostalDistrict", "PostalDistrict");
-
                 try
                 {
                     bulkCopy.WriteToServer(dt);
@@ -90,17 +83,12 @@ namespace Projekt_HjemIS.Systems
             string query = "DELETE FROM Locations;";
             try
             {
-                //connection.Open();
                 SqlCommand command = new SqlCommand(@query, connection);
                 command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-
-            }
-            finally
-            {
-                //connection.Close();
+                Debug.WriteLine(ex.Message);
             }
         }
 
