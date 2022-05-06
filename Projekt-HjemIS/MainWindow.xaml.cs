@@ -1,5 +1,4 @@
-﻿using Projekt_HjemIS.Models;
-using Projekt_HjemIS.Systems;
+﻿using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
