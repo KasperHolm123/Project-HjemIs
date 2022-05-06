@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Projekt_HjemIS"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        
     </Application.Resources>
 </Application>

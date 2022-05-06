@@ -13,5 +13,6 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class App : Application
     {
+
     }
 }
