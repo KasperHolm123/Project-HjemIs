@@ -1,6 +1,9 @@
-﻿using Projekt_HjemIS.Systems;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +28,8 @@ namespace Projekt_HjemIS
         {
             InitializeComponent();
             RecordHandler record = new RecordHandler();
-            record.SplitRecord(RecordType.AKTVEJ);
+
         }
+        
     }
 }
