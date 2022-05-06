@@ -49,7 +49,7 @@ namespace Projekt_HjemIS.Systems
 
             string currentLine = string.Empty;
             List<Location> locationsList = new List<Location>();
-            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\full.txt"))
+            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\*.txt"))
             {
                 sw.Start();
 

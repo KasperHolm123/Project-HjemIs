@@ -79,7 +79,7 @@
     <Compile Include="ForgotPass.xaml.cs">
       <DependentUpon>ForgotPass.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
+    <Compile Include="Models\User.cs" />
     <Page Include="Create.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Emulator\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

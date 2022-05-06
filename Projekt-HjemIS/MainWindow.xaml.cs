@@ -1,4 +1,5 @@
-﻿using Projekt_HjemIS.Systems;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -33,7 +34,7 @@ namespace Projekt_HjemIS
         //
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
+            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
             try
             {

@@ -28,7 +28,7 @@ namespace Projekt_HjemIS
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
+            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
             connString.Open();
             try
             {
