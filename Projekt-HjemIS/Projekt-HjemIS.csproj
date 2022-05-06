@@ -92,6 +92,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Systems\DatabaseHandler.cs" />
+    <Compile Include="Systems\ListToDataTableConverter.cs" />
+    <Compile Include="Systems\RecordDataReader.cs" />
+    <Compile Include="Systems\RecordHandler.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

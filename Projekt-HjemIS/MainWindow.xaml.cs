@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -26,6 +28,8 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
+            RecordHandler record = new RecordHandler();
+
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
