@@ -20,6 +20,7 @@ namespace Projekt_HjemIS.Systems
         {
             Pulse();
             GetRecords();
+            ObserveDropZone();
         }
 
         // Holds a single record.
@@ -82,14 +83,7 @@ namespace Projekt_HjemIS.Systems
 
                     recordCount++;
                 }
-                ListToDataTableConverter converter = new ListToDataTableConverter();
-
-                DataTable dt = converter.ToDataTable(locationsList);
-                
-
-                //DatabaseHandler.AddBulkData(dt); // DatabaseHandler mangler refactoring.
-
-                //DatabaseHandler.AddData(locationsList);
+                //DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
 
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();
@@ -125,20 +119,40 @@ namespace Projekt_HjemIS.Systems
             switch (record[0])
             {
                 case "001":
-                    loc.Kommunekode = record[1]; //kommunekode
-                    loc.Vejkode = record[2]; //vejkode
-                    loc.VejNavn = record[10]; // 9 eller 10 er vejnavn
+                    loc.CountyCode = record[1]; //kommunekode
+                    loc.StreetCode = record[2]; //vejkode
+                    loc.Street = record[10]; // 9 eller 10 er vejnavn
                     break;
                 case "003":
-                    loc.Bynavn = record[7];
+                    loc.City = record[7];
                     break;
                 case "004":
-                    loc.PostNr = record[7];
-                    loc.Postdistrikt = record[8];
+                    loc.PostalCode = record[7];
+                    loc.PostalDistrict = record[8];
                     break;
                 default:
                     break;
             }
+        }
+
+        // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
+        FileSystemWatcher watcher = new FileSystemWatcher();
+        
+        /// <summary>
+        /// Observes a folder for a new file.
+        /// </summary>
+        private void ObserveDropZone()
+        {
+            watcher.Path = $@"{GetCurrentDirectory()}\dropzone";
+            watcher.Filter = "*.txt";
+            watcher.Created += new FileSystemEventHandler(Watcher_Created);
+            watcher.IncludeSubdirectories = true;
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        {
+            Debug.WriteLine($"new file: {e.FullPath}");
         }
 
         /// <summary>
@@ -159,7 +173,7 @@ namespace Projekt_HjemIS.Systems
             while (true)
             {
                 //await Task.Run(()=>GetRecords()); //GetRecords() delegated to separate thread, await-es for ikke at blokere calling-thread
-                await Task.Delay(10000);
+                await Task.Delay(1000);
             }
 
         }

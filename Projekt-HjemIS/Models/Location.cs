@@ -8,12 +8,12 @@ namespace Projekt_HjemIS.Models
 {
     public class Location
     {
-        public string PostNr { get; set; }
-        public string Bynavn { get; set; }
-        public string Postdistrikt { get; set; }
-        public string Vejkode { get; set; }
-        public string Kommunekode { get; set; }
-        public string VejNavn { get; set; }
+        public string PostalCode { get; set; }
+        public string City { get; set; }
+        public string PostalDistrict { get; set; }
+        public string StreetCode { get; set; }
+        public string CountyCode { get; set; }
+        public string Street { get; set; }
         
         public Location()
         {
@@ -22,16 +22,16 @@ namespace Projekt_HjemIS.Models
 
         public Location(string postnr, string bynavn, string postdistrikt, string vejkode, string kommunekode)
         {
-            PostNr = postnr;
-            Bynavn = bynavn;
-            Postdistrikt = postdistrikt;
-            Vejkode = vejkode;
-            Kommunekode = kommunekode;
+            PostalCode = postnr;
+            City = bynavn;
+            PostalDistrict = postdistrikt;
+            StreetCode = vejkode;
+            CountyCode = kommunekode;
         }
         public Location(string vejkode, string kommunekode)
         {
-            Vejkode = vejkode;
-            Kommunekode = kommunekode;
+            StreetCode = vejkode;
+            CountyCode = kommunekode;
         }
     }
 }

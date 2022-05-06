@@ -33,12 +33,12 @@ namespace Projekt_HjemIS.Systems
                 foreach (var item in locList)
                 {
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.Add(CreateParameter("@streetcode", item.Vejkode, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@countycode", item.Kommunekode, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@street", DbValueExtensions.AsDbValue(item.VejNavn), SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@postalcode", DbValueExtensions.AsDbValue(item.PostNr), SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@city", DbValueExtensions.AsDbValue(item.Bynavn), SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@postaldistrict", DbValueExtensions.AsDbValue(item.Postdistrikt), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@streetcode", item.StreetCode, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@countycode", item.CountyCode, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@street", DbValueExtensions.AsDbValue(item.Street), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@postalcode", DbValueExtensions.AsDbValue(item.PostalCode), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@city", DbValueExtensions.AsDbValue(item.City), SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@postaldistrict", DbValueExtensions.AsDbValue(item.PostalDistrict), SqlDbType.NVarChar));
                     command.ExecuteNonQuery();
                 }
 
@@ -57,18 +57,15 @@ namespace Projekt_HjemIS.Systems
         {
             connection.Open();
             ClearTables();
-            string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict)" +
-                               "VALUES (@streetcode, @countycode, @street, @postalcode, @city, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
-
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
                 bulkCopy.DestinationTableName = "Locations";
-                bulkCopy.ColumnMappings.Add("Vejkode", "StreetCode");
-                bulkCopy.ColumnMappings.Add("Kommunekode", "CountyCode");
-                bulkCopy.ColumnMappings.Add("VejNavn", "Street");
-                bulkCopy.ColumnMappings.Add("PostNr", "PostalCode");
-                bulkCopy.ColumnMappings.Add("Bynavn", "City");
-                bulkCopy.ColumnMappings.Add("Postdistrikt", "PostalDistrict");
+                bulkCopy.ColumnMappings.Add("StreetCode", "StreetCode");
+                bulkCopy.ColumnMappings.Add("CountyCode", "CountyCode");
+                bulkCopy.ColumnMappings.Add("Street", "Street");
+                bulkCopy.ColumnMappings.Add("PostalCode", "PostalCode");
+                bulkCopy.ColumnMappings.Add("City", "City");
+                bulkCopy.ColumnMappings.Add("PostalDistrict", "PostalDistrict");
 
                 try
                 {

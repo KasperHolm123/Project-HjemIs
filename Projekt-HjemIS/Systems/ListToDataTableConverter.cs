@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
-    public class ListToDataTableConverter
+    public static class ListToDataTableConverter
     {
-        public DataTable ToDataTable<T>(List<T> items)
+        public static DataTable ToDataTable<T>(List<T> items)
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
 

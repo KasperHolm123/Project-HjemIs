@@ -3,6 +3,7 @@ using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,24 +28,8 @@ namespace Projekt_HjemIS
         {
             InitializeComponent();
             RecordHandler record = new RecordHandler();
-            TestTypeof temp = new TestTypeof();
-        }
-    }
 
-    /// <summary>
-    /// Klasse til at vise hvordan typeof keywordet virker i forhold til ListTODataTableConverer klassen.
-    /// </summary>
-    public class TestTypeof
-    {
-        List<Location> loc = new List<Location>();
-        public TestTypeof()
-        {
-            tempmethod(loc);
         }
-
-        public void tempmethod<T>(List<T> loc)
-        {
-            Debug.WriteLine("\n" + typeof(T) + "\n");
-        }
+        
     }
 }
