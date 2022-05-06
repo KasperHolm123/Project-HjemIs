@@ -31,7 +31,7 @@ namespace Projekt_HjemIS
             RecordHandler record = new RecordHandler();
 
         }
-
+        //
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
