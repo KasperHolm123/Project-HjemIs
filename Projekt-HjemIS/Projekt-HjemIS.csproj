@@ -79,6 +79,10 @@
     <Compile Include="ForgotPass.xaml.cs">
       <DependentUpon>ForgotPass.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="User.cs" />
     <Page Include="Create.xaml">
       <SubType>Designer</SubType>
