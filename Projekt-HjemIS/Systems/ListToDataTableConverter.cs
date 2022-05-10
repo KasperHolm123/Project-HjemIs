@@ -15,7 +15,7 @@ namespace Projekt_HjemIS.Systems
             DataTable dataTable = new DataTable(typeof(T).Name);
 
             // typeof(T) works by checking the type of the passed-in List<T>
-            PropertyInfo[] Props = typeof(T).GetProperties(); // Get all the properties
+            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance); // Get all the properties
 
             foreach (PropertyInfo prop in Props)
             {
