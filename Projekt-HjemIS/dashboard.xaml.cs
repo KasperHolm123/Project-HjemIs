@@ -25,5 +25,20 @@ namespace Projekt_HjemIS
             InitializeComponent();
             lablUsername.Content = "Welcome " + User.Username.ToString();
         }
+
+        private void _Offers_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void _Email_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void _Home_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
