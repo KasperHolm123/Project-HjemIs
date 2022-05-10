@@ -91,6 +91,10 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
+        /// <summary>
+        /// Get all Customers from database and return them as an ObservableCollection.
+        /// </summary>
+        /// <returns></returns>
         public static ObservableCollection<Customer> GetCustomers()
         {
             ObservableCollection<Customer> InternalCustomers = new ObservableCollection<Customer>();
