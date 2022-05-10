@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
-    /// Interaction logic for OffersViews.xaml
+    /// Interaction logic for OfferViews.xaml
     /// </summary>
-    public partial class OffersViews : Window
+    public partial class OfferViews : UserControl
     {
-        public OffersViews()
+        public OfferViews()
         {
             InitializeComponent();
         }

@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
-    /// Interaction logic for MailViews.xaml
+    /// Interaction logic for EmailViews.xaml
     /// </summary>
-    public partial class MailViews : Window
+    public partial class EmailViews : UserControl
     {
-        public MailViews()
+        public EmailViews()
         {
             InitializeComponent();
         }
