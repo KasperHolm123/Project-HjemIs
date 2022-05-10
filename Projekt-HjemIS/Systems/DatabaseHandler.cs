@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -29,7 +30,7 @@ namespace Projekt_HjemIS.Systems
                 ClearTables();
                 string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict)" +
                                "VALUES (@streetcode, @countycode, @street, @postalcode, @city, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
-                
+
                 foreach (var item in locList)
                 {
                     SqlCommand command = new SqlCommand(query, connection);
@@ -60,12 +61,15 @@ namespace Projekt_HjemIS.Systems
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
                 bulkCopy.DestinationTableName = "Locations";
-                bulkCopy.ColumnMappings.Add("StreetCode", "StreetCode");
-                bulkCopy.ColumnMappings.Add("CountyCode", "CountyCode");
-                bulkCopy.ColumnMappings.Add("Street", "Street");
-                bulkCopy.ColumnMappings.Add("PostalCode", "PostalCode");
-                bulkCopy.ColumnMappings.Add("City", "City");
-                bulkCopy.ColumnMappings.Add("PostalDistrict", "PostalDistrict");
+                // Using the nameof keyword becuase Customer models a database table with the same name
+                // This makes it so we don't accidentally make a typo and spend 5 hours
+                // trying to figure out why it doesn't work.
+                bulkCopy.ColumnMappings.Add($"{nameof(Location.StreetCode)}", $"{nameof(Location.StreetCode)}");
+                bulkCopy.ColumnMappings.Add($"{nameof(Location.CountyCode)}", $"{nameof(Location.CountyCode)}");
+                bulkCopy.ColumnMappings.Add($"{nameof(Location.Street)}", $"{nameof(Location.Street)}");
+                bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalCode)}", $"{nameof(Location.PostalCode)}");
+                bulkCopy.ColumnMappings.Add($"{nameof(Location.City)}", $"{nameof(Location.City)}");
+                bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalDistrict)}", $"{nameof(Location.PostalDistrict)}");
 
                 try
                 {
@@ -81,6 +85,42 @@ namespace Projekt_HjemIS.Systems
                 }
             }
         }
+
+        public static ObservableCollection<Customer> GetCustomers()
+        {
+            ObservableCollection<Customer> InternalCustomers = new ObservableCollection<Customer>();
+            try
+            {
+                connection.Open();
+                string query = $@"SELECT * FROM {nameof(Customer)}";
+                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        
+                        InternalCustomers.Add(new Customer(
+                            (string)reader[$"{nameof(Customer.StreetCode)}"],
+                            (string)reader[$"{nameof(Customer.CountyCode)}"],
+                            (int)reader[$"{nameof(Customer.PhoneNumber)}"],
+                            (string)reader[$"{nameof(Customer.StreetCode)}"],
+                            (string)reader[$"{nameof(Customer.CountyCode)}"]
+                            ));
+                    }
+                }
+                return InternalCustomers;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Clear database tables to make room for new data.

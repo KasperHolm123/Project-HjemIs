@@ -49,6 +49,7 @@ namespace Projekt_HjemIS.Systems
         private void GetReceivers()
         {
             // Hent data af modtagerne af sendte beskeder i gennem DatabaseHandler.
+            InternalCustomers = DatabaseHandler.GetCustomers();
         }
 
         /// <summary>
