@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Projekt_HjemIS.Models;
@@ -61,15 +62,19 @@ namespace Projekt_HjemIS.Systems
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
                 bulkCopy.DestinationTableName = "Locations";
-                // Using the nameof keyword becuase Customer models a database table with the same name
-                // This makes it so we don't accidentally make a typo and spend 5 hours
-                // trying to figure out why it doesn't work.
-                bulkCopy.ColumnMappings.Add($"{nameof(Location.StreetCode)}", $"{nameof(Location.StreetCode)}");
-                bulkCopy.ColumnMappings.Add($"{nameof(Location.CountyCode)}", $"{nameof(Location.CountyCode)}");
-                bulkCopy.ColumnMappings.Add($"{nameof(Location.Street)}", $"{nameof(Location.Street)}");
-                bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalCode)}", $"{nameof(Location.PostalCode)}");
-                bulkCopy.ColumnMappings.Add($"{nameof(Location.City)}", $"{nameof(Location.City)}");
-                bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalDistrict)}", $"{nameof(Location.PostalDistrict)}");
+                
+                PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public);
+
+                foreach (PropertyInfo property in properties)
+                {
+                    bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
+                }
+                //bulkCopy.ColumnMappings.Add($"{nameof(Location.StreetCode)}", $"{nameof(Location.StreetCode)}");
+                //bulkCopy.ColumnMappings.Add($"{nameof(Location.CountyCode)}", $"{nameof(Location.CountyCode)}");
+                //bulkCopy.ColumnMappings.Add($"{nameof(Location.Street)}", $"{nameof(Location.Street)}");
+                //bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalCode)}", $"{nameof(Location.PostalCode)}");
+                //bulkCopy.ColumnMappings.Add($"{nameof(Location.City)}", $"{nameof(Location.City)}");
+                //bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalDistrict)}", $"{nameof(Location.PostalDistrict)}");
 
                 try
                 {
@@ -98,7 +103,9 @@ namespace Projekt_HjemIS.Systems
                 {
                     while (reader.Read())
                     {
-                        
+                        // Using the nameof keyword becuase Customer models a database table with the same name
+                        // This makes it so we don't accidentally make a typo and spend 5 hours
+                        // trying to figure out why it doesn't work.
                         InternalCustomers.Add(new Customer(
                             (string)reader[$"{nameof(Customer.StreetCode)}"],
                             (string)reader[$"{nameof(Customer.CountyCode)}"],
