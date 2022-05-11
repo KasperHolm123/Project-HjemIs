@@ -44,22 +44,26 @@ namespace Projekt_HjemIS.Systems
         {
             Stopwatch sw = new Stopwatch();
 
-
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
 
             Location currentLocation = new Location();
-
-            string currentLine = string.Empty;
+            Location prevLocation = new Location();
             List<Location> locationsList = new List<Location>();
-            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\*.txt"))
+
+
+            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\tempRecords.txt"))
             {
+                string currentLine = string.Empty;
                 sw.Start();
+
                 // Read each line from current file.
                 while ((currentLine = sr.ReadLine()) != null)
                 {
                     BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict["001"]));
-                    locationsList.Add(currentLocation);
+                    if (currentLocation.StreetCode != prevLocation.StreetCode && currentLine.Substring(0, 3) != "000")
+                        locationsList.Add(currentLocation);
+                    prevLocation = currentLocation;
                     currentLocation = new Location();
 
                     // Keep count of handled records and total records
@@ -73,9 +77,7 @@ namespace Projekt_HjemIS.Systems
                     recordCount++;
                 }
                 DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
-
                 DatabaseHandler.AddBulkData(dt);
-
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();
             }

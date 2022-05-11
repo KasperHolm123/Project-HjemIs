@@ -1,0 +1,95 @@
+00101010004København           Abel Cathrines Gade 002 028 L1654København V         
+00101010004København           Abel Cathrines Gade 001 033 U1654København V         
+00101010005København           Bygården            002 008 L2700Brønshøj            
+00101010006København           Aberdeengade        002 004 L2150Nordhavn            
+00101010008København           Abildgaardsgade     004 048 L2100København Ø         
+00101010008København           Abildgaardsgade     003 049 U2100København Ø         
+00101010012København           Abildhøj            002 010 L2700Brønshøj            
+00101010012København           Abildhøj            001 003 U2700Brønshøj            
+00101010013København           Østre Landsrets Pl. 001 001 U2150Nordhavn            
+00101010014København           Abildvang           004 154 L2700Brønshøj            
+00101010016København           Abrikosvej          002 002 L2400København NV        
+00101010016København           Abrikosvej          001 009 U2400København NV        
+00101010020København           Absalonsgade        008 048 L1658København V         
+00101010020København           Absalonsgade        001 043 U1658København V         
+00101010021København           Morten Grunwalds Pl.001 001 U2100København Ø         
+00101010024København           Adelgade            006 108 L1304København K         
+00101010024København           Adelgade            001 117 U1304København K         
+00101010028København           Admiralgade         020 028 L1066København K         
+00101010028København           Admiralgade         015 031 U1066København K         
+00101010032København           Adriansvej          004 022 L2300København S         
+00101010032København           Adriansvej          003 021 U2300København S         
+00101010036København           Agerbo              014A024 L2300København S         
+00101010036København           Agerbo              011 021 U2300København S         
+00101010038København           Agerhønestien       002 082 L2770Kastrup             
+00101010038København           Agerhønestien       001 075 U2770Kastrup             
+00101010040København           Agerlandsvej        006 058 L2300København S         
+00101010040København           Agerlandsvej        001 057 U2300København S         
+00101010041København           Mimers Plads        002 010 L2200København N         
+00101010044København           Aggersborggade      002 010 L2100København Ø         
+00101010044København           Aggersborggade      001 009 U2100København Ø         
+00101010048København           Aggersvoldvej       002 022 L2700Brønshøj            
+00101010048København           Aggersvoldvej       001A025 U2700Brønshøj            
+00101010052København           Aggervej            002 018 L2720Vanløse             
+00101010052København           Aggervej            003 015 U2720Vanløse             
+00101010054København           Agnes Henningsens V 002 008 L2200København N         
+00101010054København           Agnes Henningsens V 001 009 U2200København N         
+00101010056København           Agnetevej           004 028 L2300København S         
+00101010056København           Agnetevej           001 021 U2300København S         
+00101010060København           Ahlefeldtsgade      016 026 L1359København K         
+00101010060København           Ahlefeldtsgade      021 029 U1359København K         
+00101010064København           Ahlmannsgade        002 006 L2200København N         
+00101010064København           Ahlmannsgade        001 003AU2200København N         
+00101010068København           Ahornsgade          004 024 L2200København N         
+00101010068København           Ahornsgade          001 025 U2200København N         
+00101010072København           Ahrenkildes Allé    002 020 L2300København S         
+00101010072København           Ahrenkildes Allé    001 019 U2300København S         
+00101010075København           Aksel Sandemoses Pl 004 004 L2500Valby               
+00101010076København           Albaniensgade       002 008 L2300København S         
+00101010076København           Albaniensgade       001 007 U2300København S         
+00101010078København           Albert Schweitzers V002 088 L2450København SV        
+00101010080København           Aldersrogade        002 008BL2100København Ø         
+00101010080København           Aldersrogade        001 017 U2100København Ø         
+00101010086København           Alléen              002 006 L2200København N         
+00101010086København           Alléen              001 005 U2200København N         
+00101010088København           Allersgade          002 018 L2200København N         
+00101010088København           Allersgade          001 009BU2200København N         
+00101010089København           Alexandriagade      002 022 L2150Nordhavn            
+00101010089København           Alexandriagade      001 001 U2150Nordhavn            
+00101010090København           Alliancevej         002 036 L2450København SV        
+00101010090København           Alliancevej         001 043 U2450København SV        
+00101010092København           Alperosevej         004 008 L2300København S         
+00101010092København           Alperosevej         001 011 U2300København S         
+00101010096København           Alsgade             002 024 L1764København V         
+00101010096København           Alsgade             001 015 U1764København V         
+00101010100København           Alstedvej           004 018 L2700Brønshøj            
+00101010100København           Alstedvej           001 017 U2700Brønshøj            
+00101010102København           Alva Myrdals Plads  001 003 U2450København SV        
+00101010104København           Amager Boulevard    002 134 L2300København S         
+00101010104København           Amager Boulevard    101 133 U2300København S         
+00101010108København           Amagerbrogade       002 300 L2300København S         
+00101010108København           Amagerbrogade       005 309 U2300København S         
+00101010110København           Amagerbro Torv      004 004 L2300København S         
+00101010110København           Amagerbro Torv      001 023 U2300København S         
+00101010112København           Amagerfælledvej     004 182 L2300København S         
+00101010112København           Amagerfælledvej     001 203 U2300København S         
+00101010116København           Amagergade          002 006 L1423København K         
+00101010116København           Amagergade          001A017 U1423København K         
+00101010120København           Amager Strandvej    016 246 L2300København S         
+00101010120København           Amager Strandvej    001 275 U2300København S         
+00101010122København           Am. Str. Promenaden 006 008 L2300København S         
+00101010122København           Am. Str. Promenaden 001 003 U2300København S         
+00101010124København           Amagertorv          002 024 L1160København K         
+00101010124København           Amagertorv          001 033 U1160København K         
+00101010128København           Amaliegade          004 048 L1256København K         
+00101010128København           Amaliegade          003 049AU1256København K         
+00101010132København           Amalienborg Slotspl 002 008 L1257København K         
+00101010132København           Amalienborg Slotspl 001 007KU1257København K         
+00101010136København           Amalie Skrams Allé  002 036 L2500Valby               
+00101010136København           Amalie Skrams Allé  001 039 U2500Valby               
+00101010139København           Amerika Plads       004 038 L2100København Ø         
+00101010139København           Amerika Plads       001 037 U2100København Ø         
+00101010140København           Amerikavej          002 024 L1756København V         
+00101010140København           Amerikavej          001 021 U1756København V         
+00101010144København           Amsterdamvej        002 040 L2300København S         
+00101010144København           Amsterdamvej        001 033 U2300København S         
