@@ -63,7 +63,7 @@ namespace Projekt_HjemIS.Systems
             {
                 bulkCopy.DestinationTableName = "Locations";
                 
-                PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public);
+                PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
                 foreach (PropertyInfo property in properties)
                 {

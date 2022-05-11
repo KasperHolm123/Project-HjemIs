@@ -84,7 +84,7 @@ namespace Projekt_HjemIS.Systems
                 }
                 DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
 
-                //DatabaseHandler.AddBulkData(dt);
+                DatabaseHandler.AddBulkData(dt);
 
                 Debug.WriteLine(sw.Elapsed);
                 sw.Stop();
