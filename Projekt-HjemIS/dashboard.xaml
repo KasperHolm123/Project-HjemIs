@@ -80,7 +80,7 @@
         </Grid>
 
         <!--Grid Content-->
-        <Grid x:Name="GridContent" VerticalAlignment="Stretch" Grid.Column="1"/>
+        <Grid x:Name="GridContent" VerticalAlignment="Stretch" Grid.Column="1" Height="720" Width="1090"/>
 
     </Grid>
 </Window>
