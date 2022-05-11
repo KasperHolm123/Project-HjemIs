@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -85,6 +85,19 @@
     <Compile Include="Systems\Emulator.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Views\EmailViews.xaml.cs">
+      <DependentUpon>EmailViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HomeViews.xaml.cs">
+      <DependentUpon>HomeViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OfferViews.xaml.cs">
+      <DependentUpon>OfferViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UsersViews.xaml.cs">
+      <DependentUpon>UsersViews.xaml</DependentUpon>
+    </Compile>
     <Page Include="Create.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,6 +130,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\EmailViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HomeViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OfferViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UsersViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -150,6 +179,21 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Emulator\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\envelope.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\sign-out.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

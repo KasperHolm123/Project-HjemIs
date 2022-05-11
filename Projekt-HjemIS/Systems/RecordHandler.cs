@@ -50,7 +50,7 @@ namespace Projekt_HjemIS.Systems
 
             string currentLine = string.Empty;
             List<Location> locationsList = new List<Location>();
-            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\full.txt"))
+            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\*.txt"))
             {
                 sw.Start();
 
@@ -134,6 +134,7 @@ namespace Projekt_HjemIS.Systems
                 default:
                     break;
             }
+
         }
 
         // Watcher needs to be declared at the global scope to insure that it won't be disposed of.

@@ -36,7 +36,7 @@ namespace Projekt_HjemIS
         //
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
+            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
             try
             {

@@ -5,17 +5,82 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Projekt_HjemIS"
         mc:Ignorable="d"
-        Title="dashboard" Height="450" Width="800">
-    <Grid>
+        Title="dashboard" Height="750" Width="1200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        
+    </Window.Resources>
+    <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10.5*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="10*"/>
-        </Grid.RowDefinitions>
-        <Label x:Name="lablUsername" FontSize="15" Height="30" Width="150" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+        <!--Logged in UserName-->
+        <Label x:Name="lablUsername" FontSize="15" Height="30" Width="150" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+
+        <Grid Background="Gold" x:Name="GridMenu">
+            <StackPanel>
+                <Menu Background="{x:Null}">
+
+                    <!--Home-->
+                    <MenuItem  Name="_Home" FontSize="16" Foreground="White" Click="_Home_Click" Height="70" Width="80" Margin="10,10,10,10">
+                        <MenuItem.Background>
+                            <ImageBrush/>
+                        </MenuItem.Background>
+                        <MenuItem.Icon>
+                            <Image Source="/Pictures/home.png" Margin="0,-7,-55,-7" VerticalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--Mail-->
+                    <MenuItem Name="_Email" FontSize="16" Foreground="White" Click="_Email_Click" Height="70" Width="80" Margin="10,10,10,10">
+                        <MenuItem.Background>
+                            <ImageBrush/>
+                        </MenuItem.Background>
+                        <MenuItem.Icon>
+                            <Image Source="/Pictures/envelope.png" Margin="0,-7,-55,-14"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--Offers-->
+                    <MenuItem Name="_Offers" FontSize="16" Foreground="White" Click="_Offers_Click" Height="70" Width="80" Margin="10,10,10,10">
+                        <MenuItem.Background>
+                            <ImageBrush/>
+                        </MenuItem.Background>
+                        <MenuItem.Icon>
+                            <Image Source="/Pictures/plus.png" Margin="0,-7,-55,-14"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--Users-->
+                    <MenuItem Name="_Users" FontSize="16" Foreground="White" Click="_Users_Click" Height="70" Width="80" Margin="10,10,10,10">
+                        <MenuItem.Background>
+                            <ImageBrush/>
+                        </MenuItem.Background>
+                        <MenuItem.Icon>
+                            <Image Source="/Pictures/user.png" Margin="0,-7,-55,-14"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+
+            <!--Log ud stackpanel-->
+            <StackPanel VerticalAlignment="Bottom">
+                <Menu Background="{x:Null}">
+                    <MenuItem x:Name="_SignOut" FontSize="16" Foreground="White" Click="_SignOut_Click" Height="70" Width="80" Margin="10,10,10,10">
+                        <MenuItem.Background>
+                            <ImageBrush/>
+                        </MenuItem.Background>
+                        <MenuItem.Icon>
+                            <Image Source="/Pictures/sign-out.png" Margin="0,-7,-55,-14"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+        </Grid>
+
+        <!--Grid Content-->
+        <Grid x:Name="GridContent" VerticalAlignment="Stretch" Grid.Column="1"/>
 
     </Grid>
 </Window>

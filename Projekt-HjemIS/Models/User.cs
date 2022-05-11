@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Projekt_HjemIS
+namespace Projekt_HjemIS.Models
 {
     public class User
     {

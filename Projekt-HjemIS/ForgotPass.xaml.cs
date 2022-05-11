@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projekt_HjemIS.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -43,7 +44,7 @@ namespace Projekt_HjemIS
         }
         public string RequestPass(string fUsername)
         {
-            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["path"].ConnectionString);
+            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
             User fUser = new User();
             try
             {

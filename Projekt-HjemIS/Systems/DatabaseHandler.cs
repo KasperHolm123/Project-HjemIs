@@ -61,21 +61,13 @@ namespace Projekt_HjemIS.Systems
             ClearTables();
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
-                bulkCopy.DestinationTableName = "Locations";
-                
+                bulkCopy.DestinationTableName = "Locations";                
                 PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
                 foreach (PropertyInfo property in properties)
                 {
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
                 }
-                //bulkCopy.ColumnMappings.Add($"{nameof(Location.StreetCode)}", $"{nameof(Location.StreetCode)}");
-                //bulkCopy.ColumnMappings.Add($"{nameof(Location.CountyCode)}", $"{nameof(Location.CountyCode)}");
-                //bulkCopy.ColumnMappings.Add($"{nameof(Location.Street)}", $"{nameof(Location.Street)}");
-                //bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalCode)}", $"{nameof(Location.PostalCode)}");
-                //bulkCopy.ColumnMappings.Add($"{nameof(Location.City)}", $"{nameof(Location.City)}");
-                //bulkCopy.ColumnMappings.Add($"{nameof(Location.PostalDistrict)}", $"{nameof(Location.PostalDistrict)}");
-
+              
                 try
                 {
                     bulkCopy.WriteToServer(dt);
