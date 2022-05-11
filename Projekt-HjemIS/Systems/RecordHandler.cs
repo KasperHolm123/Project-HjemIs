@@ -60,10 +60,26 @@ namespace Projekt_HjemIS.Systems
                 // Read each line from current file.
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict["001"]));
-                    if (currentLocation.StreetCode != prevLocation.StreetCode && currentLine.Substring(0, 3) != "000")
-                        locationsList.Add(currentLocation);
+                    if (RecordTypeDict.ContainsKey(currentLine.Substring(0, 3)))
+                        BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict["001"]));
+                    switch (currentLine.Substring(0, 3))
+                    {
+                        case "001":
+                            if (prevLocation.StreetCode != currentLocation.StreetCode)
+                                locationsList.Add(currentLocation);
+                            break;
+                        case "000":
+                            break;
+                        case "999":
+                            break;
+                    }
+                    //if (currentLocation.StreetCode != prevLocation.StreetCode && currentLine.Substring(0, 3) != "000")
+                    //    locationsList.Add(currentLocation);
                     prevLocation = currentLocation;
+                    if (currentLocation.StreetCode == null || currentLocation.StreetCode == "" || currentLocation.StreetCode == "    ")
+                    {
+                        Debug.WriteLine(currentLocation.Street);
+                    }
                     currentLocation = new Location();
 
                     // Keep count of handled records and total records
