@@ -36,9 +36,7 @@ namespace Projekt_HjemIS.Systems
                         temp += currentLine;
 
                     if (currentLine == "____END OF MESSAGE____")
-                    {
                         InternalMessages.Add(temp); // by value or by reference? testing..
-                    }
                 }
             }
         }

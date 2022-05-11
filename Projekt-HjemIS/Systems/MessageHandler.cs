@@ -15,39 +15,38 @@ namespace Projekt_HjemIS.Systems
 
         private static string _rootPath = $@"\tempMessages\InternalMessages.txt";
 
-        private static void GetCustomers()
+        public static void GetCustomers()
         {
             DatabaseHandler.GetCustomers();
         }
 
-        public static void SendMessages(List<Customer> recipients, string subject, List<bool> messageType, string body, List<Product> offers = null)
+        public static void SendMessages(Message message)
         {
             string products = string.Empty;
-            foreach (Product item in offers)
-            {
+            foreach (Product item in message.Offers)
                 products += $"{item.Name}, ";
-            }
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
-                if (offers != null)
-                {
-                    sw.WriteLine(
-                        $"To:{PrintItemDescription(recipients)}      | Offers:{products}\n" +
-                        $"Subject:{subject}    | SMS|Mail\n" +
-                        $"{body}\n" +
-                        $"{PrintItemDescription(offers)}\n" +
-                        "____END OF MESSAGE____");
-                }
+                sw.WriteLine(FormatMessage(message, products));
             }
         }
 
-        private static string PrintItemDescription<T>(List<T> items)
+        private static string FormatMessage(Message message, string products = null)
+        {
+            string internalMessage = 
+                $"To:{PrintMessageDescription(message.Recipients)}      | Offers:{products}\n" +
+                $"Subject:{message.Subject}    | SMS|Mail\n" +
+                $"{message.MessageBody}\n" +
+                $"{PrintMessageDescription(message.Offers)}\n" +
+                "____END OF MESSAGE____";
+            return internalMessage;
+        }
+
+        private static string PrintMessageDescription<T>(List<T> items)
         {
             string formatedItems = string.Empty;
             foreach (T item in items)
-            {
                 formatedItems += $"{item}";
-            }
             return formatedItems;
         }
 

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +23,25 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class EmailViews : UserControl
     {
+        public ObservableCollection<Customer> InternalCustomers { get; set; } = DatabaseHandler.GetCustomers();
+        public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
+
+        public List<Customer> messageRecipients { get; set; }
+
         public EmailViews()
         {
             InitializeComponent();
+
+            // Setup collections
+
+            // Bind comboboxes
+            ComboTo.ItemsSource = InternalCustomers;
+            ComboOffers.ItemsSource = InternalProducts;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Message message = new Message(messageBodytxt.Text, messageRecipients);
         }
     }
 }
