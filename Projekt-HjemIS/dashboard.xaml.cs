@@ -54,8 +54,16 @@ namespace Projekt_HjemIS
         private void _SignOut_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            this.Close();
+            MessageBoxResult result = MessageBox.Show("Are You Sure You Want To Log Out?", "Log Out", MessageBoxButton.YesNo);
+            switch(result)
+            {
+                case MessageBoxResult.Yes:
+                    mainWindow.Show();
+                    this.Close();
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
         }
 
         private void _Users_Click(object sender, RoutedEventArgs e)

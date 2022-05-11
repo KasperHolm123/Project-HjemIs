@@ -28,7 +28,7 @@
                             <ImageBrush/>
                         </MenuItem.Background>
                         <MenuItem.Icon>
-                            <Image Source="/Pictures/home.png" Margin="0,-7,-55,-7" VerticalAlignment="Center"/>
+                            <Image Source="/Pictures/home.png" Margin="0,-10,-55,-10" VerticalAlignment="Center"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
@@ -38,7 +38,7 @@
                             <ImageBrush/>
                         </MenuItem.Background>
                         <MenuItem.Icon>
-                            <Image Source="/Pictures/envelope.png" Margin="0,-7,-55,-14"/>
+                            <Image Source="/Pictures/envelope.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
@@ -48,7 +48,7 @@
                             <ImageBrush/>
                         </MenuItem.Background>
                         <MenuItem.Icon>
-                            <Image Source="/Pictures/plus.png" Margin="0,-7,-55,-14"/>
+                            <Image Source="/Pictures/plus.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
 
@@ -58,7 +58,7 @@
                             <ImageBrush/>
                         </MenuItem.Background>
                         <MenuItem.Icon>
-                            <Image Source="/Pictures/user.png" Margin="0,-7,-55,-14"/>
+                            <Image Source="/Pictures/user.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </Menu>
@@ -72,7 +72,7 @@
                             <ImageBrush/>
                         </MenuItem.Background>
                         <MenuItem.Icon>
-                            <Image Source="/Pictures/sign-out.png" Margin="0,-7,-55,-14"/>
+                            <Image Source="/Pictures/sign-out.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </Menu>
