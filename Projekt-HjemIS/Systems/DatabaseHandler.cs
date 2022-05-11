@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Projekt_HjemIS.Models;
@@ -29,7 +31,7 @@ namespace Projekt_HjemIS.Systems
                 ClearTables();
                 string query = "INSERT INTO Locations (StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict)" +
                                "VALUES (@streetcode, @countycode, @street, @postalcode, @city, @postaldistrict)"; // parametre er allerede strings, så der er ingen grund til at skrive '' ved dem.
-                
+
                 foreach (var item in locList)
                 {
                     SqlCommand command = new SqlCommand(query, connection);
@@ -59,14 +61,13 @@ namespace Projekt_HjemIS.Systems
             ClearTables();
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
-                bulkCopy.DestinationTableName = "Locations";
-                bulkCopy.ColumnMappings.Add("StreetCode", "StreetCode");
-                bulkCopy.ColumnMappings.Add("CountyCode", "CountyCode");
-                bulkCopy.ColumnMappings.Add("Street", "Street");
-                bulkCopy.ColumnMappings.Add("PostalCode", "PostalCode");
-                bulkCopy.ColumnMappings.Add("City", "City");
-                bulkCopy.ColumnMappings.Add("PostalDistrict", "PostalDistrict");
-
+                bulkCopy.DestinationTableName = "Locations";                
+                PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                foreach (PropertyInfo property in properties)
+                {
+                    bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
+                }
+              
                 try
                 {
                     bulkCopy.WriteToServer(dt);
@@ -81,6 +82,48 @@ namespace Projekt_HjemIS.Systems
                 }
             }
         }
+
+        /// <summary>
+        /// Get all Customers from database and return them as an ObservableCollection.
+        /// </summary>
+        /// <returns></returns>
+        public static ObservableCollection<Customer> GetCustomers()
+        {
+            ObservableCollection<Customer> InternalCustomers = new ObservableCollection<Customer>();
+            try
+            {
+                connection.Open();
+                string query = $@"SELECT * FROM Customers";
+                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        // Using the nameof keyword becuase Customer models a database table with the same name
+                        // This makes it so we don't accidentally make a typo and spend 5 hours
+                        // trying to figure out why it doesn't work.
+                        InternalCustomers.Add(new Customer(
+                            (string)reader[$"{nameof(Customer.StreetCode)}"],
+                            (string)reader[$"{nameof(Customer.CountyCode)}"],
+                            (int)reader[$"{nameof(Customer.PhoneNumber)}"],
+                            (string)reader[$"{nameof(Customer.StreetCode)}"],
+                            (string)reader[$"{nameof(Customer.CountyCode)}"]
+                            ));
+                    }
+                }
+                return InternalCustomers;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Clear database tables to make room for new data.
