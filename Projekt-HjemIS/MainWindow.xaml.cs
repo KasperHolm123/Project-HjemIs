@@ -28,7 +28,9 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
-            RecordHandler record = new RecordHandler();
+            //RecordHandler record = new RecordHandler();
+            Emulator emu = new Emulator();
+            emu.GetReceivers();
 
         }
         //

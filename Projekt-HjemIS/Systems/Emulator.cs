@@ -46,7 +46,7 @@ namespace Projekt_HjemIS.Systems
         /// <summary>
         /// Gets all receivers of sent messages within the program's lifetime.
         /// </summary>
-        private void GetReceivers()
+        public void GetReceivers()
         {
             // Hent data af modtagerne af sendte beskeder i gennem DatabaseHandler.
             InternalCustomers = DatabaseHandler.GetCustomers();

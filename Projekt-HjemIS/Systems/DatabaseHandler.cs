@@ -101,7 +101,7 @@ namespace Projekt_HjemIS.Systems
             try
             {
                 connection.Open();
-                string query = $@"SELECT * FROM {nameof(Customer)}";
+                string query = $@"SELECT * FROM Customers";
                 SqlCommand command = new SqlCommand(query, connection);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {

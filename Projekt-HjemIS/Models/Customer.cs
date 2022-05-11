@@ -29,5 +29,10 @@ namespace Projekt_HjemIS.Models
             StreetCode = streetCode;
             CountyCode = countyCode;
         }
+
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}; ";
+        }
     }
 }
