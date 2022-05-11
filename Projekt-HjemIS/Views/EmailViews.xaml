@@ -13,6 +13,7 @@
             <TextBlock FontSize="40" FontWeight="Bold" 
                        VerticalAlignment="Center" HorizontalAlignment="Center"
                        Text="Email"/>
+            <!---->
         </StackPanel>
     </Grid>
 </UserControl>
