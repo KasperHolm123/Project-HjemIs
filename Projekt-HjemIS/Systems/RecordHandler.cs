@@ -29,10 +29,12 @@ namespace Projekt_HjemIS.Systems
         // This dictionary holds all record types and their segment positional values.
         private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
         {
-            { "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
-            { "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
-            { "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
-            { "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // KIRKEDIST
+            { "001", new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 } } // POSTDIST
+
+            //{ "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
+            //{ "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
+            //{ "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
+            //{ "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // KIRKEDIST
         };
 
         /// <summary>
@@ -53,23 +55,12 @@ namespace Projekt_HjemIS.Systems
             using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\*.txt"))
             {
                 sw.Start();
-
                 // Read each line from current file.
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    string currentLineRecordType = currentLine.Substring(0, 3);
-
-                    // Instantiate a new Location object if the current line is a record of type "001".
-                    if (currentLineRecordType == "001")
-                    {
-                        // The first record doesn't have any data yet.
-                        if (recordCount > 1)
-                            locationsList.Add(currentLocation);
-                        currentLocation = new Location();
-                    }
-
-                    if (RecordTypeDict.Keys.Contains(currentLine.Substring(0, 3)))
-                        BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict[currentLineRecordType]));
+                    BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict["001"]));
+                    locationsList.Add(currentLocation);
+                    currentLocation = new Location();
 
                     // Keep count of handled records and total records
                     if (currentLine.Substring(0, 3) == "999")
@@ -79,7 +70,6 @@ namespace Projekt_HjemIS.Systems
                             "\nTotal records: " + Int32.Parse(currentLine.Substring(4)) +
                             "\nAmount of handled records: " + (recordCount - 2));
                     }
-
                     recordCount++;
                 }
                 DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
@@ -117,23 +107,12 @@ namespace Projekt_HjemIS.Systems
         /// <param name="record"></param>
         private void BuildLocation(Location loc, List<string> record)
         {
-            switch (record[0])
-            {
-                case "001":
-                    loc.CountyCode = record[1]; //kommunekode
-                    loc.StreetCode = record[2]; //vejkode
-                    loc.Street = record[10]; // 9 eller 10 er vejnavn
-                    break;
-                case "003":
-                    loc.City = record[7];
-                    break;
-                case "004":
-                    loc.PostalCode = record[7];
-                    loc.PostalDistrict = record[8];
-                    break;
-                default:
-                    break;
-            }
+            loc.CountyCode = record[1];
+            loc.StreetCode = record[2];
+            loc.City = record[3];
+            loc.Street = record[4];
+            loc.PostalCode = record[8];
+            loc.PostalDistrict = record[9];
 
         }
 
