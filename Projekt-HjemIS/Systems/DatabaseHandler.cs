@@ -83,6 +83,21 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
+        public static void SaveMessage(Message message)
+        {
+            try
+            {
+                connection.Open();
+                string query = "";
+                SqlCommand commands = new SqlCommand(query, connection);
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
         /// <summary>
         /// Get all Customers from database and return them as an ObservableCollection.
         /// </summary>
