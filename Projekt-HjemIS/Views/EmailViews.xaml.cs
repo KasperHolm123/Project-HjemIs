@@ -41,6 +41,7 @@ namespace Projekt_HjemIS.Views
 
             // Bind comboboxes
             ComboTo.ItemsSource = InternalLocations;
+            ComboTo.DisplayMemberPath = $"{nameof(Location.Street)}";
             ComboOffers.ItemsSource = InternalProducts;
         }
 
@@ -49,20 +50,16 @@ namespace Projekt_HjemIS.Views
             //Message message = new Message(messageBodytxt.Text, messageRecipients);
         }
 
-        private void ComboOffers_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            InternalProducts.Add(ComboOffers.SelectedItem as Product);
-        }
-
-        private void ComboTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            InternalLocations.Add(DatabaseHandler.GetLocation(ComboTo.Text) as Location);
-        }
-
         public void OnPropertyChanged(string property = null)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        private void ComboTo_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            InternalLocations.Add(DatabaseHandler.GetLocation(ComboTo.Text) as Location);
+            Debug.WriteLine(InternalLocations.Count);
         }
     }
 }

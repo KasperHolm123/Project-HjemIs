@@ -18,7 +18,6 @@ namespace Projekt_HjemIS.Systems
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
-
         /// <summary>
         /// Execute SQL query to add data to designated database.
         /// </summary>
@@ -120,6 +119,7 @@ namespace Projekt_HjemIS.Systems
                             ));
                     }
                 }
+                Debug.WriteLine($"Returned: {locations.Count} streets");
             }
             catch (Exception e)
             {
