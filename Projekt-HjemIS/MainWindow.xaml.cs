@@ -28,12 +28,11 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
-            //RecordHandler record = new RecordHandler();
-            Emulator emu = new Emulator();
-            emu.GetReceivers();
 
+            // Comment out the line below while testing other things, otherwise it will run GetRecords every time the program is opened.
+            RecordHandler record = new RecordHandler();
         }
-        //
+
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
