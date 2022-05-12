@@ -28,9 +28,6 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
-
-            // Comment out the line below while testing other things, otherwise it will run GetRecords every time the program is opened.
-            RecordHandler record = new RecordHandler();
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

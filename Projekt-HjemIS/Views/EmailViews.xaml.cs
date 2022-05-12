@@ -24,7 +24,7 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class EmailViews : UserControl
     {
-        public ObservableCollection<Location> InternalLocations { get; set; } = new ObservableCollection<Location>();
+        public ObservableCollection<Location> InternalLocations { get; set; }
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
 
         public List<Customer> messageRecipients { get; set; }
@@ -34,7 +34,7 @@ namespace Projekt_HjemIS.Views
             InitializeComponent();
 
             // Setup collections
-            
+            InternalLocations = new ObservableCollection<Location>(RecordHandler.GetRecords());
 
             // Bind comboboxes
             ComboTo.ItemsSource = InternalLocations;
