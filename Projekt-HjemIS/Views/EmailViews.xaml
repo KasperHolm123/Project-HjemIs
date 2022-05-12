@@ -21,7 +21,7 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Label Content="To:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="126,32,0,0"/>
-                <ComboBox x:Name="ComboTo" Width="150" Height="30" AllowDrop="True" IsEditable="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="168,32,0,0" RenderTransformOrigin="0.665,0.787">
+                <ComboBox x:Name="ComboTo" Width="150" Height="30" AllowDrop="True" IsEditable="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="168,32,0,0" RenderTransformOrigin="0.665,0.787" SelectionChanged="ComboTo_SelectionChanged">
                     <!--<ComboBoxItem Content="test"/>-->
                 </ComboBox>
             </Grid>
