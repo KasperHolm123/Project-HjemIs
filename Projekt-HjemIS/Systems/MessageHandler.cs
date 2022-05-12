@@ -27,15 +27,15 @@ namespace Projekt_HjemIS.Systems
                 products += $"{item.Name}, ";
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
-                sw.WriteLine(FormatMessage(message, products));
+                sw.WriteLine(FormatMessage(message));
             }
+            DatabaseHandler.SaveMessage(message);
         }
 
-        private static string FormatMessage(Message message, string products = null)
+        private static string FormatMessage(Message message)
         {
             string internalMessage = 
-                $"To:{PrintMessageDescription(message.Recipients)}      | Offers:{products}\n" +
-                $"Subject:{message.Subject}    | SMS|Mail\n" +
+                $"Subject:{message.Subject}\n\n" +
                 $"{message.MessageBody}\n" +
                 $"{PrintMessageDescription(message.Offers)}\n" +
                 "____END OF MESSAGE____";
