@@ -54,9 +54,7 @@ namespace Projekt_HjemIS.Systems
                             if (prevLocation.StreetCode != currentLocation.StreetCode)
                                 _locationsList.Add(currentLocation);
                             break;
-                        case "000":
-                            break;
-                        case "999":
+                        default:
                             break;
                     }
                     prevLocation = currentLocation;
