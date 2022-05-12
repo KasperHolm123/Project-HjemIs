@@ -60,13 +60,13 @@ namespace Projekt_HjemIS.Systems
             ClearTables();
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
-                bulkCopy.DestinationTableName = "Locations";                
+                bulkCopy.DestinationTableName = "Locations";
                 PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 foreach (PropertyInfo property in properties)
                 {
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
                 }
-              
+
                 try
                 {
                     bulkCopy.WriteToServer(dt);
@@ -97,39 +97,38 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
-        public static IEnumerable<Location> GetLocation(string streetName)
+        public static void GetLocation(ObservableCollection<Location> collection, string streetName)
         {
-            ObservableCollection<Location> locations = new ObservableCollection<Location>();
             try
             {
                 connection.Open();
                 string query = $"SELECT Street FROM Locations WHERE Street LIKE '%{streetName}%';";
                 SqlCommand command = new SqlCommand(query, connection);
+                int streetAmount = 0;
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        locations.Add(new Location(
+                        Location newLocation = new Location(
                             (string)reader[$"{nameof(Location.StreetCode)}"],
                             (string)reader[$"{nameof(Location.CountyCode)}"],
                             (string)reader[$"{nameof(Location.Street)}"],
                             (string)reader[$"{nameof(Location.PostalCode)}"],
                             (string)reader[$"{nameof(Location.City)}"],
                             (string)reader[$"{nameof(Location.PostalDistrict)}"]
-                            ));
+                            );
+                        if (!collection.Contains(newLocation))
+                            collection.Add(newLocation);
+                        streetAmount++;
                     }
                 }
-                Debug.WriteLine($"Returned: {locations.Count} streets");
+                Debug.WriteLine($"Returned: {streetAmount} streets");
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
             finally { connection.Close(); }
-            foreach (Location location in locations)
-            {
-                yield return location;
-            }
         }
 
         /// <summary>

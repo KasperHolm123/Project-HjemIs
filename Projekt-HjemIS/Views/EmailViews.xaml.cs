@@ -58,7 +58,7 @@ namespace Projekt_HjemIS.Views
 
         private void ComboTo_TextChanged(object sender, TextChangedEventArgs e)
         {
-            InternalLocations.Add(DatabaseHandler.GetLocation(ComboTo.Text) as Location);
+            DatabaseHandler.GetLocation(InternalLocations, ComboTo.Text);
             Debug.WriteLine(InternalLocations.Count);
         }
     }
