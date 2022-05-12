@@ -15,6 +15,7 @@ namespace Projekt_HjemIS.Systems
     /// </summary>
     public class RecordHandler
     {
+        private List<Location> _locationsList = new List<Location>();
 
         public RecordHandler()
         {
@@ -26,69 +27,63 @@ namespace Projekt_HjemIS.Systems
         private List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
-        // This dictionary holds all record types and their segment positional values.
-        private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
-        {
-            { "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
-            { "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
-            { "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
-            { "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // KIRKEDIST
-        };
+        private int[] _postDist = new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 };
 
         /// <summary>
         /// Read from .txt file
         /// </summary>
-        private void GetRecords()
+        private List<Location> GetRecords()
         {
-            Stopwatch sw = new Stopwatch();
-
-
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
 
             Location currentLocation = new Location();
-
-            string currentLine = string.Empty;
-            List<Location> locationsList = new List<Location>();
-            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\*.txt"))
+            Location prevLocation = new Location();
+            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\tempRecords.txt"))
             {
-                sw.Start();
+                string currentLine = string.Empty;
 
                 // Read each line from current file.
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    string currentLineRecordType = currentLine.Substring(0, 3);
-
-                    // Instantiate a new Location object if the current line is a record of type "001".
-                    if (currentLineRecordType == "001")
+                    if (currentLine.Substring(0, 3) == "001")
+                        BuildLocation(currentLocation, SpliceRecord(currentLine, _postDist));
+                    switch (currentLine.Substring(0, 3))
                     {
-                        // The first record doesn't have any data yet.
-                        if (recordCount > 1)
-                            locationsList.Add(currentLocation);
-                        currentLocation = new Location();
+                        case "001":
+                            if (prevLocation.StreetCode != currentLocation.StreetCode)
+                                _locationsList.Add(currentLocation);
+                            break;
+                        case "000":
+                            break;
+                        case "999":
+                            break;
                     }
-
-                    if (RecordTypeDict.Keys.Contains(currentLine.Substring(0, 3)))
-                        BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict[currentLineRecordType]));
+                    prevLocation = currentLocation;
+                    currentLocation = new Location();
 
                     // Keep count of handled records and total records
                     if (currentLine.Substring(0, 3) == "999")
                     {
                         Debug.WriteLine(
-                            "Amount of locations added to database: " + locationsList.Count +
+                            "Amount of locations added to database: " + _locationsList.Count +
                             "\nTotal records: " + Int32.Parse(currentLine.Substring(4)) +
-                            "\nAmount of handled records: " + (recordCount - 2));
+                            "\nAmount of handled records: " + (recordCount - 1));
                     }
-
                     recordCount++;
                 }
-                DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
-
-                DatabaseHandler.AddBulkData(dt);
-
-                Debug.WriteLine(sw.Elapsed);
-                sw.Stop();
+                return _locationsList;
             }
+        }
+
+        public void SaveRecords(List<Location> locations)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            DataTable dt = ListToDataTableConverter.ToDataTable(locations);
+            DatabaseHandler.AddBulkData(dt);
+            Debug.WriteLine(sw.Elapsed);
+            sw.Stop();
         }
 
         /// <summary>
@@ -117,23 +112,12 @@ namespace Projekt_HjemIS.Systems
         /// <param name="record"></param>
         private void BuildLocation(Location loc, List<string> record)
         {
-            switch (record[0])
-            {
-                case "001":
-                    loc.CountyCode = record[1]; //kommunekode
-                    loc.StreetCode = record[2]; //vejkode
-                    loc.Street = record[10]; // 9 eller 10 er vejnavn
-                    break;
-                case "003":
-                    loc.City = record[7];
-                    break;
-                case "004":
-                    loc.PostalCode = record[7];
-                    loc.PostalDistrict = record[8];
-                    break;
-                default:
-                    break;
-            }
+            loc.CountyCode = record[1];
+            loc.StreetCode = record[2];
+            loc.City = record[3];
+            loc.Street = record[4];
+            loc.PostalCode = record[8];
+            loc.PostalDistrict = record[9];
 
         }
 
@@ -154,7 +138,7 @@ namespace Projekt_HjemIS.Systems
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            Debug.WriteLine($"new file: {e.FullPath}");
+            SaveRecords(_locationsList);
         }
 
         /// <summary>
