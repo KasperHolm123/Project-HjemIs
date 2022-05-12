@@ -20,5 +20,15 @@ namespace Projekt_HjemIS.Models
 
         }
 
+        public Location(string streetCode, string countyCode, string street, string postalCode, string city, string postalDistrict)
+        {
+            Street = streetCode;
+            CountyCode = countyCode;
+            Street = street;
+            PostalCode = postalCode;
+            City = city;
+            PostalDistrict = postalDistrict;
+        }
+
     }
 }

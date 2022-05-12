@@ -32,7 +32,7 @@ namespace Projekt_HjemIS.Models
 
         public override string ToString()
         {
-            return $"{FirstName} {LastName}; ";
+            return $"{FirstName} {LastName}, {PhoneNumber}; ";
         }
     }
 }

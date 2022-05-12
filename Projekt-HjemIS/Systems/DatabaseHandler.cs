@@ -98,6 +98,40 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
+        public static IEnumerable<Location> GetLocation(string streetName)
+        {
+            ObservableCollection<Location> locations = new ObservableCollection<Location>();
+            try
+            {
+                connection.Open();
+                string query = $"SELECT Street FROM Locations WHERE Street LIKE '%{streetName}%';";
+                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        locations.Add(new Location(
+                            (string)reader[$"{nameof(Location.StreetCode)}"],
+                            (string)reader[$"{nameof(Location.CountyCode)}"],
+                            (string)reader[$"{nameof(Location.Street)}"],
+                            (string)reader[$"{nameof(Location.PostalCode)}"],
+                            (string)reader[$"{nameof(Location.City)}"],
+                            (string)reader[$"{nameof(Location.PostalDistrict)}"]
+                            ));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            finally { connection.Close(); }
+            foreach (Location location in locations)
+            {
+                yield return location;
+            }
+        }
+
         /// <summary>
         /// Get all Customers from database and return them as an ObservableCollection.
         /// </summary>

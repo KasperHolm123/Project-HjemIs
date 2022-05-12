@@ -3,6 +3,7 @@ using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -22,8 +23,10 @@ namespace Projekt_HjemIS.Views
     /// <summary>
     /// Interaction logic for EmailViews.xaml
     /// </summary>
-    public partial class EmailViews : UserControl
+    public partial class EmailViews : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public ObservableCollection<Location> InternalLocations { get; set; }
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
 
@@ -34,7 +37,7 @@ namespace Projekt_HjemIS.Views
             InitializeComponent();
 
             // Setup collections
-            InternalLocations = new ObservableCollection<Location>(RecordHandler.GetRecords());
+            InternalLocations = new ObservableCollection<Location>();
 
             // Bind comboboxes
             ComboTo.ItemsSource = InternalLocations;
@@ -53,7 +56,13 @@ namespace Projekt_HjemIS.Views
 
         private void ComboTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            InternalLocations.Add(ComboTo.SelectedItem as Location);
+            InternalLocations.Add(DatabaseHandler.GetLocation(ComboTo.Text) as Location);
+        }
+
+        public void OnPropertyChanged(string property = null)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
     }
 }
