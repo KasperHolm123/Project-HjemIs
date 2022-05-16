@@ -21,12 +21,12 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Label Content="To:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="126,32,0,0"/>
-                <ComboBox x:Name="ComboTo" Width="150" Height="30" AllowDrop="True" IsEditable="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="168,32,0,0" RenderTransformOrigin="0.665,0.787" TextBoxBase.TextChanged="ComboTo_TextChanged">
-                    <!--<ComboBoxItem Content="test"/>-->
-                </ComboBox>
-                <DataGrid x:Name="recipientsDataGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
+                <TextBox x:Name="searchTxt" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
+                <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" Click="searchButton_Click"/>
+                <DataGrid x:Name="recipientsDataGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False" LostFocus="recipientsDataGrid_LostFocus" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True"/>
+                        <DataGridCheckBoxColumn Header="Recipient" Binding="{Binding Path=IsRecipient}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -50,7 +50,7 @@
                 </Grid.RowDefinitions>
                 <CheckBox Grid.Row="1" Grid.Column="1" x:Name="isSMS" Content="SMS" IsChecked="False" Height="20" Width="60" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,50,0,0"/>
                 <CheckBox Grid.Row="1" Grid.Column="1" x:Name="isMAIL" IsChecked="False" Content="E-Mail" VerticalAlignment="Top" HorizontalAlignment="Left" Height="20" Width="60" Margin="50,50,0,0"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="Subject" Width="150" Height="30" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                <TextBox x:Name="subjectTxt" Grid.Row="1" Grid.Column="1" Text="Subject" Width="150" Height="30" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0"/>
             </Grid>
         </Grid>
     </Grid>

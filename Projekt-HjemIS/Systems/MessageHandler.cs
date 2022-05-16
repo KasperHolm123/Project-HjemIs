@@ -23,8 +23,9 @@ namespace Projekt_HjemIS.Systems
         public static void SendMessages(Message message)
         {
             string products = string.Empty;
-            foreach (Product item in message.Offers)
-                products += $"{item.Name}, ";
+            if (message.Offers != null)
+                foreach (Product item in message.Offers)
+                    products += $"{item.Name}, ";
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
                 sw.WriteLine(FormatMessage(message));
@@ -44,6 +45,8 @@ namespace Projekt_HjemIS.Systems
 
         private static string PrintMessageDescription<T>(List<T> items)
         {
+            if (items == null)
+                return null;
             string formatedItems = string.Empty;
             foreach (T item in items)
                 formatedItems += $"{item}";

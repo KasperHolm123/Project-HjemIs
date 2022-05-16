@@ -14,7 +14,8 @@ namespace Projekt_HjemIS.Models
         public string StreetCode { get; set; }
         public string CountyCode { get; set; }
         public string Street { get; set; }
-        
+        public bool IsRecipient { get; set; }
+
         public Location()
         {
 

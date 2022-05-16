@@ -23,13 +23,17 @@ namespace Projekt_HjemIS.Views
     /// <summary>
     /// Interaction logic for EmailViews.xaml
     /// </summary>
-    public partial class EmailViews : UserControl, INotifyPropertyChanged
+    public partial class EmailViews : UserControl
     {
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        // Contains all available locations.
         public ObservableCollection<Location> InternalLocations { get; set; }
+        // Contains all filtered locations.
+        public ObservableCollection<Location> SearchedLocations { get; set; }
+        // Contains all available products
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
-        public ObservableCollection<Location> ChosenLocations { get; set; }
+        // Locations to be treated as recipients
+        public List<Location> RecipientsLocations { get; set; }
 
         public List<Customer> messageRecipients { get; set; }
 
@@ -38,32 +42,42 @@ namespace Projekt_HjemIS.Views
             InitializeComponent();
 
             // Setup collections
-            InternalLocations = new ObservableCollection<Location>();
-            ChosenLocations = new ObservableCollection<Location>();
+            InternalLocations = new ObservableCollection<Location>(RecordHandler.GetRecords());
+            SearchedLocations = new ObservableCollection<Location>();
+            RecipientsLocations = new List<Location>();
 
             // Bind comboboxes
-            recipientsDataGrid.ItemsSource = ChosenLocations;
+            recipientsDataGrid.ItemsSource = InternalLocations;
 
-            ComboTo.ItemsSource = InternalLocations;
-            ComboTo.DisplayMemberPath = $"{nameof(Location.Street)}";
             ComboOffers.ItemsSource = InternalProducts;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //Message message = new Message(messageBodytxt.Text, messageRecipients);
+            Message message = new Message(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
+            MessageHandler.SendMessages(message);
         }
 
-        public void OnPropertyChanged(string property = null)
+        private void searchButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            if (SearchedLocations.Count != 0)
+                SearchedLocations.Clear();
+            if (searchTxt.Text == "" || searchTxt.Text == null)
+            {
+                DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
+                recipientsDataGrid.ItemsSource = SearchedLocations;
+            }
         }
 
-        private void ComboTo_TextChanged(object sender, TextChangedEventArgs e)
+        private void recipientsDataGrid_LostFocus(object sender, RoutedEventArgs e)
         {
-            DatabaseHandler.GetLocation(InternalLocations, ComboTo.Text);
-            Debug.WriteLine(InternalLocations.Count);
+            Location loc = recipientsDataGrid.SelectedItem as Location;
+            if (loc.IsRecipient)
+                RecipientsLocations.Add(loc);
+            else
+                if (RecipientsLocations.Contains(loc))
+                    RecipientsLocations.Remove(loc);
+                    
         }
     }
 }

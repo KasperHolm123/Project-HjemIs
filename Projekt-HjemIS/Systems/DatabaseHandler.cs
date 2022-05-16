@@ -61,7 +61,13 @@ namespace Projekt_HjemIS.Systems
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
                 bulkCopy.DestinationTableName = "Locations";
-                PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                PropertyInfo[] allProperties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                List<PropertyInfo> properties = new List<PropertyInfo>();
+                foreach (PropertyInfo item in allProperties)
+                {
+                    if (item.PropertyType == typeof(String))
+                        properties.Add(item);
+                }
                 foreach (PropertyInfo property in properties)
                 {
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
@@ -102,7 +108,7 @@ namespace Projekt_HjemIS.Systems
             try
             {
                 connection.Open();
-                string query = $"SELECT Street FROM Locations WHERE Street LIKE '%{streetName}%';";
+                string query = $"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{streetName}%';";
                 SqlCommand command = new SqlCommand(query, connection);
                 int streetAmount = 0;
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -151,8 +157,8 @@ namespace Projekt_HjemIS.Systems
                         // This makes it so we don't accidentally make a typo and spend 5 hours
                         // trying to figure out why it doesn't work.
                         InternalCustomers.Add(new Customer(
-                            (string)reader[$"{nameof(Customer.StreetCode)}"],
-                            (string)reader[$"{nameof(Customer.CountyCode)}"],
+                            (string)reader[$"{nameof(Customer.FirstName)}"],
+                            (string)reader[$"{nameof(Customer.LastName)}"],
                             (int)reader[$"{nameof(Customer.PhoneNumber)}"],
                             (string)reader[$"{nameof(Customer.StreetCode)}"],
                             (string)reader[$"{nameof(Customer.CountyCode)}"]
