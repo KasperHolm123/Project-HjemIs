@@ -28,17 +28,26 @@ namespace Projekt_HjemIS.Systems
                     products += $"{item.Name}, ";
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
-                sw.WriteLine(FormatMessage(message));
+                //sw.WriteLine(FormatMessage(message));
             }
             DatabaseHandler.SaveMessage(message);
         }
 
-        private static string FormatMessage(Message message)
+        private static string FormatSms(Message_SMS sms)
         {
             string internalMessage = 
-                $"Subject:{message.Subject}\n\n" +
-                $"{message.MessageBody}\n" +
-                $"{PrintMessageDescription(message.Offers)}\n" +
+                $"{sms.MessageBody}\n" +
+                $"{PrintMessageDescription(sms.Offers)}\n" +
+                "____END OF MESSAGE____";
+            return internalMessage;
+        }
+
+        private static string FormatMail(Message_Mail mail)
+        {
+            string internalMessage =
+                $"{mail.Subject}\n" +
+                $"{mail.MessageBody}\n" +
+                $"{PrintMessageDescription(mail.Offers)}\n" +
                 "____END OF MESSAGE____";
             return internalMessage;
         }

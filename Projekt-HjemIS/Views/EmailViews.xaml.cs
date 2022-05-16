@@ -54,8 +54,8 @@ namespace Projekt_HjemIS.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Message message = new Message(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
-            MessageHandler.SendMessages(message);
+            //Message message = new Message(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
+            //MessageHandler.SendMessages(message);
         }
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
