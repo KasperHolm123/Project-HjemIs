@@ -29,6 +29,7 @@ namespace Projekt_HjemIS.Views
 
         public ObservableCollection<Location> InternalLocations { get; set; }
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
+        public ObservableCollection<Location> ChosenLocations { get; set; }
 
         public List<Customer> messageRecipients { get; set; }
 
@@ -38,8 +39,11 @@ namespace Projekt_HjemIS.Views
 
             // Setup collections
             InternalLocations = new ObservableCollection<Location>();
+            ChosenLocations = new ObservableCollection<Location>();
 
             // Bind comboboxes
+            recipientsDataGrid.ItemsSource = ChosenLocations;
+
             ComboTo.ItemsSource = InternalLocations;
             ComboTo.DisplayMemberPath = $"{nameof(Location.Street)}";
             ComboOffers.ItemsSource = InternalProducts;
