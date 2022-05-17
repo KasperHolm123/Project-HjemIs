@@ -77,11 +77,13 @@ namespace Projekt_HjemIS.Views
         {
             if (SearchedLocations.Count != 0)
                 SearchedLocations.Clear();
-            if (searchTxt.Text == "" || searchTxt.Text == null)
+            if (searchTxt.Text != "" || searchTxt.Text != null)
             {
                 DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
                 recipientsDataGrid.ItemsSource = SearchedLocations;
             }
+            else
+                recipientsDataGrid.ItemsSource = InternalLocations;
         }
 
         private void recipientsDataGrid_LostFocus(object sender, RoutedEventArgs e)
