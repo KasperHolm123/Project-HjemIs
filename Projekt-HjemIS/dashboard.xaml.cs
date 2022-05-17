@@ -28,6 +28,10 @@ namespace Projekt_HjemIS
             userControl = new HomeViews();
             GridContent.Children.Add(userControl);
             lablUsername.Content = "Welcome " + User.Username.ToString();
+            if (User.Admin == false)
+            {
+                _Users.IsEnabled = false;
+            }
         }
 
         private void _Offers_Click(object sender, RoutedEventArgs e)

@@ -178,6 +178,35 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
 
+        public static ObservableCollection<User> GetUsers()
+        {
+            ObservableCollection<User> InternalUsers = new ObservableCollection<User>();
+            try
+            {
+                connection.Open();
+                string query = $@"SELECT [username] FROM Users";
+                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        InternalUsers.Add(new User(
+                            (string)reader[$"{nameof(User.Username)}"]));
+                    }
+
+                }
+                return InternalUsers;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
 
         /// <summary>
         /// Clear database tables to make room for new data.
