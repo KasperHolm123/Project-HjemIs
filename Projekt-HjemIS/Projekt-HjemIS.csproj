@@ -88,6 +88,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Systems\Emulator.cs" />
+    <Compile Include="Systems\LocationRepository.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Views\EmailViews.xaml.cs">
@@ -95,6 +96,9 @@
     </Compile>
     <Compile Include="Views\HomeViews.xaml.cs">
       <DependentUpon>HomeViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OfferViews.xaml.cs">
       <DependentUpon>OfferViews.xaml</DependentUpon>
@@ -139,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HomeViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

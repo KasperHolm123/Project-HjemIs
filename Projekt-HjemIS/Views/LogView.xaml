@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="Projekt_HjemIS.Views.LogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Projekt_HjemIS.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ComboBox x:Name="CityBox" IsEditable="True" Text="{Binding CitySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="350,30,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=City}"/>
+                        <TextBlock Text="{Binding Path=PostalCode, StringFormat= - {0}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox x:Name="PostalBox" IsEditable="True" Text="{Binding PostSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,30,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=City}"/>
+                        <TextBlock Text="{Binding Path=PostalCode, StringFormat= - {0}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox x:Name="StreetBox" Text="{Binding StreetSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="{Binding Path=CanExecute, Mode=OneWay}" ItemsSource="{Binding Path=Streets}" HorizontalAlignment="Left" Margin="200,30,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=Street}"/>
+                        <TextBlock Text="{Binding Path=City, StringFormat= - {0}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button x:Name="FindStreets" Content="Button" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="538,30,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
+        <ListBox Width="75" Height="250" Margin="50,150,675,50" ItemsSource="{Binding Path=LocationsToSearch}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=City}"/>
+                        <TextBlock Text="{Binding Path=PostalCode, StringFormat= - {0}}"/>
+                        <TextBlock Text="{Binding Path=Street, TargetNullValue=-}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

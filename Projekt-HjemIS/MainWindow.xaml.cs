@@ -25,12 +25,21 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class MainWindow : Window
     {
+        LocationRepository repository = new LocationRepository();
         public MainWindow()
         {
             InitializeComponent();
-
             // Comment out the line below while testing other things, otherwise it will run GetRecords every time the program is opened.
-            RecordHandler record = new RecordHandler();
+            //RecordHandler record = new RecordHandler();
+            //Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Location loc = new Location() { City = "Vib", PostalCode = "780" };
+            IEnumerable<Location> streets1 = await repository.GetLocations(loc);
+            loc.City = "Skiv";
+            IEnumerable<Location> streets2 = await repository.GetLocations(loc);
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
