@@ -56,19 +56,19 @@ namespace Projekt_HjemIS.Views
         {
             if ((bool)isSMS.IsChecked) // SMS
             {
-                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations);
+                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
                 MessageHandler.SendMessages(sms);
             }
             if ((bool)isMAIL.IsChecked) // Mail
             {
-                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
+                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
                 MessageHandler.SendMessages(mail);
             }
             if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
             {
-                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
+                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
                 MessageHandler.SendMessages(mail);
-                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations);
+                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
                 MessageHandler.SendMessages(sms);
             }
         }
