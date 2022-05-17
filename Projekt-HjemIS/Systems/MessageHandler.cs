@@ -20,7 +20,12 @@ namespace Projekt_HjemIS.Systems
             DatabaseHandler.GetCustomers();
         }
 
-        public static void SendMessages(Message message)
+        /// <summary>
+        /// Writes the content of a message out into a .txt file. Send the message to DatabaseHandler.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        public static void SendMessages<T>(T message) where T : Message
         {
             string products = string.Empty;
             if (message.Offers != null)
@@ -28,14 +33,17 @@ namespace Projekt_HjemIS.Systems
                     products += $"{item.Name}, ";
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
-                //sw.WriteLine(FormatMessage(message));
+                if (typeof(T) == typeof(Message_SMS))
+                    sw.WriteLine(FormatSms(message as Message_SMS));
+                if (typeof(T) == typeof(Message_Mail))
+                    sw.WriteLine(FormatMail(message as Message_Mail));
+                DatabaseHandler.SaveMessage(message);
             }
-            DatabaseHandler.SaveMessage(message);
         }
 
         private static string FormatSms(Message_SMS sms)
         {
-            string internalMessage = 
+            string internalMessage =
                 $"{sms.MessageBody}\n" +
                 $"{PrintMessageDescription(sms.Offers)}\n" +
                 "____END OF MESSAGE____";

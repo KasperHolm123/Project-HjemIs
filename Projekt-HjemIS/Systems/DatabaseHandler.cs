@@ -88,18 +88,44 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
-        public static void SaveMessage(Message message)
+        /// <summary>
+        /// Saves any type of message in a database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string SaveMessage<T>(T message) where T : Message
         {
             try
             {
                 connection.Open();
-                string query = "";
-                SqlCommand commands = new SqlCommand(query, connection);
-
+                if (typeof(T) == typeof(Message_Mail))
+                {
+                    Message_Mail mail = message as Message_Mail;
+                    string query = "INSERT INTO [Messages] ([Type], [Subject], Body) OUTPUT Inserted.ID" +
+                        "VALUES (@messageType, @subject, @body)";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.Add(CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar));
+                    return (string)command.ExecuteScalar();
+                }
+                if (typeof(T) == typeof(Message_SMS))
+                {
+                    Message_SMS sms = message as Message_SMS;
+                    string query = "INSERT INTO [Messages] ([Type], Body) OUTPUT Inserted.ID" +
+                        "VALUES (@messageType, @body)";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.Add(CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar));
+                    return (string)command.ExecuteScalar();
+                }
+                return "Unknown message type";
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                return "Could not save message";
             }
         }
 
