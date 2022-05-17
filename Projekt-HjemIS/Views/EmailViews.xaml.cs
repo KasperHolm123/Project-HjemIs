@@ -54,8 +54,23 @@ namespace Projekt_HjemIS.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //Message message = new Message(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
-            //MessageHandler.SendMessages(message);
+            if ((bool)isSMS.IsChecked) // SMS
+            {
+                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations);
+                MessageHandler.SendMessages(sms);
+            }
+            if ((bool)isMAIL.IsChecked) // Mail
+            {
+                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
+                MessageHandler.SendMessages(mail);
+            }
+            if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
+            {
+                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations);
+                MessageHandler.SendMessages(mail);
+                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations);
+                MessageHandler.SendMessages(sms);
+            }
         }
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
