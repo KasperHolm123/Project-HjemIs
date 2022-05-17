@@ -46,7 +46,8 @@ namespace Projekt_HjemIS.Systems
             string internalMessage =
                 $"{sms.MessageBody}\n" +
                 $"{PrintMessageDescription(sms.Offers)}\n" +
-                "____END OF MESSAGE____";
+                $"{DateTime.Now}\n" +
+                "____END OF MESSAGE____\n";
             return internalMessage;
         }
 
@@ -56,7 +57,8 @@ namespace Projekt_HjemIS.Systems
                 $"{mail.Subject}\n" +
                 $"{mail.MessageBody}\n" +
                 $"{PrintMessageDescription(mail.Offers)}\n" +
-                "____END OF MESSAGE____";
+                $"{DateTime.Now}\n" +
+                "____END OF MESSAGE____\n";
             return internalMessage;
         }
 
