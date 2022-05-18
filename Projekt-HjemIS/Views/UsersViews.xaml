@@ -16,7 +16,7 @@
         </StackPanel>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
             <ComboBox x:Name="comboUsers" IsEditable="True" Width="150" Height="30" Margin="100,0,0,0"/>
-            <DataGrid x:Name="dataUsers" AutoGenerateColumns="False" Height="300" Width="300" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <DataGrid x:Name="dataUsers" AutoGenerateColumns="False" Height="Auto" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Top">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Username" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Is Admin" IsReadOnly="False"/>
