@@ -38,28 +38,28 @@ namespace Projekt_HjemIS.Systems
                     sw.WriteLine(FormatSms(message as Message_SMS));
                 if (typeof(T) == typeof(Message_Mail))
                     sw.WriteLine(FormatMail(message as Message_Mail));
-                return DatabaseHandler.SaveMessage(message);
             }
+            return DatabaseHandler.SaveMessage(message);
         }
 
         private static string FormatSms(Message_SMS sms)
         {
             string internalMessage =
-                $"{sms.MessageBody}\n" +
-                $"{PrintMessageDescription(sms.Offers)}\n" +
-                $"{DateTime.Now}\n" +
-                "____END OF MESSAGE____\n";
+                $"01/{sms.MessageBody}\n" +
+                $"02/{PrintMessageDescription(sms.Offers)}\n" +
+                $"03/{DateTime.Now}\n" +
+                $"04/";
             return internalMessage;
         }
 
         private static string FormatMail(Message_Mail mail)
         {
             string internalMessage =
-                $"{mail.Subject}\n" +
-                $"{mail.MessageBody}\n" +
-                $"{PrintMessageDescription(mail.Offers)}\n" +
-                $"{DateTime.Now}\n" +
-                "____END OF MESSAGE____\n";
+                $"00/{mail.Subject}\n" +
+                $"01/{mail.MessageBody}\n" +
+                $"02/{PrintMessageDescription(mail.Offers)}\n" +
+                $"03/{DateTime.Now}\n" +
+                $"04/";
             return internalMessage;
         }
 

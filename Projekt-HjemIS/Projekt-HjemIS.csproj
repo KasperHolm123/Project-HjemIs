@@ -96,6 +96,9 @@
     <Compile Include="Views\EmailViews.xaml.cs">
       <DependentUpon>EmailViews.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EmulatorView.xaml.cs">
+      <DependentUpon>EmulatorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomeViews.xaml.cs">
       <DependentUpon>HomeViews.xaml</DependentUpon>
     </Compile>
@@ -138,6 +141,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\EmailViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EmulatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -201,6 +208,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\sign-out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\mail-inbox.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
