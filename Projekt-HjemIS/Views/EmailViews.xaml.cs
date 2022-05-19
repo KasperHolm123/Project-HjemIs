@@ -52,24 +52,32 @@ namespace Projekt_HjemIS.Views
             ComboOffers.ItemsSource = InternalProducts;
         }
 
+        private void ConnectMessage<T>(T type) where T : Message
+        {
+            foreach (Location location in RecipientsLocations)
+            {
+                DatabaseHandler.ConnectMessage(MessageHandler.SendMessages(type), location.CountyCode, location.StreetCode);
+            }
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)isSMS.IsChecked) // SMS
             {
                 Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                MessageHandler.SendMessages(sms);
+                ConnectMessage(sms);
             }
             if ((bool)isMAIL.IsChecked) // Mail
             {
                 Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                MessageHandler.SendMessages(mail);
+                ConnectMessage(mail);
             }
             if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
             {
                 Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                MessageHandler.SendMessages(mail);
+                ConnectMessage(mail);
                 Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                MessageHandler.SendMessages(sms);
+                ConnectMessage(sms);
             }
         }
 

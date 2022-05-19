@@ -1,6 +1,7 @@
 ﻿using Projekt_HjemIS.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,11 @@ namespace Projekt_HjemIS.Systems
         }
 
         /// <summary>
-        /// Writes the content of a message out into a .txt file. Send the message to DatabaseHandler.
+        /// Writes the content of a message out into a .txt file. Send the message to DatabaseHandler. Returns an int.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
-        public static void SendMessages<T>(T message) where T : Message
+        public static int SendMessages<T>(T message) where T : Message
         {
             string products = string.Empty;
             if (message.Offers != null)
@@ -37,7 +38,7 @@ namespace Projekt_HjemIS.Systems
                     sw.WriteLine(FormatSms(message as Message_SMS));
                 if (typeof(T) == typeof(Message_Mail))
                     sw.WriteLine(FormatMail(message as Message_Mail));
-                DatabaseHandler.SaveMessage(message);
+                return DatabaseHandler.SaveMessage(message);
             }
         }
 
