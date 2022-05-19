@@ -74,14 +74,16 @@ namespace Projekt_HjemIS.Systems
         /// Save a list of locations to a database.
         /// </summary>
         /// <param name="locations"></param>
-        public static void SaveRecords(List<Location> locations)
+        public static Task<string> SaveRecords(List<Location> locations)
         {
+            string result = string.Empty;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            DatabaseHandler.AddBulkData(dt);
+            result = DatabaseHandler.AddBulkData(dt);
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
+            return Task.FromResult(result);
         }
 
         /// <summary>
