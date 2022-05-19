@@ -86,7 +86,10 @@
     </Compile>
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Message_Mail.cs" />
+    <Compile Include="Models\Message_SMS.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Systems\DropzoneObserver.cs" />
     <Compile Include="Systems\Emulator.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="Models\User.cs" />
