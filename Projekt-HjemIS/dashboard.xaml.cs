@@ -76,5 +76,12 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
+
+        private void _Emulator_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new EmulatorView();
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
     }
 }
