@@ -31,6 +31,9 @@ namespace Projekt_HjemIS
 
             // Comment out the line below while testing other things, otherwise it will run GetRecords every time the program is opened.
             RecordHandler record = new RecordHandler();
+
+            CustomerFactory factory = new CustomerFactory();
+
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
