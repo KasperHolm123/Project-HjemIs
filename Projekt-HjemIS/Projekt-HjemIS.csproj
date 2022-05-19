@@ -87,6 +87,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Systems\CustomerRepository.cs" />
     <Compile Include="Systems\Emulator.cs" />
     <Compile Include="Systems\LocationRepository.cs" />
     <Compile Include="Systems\MessageHandler.cs" />

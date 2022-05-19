@@ -3,6 +3,7 @@ using Projekt_HjemIS.Systems;
 using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -25,9 +26,9 @@ namespace Projekt_HjemIS
     {
         UserControl userControl = null;
         LocationRepository repository;
-        private List<Location> _locations = new List<Location>();
+        private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
         public event PropertyChangedEventHandler PropertyChanged;
-        public List<Location> Locations
+        public ObservableCollection<Location> Locations
         {
             get { return _locations; }
             set
@@ -52,9 +53,18 @@ namespace Projekt_HjemIS
 
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
-            IEnumerable<Location> locations = await Task.Run(() => repository.GetCities2());
+            List<Location> locations = await Task.Run(() => repository.GetCities2());
+            locations.Sort((x, y) => string.Compare(x.City, y.City));
             //Validate  data
-            _locations.AddRange(locations);
+            foreach (Location location in locations)
+            {
+                _locations.Add(location);
+            }
+            
+            //await Task.Delay(10000);
+            //_locations.Add(new Location() { City = "Skive", PostalCode = "7800" });
+            //_locations.Add(new Location() { City = "Holstebro", PostalCode = "7500" });
+            //_locations.Add(new Location() { City = "Gribskov", PostalCode = "3250" });
         }
 
         private void _Offers_Click(object sender, RoutedEventArgs e)

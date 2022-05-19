@@ -14,7 +14,7 @@ namespace Projekt_HjemIS.Systems
 {
     public class LocationRepository
     {
-        private static SqlConnection connection = new SqlConnection
+        private SqlConnection connection = new SqlConnection
     (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
         public LocationRepository()
         {
@@ -102,7 +102,9 @@ namespace Projekt_HjemIS.Systems
 			    FROM  Locations
 			    GROUP BY Locations.PostalCode ,Locations.City) AS innerQuery
                 GROUP BY	innerQuery.City";
-                SqlCommand command = new SqlCommand(query2, connection);
+                string query = $@"CityPostalCode";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.CommandType = CommandType.StoredProcedure;
                 command.CommandTimeout = 0;
                 //command.Parameters.Add(CreateParameter("@postalcode", loc.PostalCode, SqlDbType.NVarChar));
                 //command.Parameters.Add(CreateParameter("@city", loc.City, SqlDbType.NVarChar));
@@ -123,6 +125,54 @@ namespace Projekt_HjemIS.Systems
                     }
                 }
                 return locs;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
+        public async Task<IEnumerable<Message>> FindMessages(Location location)
+        {
+            Dictionary<int, Message> msgs = new Dictionary<int, Message>();
+            try
+            {
+                //await connection.OpenAsync();
+                await OpenAndSetArithAbort(connection);
+                string query = $@"SELECT Customers.PhoneNumber, [Messages].ID, [Messages].Body, [Messages].[Type], Customers.FirstName, Customers.LastName FROM 
+                                (SELECT DISTINCT [Customers-Messages].ID, PhoneNumber
+                                    FROM [Customers-Messages]
+                                    WHERE PhoneNumber IN
+                                (SELECT PhoneNumber
+                                    FROM Locations
+                                    CROSS APPLY(SELECT CountyCode, StreetCode, FirstName, LastName, PhoneNumber FROM Customers 
+                                    WHERE City LIKE '%{location.City}%' AND PostalCode LIKE '%{location.PostalCode}%' AND STREET LIKE '%{location.Street}%' AND Locations.CountyCode = Customers.CountyCode AND Locations.StreetCode = Customers.StreetCode)A)) AS DT
+                                RIGHT JOIN [Messages] ON DT.ID = [Messages].ID
+                                LEFT JOIN Customers ON DT.PhoneNumber = Customers.PhoneNumber";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.CommandTimeout = 0;
+                //command.Parameters.Add(CreateParameter("@postalcode", loc.PostalCode, SqlDbType.NVarChar));
+                //command.Parameters.Add(CreateParameter("@city", loc.City, SqlDbType.NVarChar));
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        int id = (int)reader[$"{nameof(Message.ID)}"];
+                        string body = reader[$"{nameof(Message.Body)}"].ToString().Trim();
+                        string type = reader[$"{nameof(Message.Type)}"].ToString().Trim();
+                        string fName = reader[$"FirstName"].ToString().Trim();
+                        string lName = reader[$"LastName"].ToString().Trim();
+                        int phoneNumber = (int)reader[$"PhoneNumber"];
+                        Customer customer = new Customer(){ FirstName = fName, LastName = lName, PhoneNumber=phoneNumber};
+                        if (!msgs.ContainsKey(id)) msgs.Add(id, new Message(){ ID = id, Body = body, Type = type });
+                        msgs[id].Recipients.Add(customer);
+                    }
+                }
+                return msgs.Values;
             }
             catch (Exception ex)
             {

@@ -27,6 +27,18 @@ namespace Projekt_HjemIS.Views
         private LocationRepository repository;
         private ObservableCollection<Location> _locations;
         private ObservableCollection<Location> _streets;
+        private ObservableCollection<Message> _messages;
+
+        public ObservableCollection<Message> Messages
+        {
+            get { return _messages; }
+            set
+            {
+                _messages = value;
+                OnPropertyChanged("Messages");
+            }
+        }
+
         public ObservableCollection<Location> Streets
         {
             get { return _streets; }
@@ -49,6 +61,18 @@ namespace Projekt_HjemIS.Views
         public event PropertyChangedEventHandler PropertyChanged;
         private List<Location> _internalStreets = new List<Location>();
         private ObservableCollection<Location> _locationsToSearch;
+        private QueryState _state;
+
+        public QueryState State
+        {
+            get { return _state; }
+            set
+            {
+                _state = value;
+                OnPropertyChanged("State");
+            }
+        }
+
         public ObservableCollection<Location> LocationsToSearch
         {
             get { return _locationsToSearch; }
@@ -68,7 +92,7 @@ namespace Projekt_HjemIS.Views
             {
                 _internalStreets = value;
                 OnPropertyChanged("SearchCanExecute");
-                Streets = new ObservableCollection<Location>(_internalStreets.Where(p => FilterLocations(p)));
+                //Streets = new ObservableCollection<Location>(_internalStreets.Where(p => FilterLocations(p)));
             }
         }
         public string CitySearchText
@@ -76,8 +100,9 @@ namespace Projekt_HjemIS.Views
             get { return _citySearchText; }
             set
             {
+                if (_citySearchText == value) return;
                 _citySearchText = value;
-                if(InternalLocations != null ) Locations = new ObservableCollection<Location>(InternalLocations.Where(p => FilterLocations(p)));
+                //if(InternalLocations != null ) Locations = new ObservableCollection<Location>(InternalLocations.Where(p => FilterLocations(p)));
                 OnPropertyChanged("CitySearchText");
                 OnPropertyChanged("CanExecute");
             }
@@ -87,8 +112,9 @@ namespace Projekt_HjemIS.Views
             get { return _postSearchText; }
             set
             {
+                if (_postSearchText == value) return;
                 _postSearchText = value;
-                if (InternalLocations != null) Locations = new ObservableCollection<Location>(InternalLocations.Where(p => FilterLocations(p)));
+                //if (InternalLocations != null) Locations = new ObservableCollection<Location>(InternalLocations.Where(p => FilterLocations(p)));
                 OnPropertyChanged("PostSearchText");
                 OnPropertyChanged("CanExecute");
             }
@@ -99,7 +125,6 @@ namespace Projekt_HjemIS.Views
             set
             {
                 _streetSearchText = value;
-                Streets = new ObservableCollection<Location>(InternalStreets.Where(p => FilterStreets(p)));
             }
         }
         public bool CanExecute
@@ -110,48 +135,86 @@ namespace Projekt_HjemIS.Views
         {
             get { return InternalLocations.Any() ? true : false; }
         }
-        public LogView(ref List<Location> locations)
+        public LogView(ref ObservableCollection<Location> locations)
         {
             InitializeComponent();
             DataContext = this;
             repository = new LocationRepository(); 
-            InternalLocations = locations;
-            LocationsToSearch = new ObservableCollection<Location>();
+            Locations = locations;
         }
-        private bool FilterStreets(Location loc)
-        {
-            if (loc.Street.StartsWith(_streetSearchText)) return true;
-            else return false;
-        }
-        private bool FilterLocations(Location loc)
-        {
-            if (loc.City.StartsWith(_citySearchText) && loc.PostalCode.StartsWith(_postSearchText)) return true;
-            else return false;
-        }
+
         public void OnPropertyChanged(string prop)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
         private async void FindStreets_Click(object sender, RoutedEventArgs e)
         {
-            Location loc = new Location() { City = _citySearchText, PostalCode = _postSearchText, Street = _streetSearchText };
-            IEnumerable<Location> streets = await Task.Run(()=>repository.GetLocations(loc));
-            InternalStreets = streets.ToList();
+            State = Views.QueryState.Executing; 
+            string[] input = _citySearchText.Split('-');
+            if(input.Length > 1)
+            {
+                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = _streetSearchText };
+                IEnumerable<Location> streets = await Task.Run(() => repository.GetLocations(loc));
+                if (streets != null) Streets = new ObservableCollection<Location>(streets);
+            }
+            State = Views.QueryState.Finished;
             //Streets = new ObservableCollection<Location>(streets.ToList().GetRange(0, 50));
         }
-
+        private async void GetMessages(object sender, SelectionChangedEventArgs e)
+        {
+            State = Views.QueryState.Executing;
+            ComboBox comboBox = (ComboBox)sender;
+            if (!comboBox.IsLoaded)
+                return;
+            if (comboBox.SelectedItem is Location)
+            {
+                int index = comboBox.SelectedIndex;
+                Location loc = comboBox.Items[index] as Location;
+                IEnumerable<Message> msgs = await Task.Run(()=>repository.FindMessages(loc));
+                if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
+                else Messages.Clear();
+            }
+            State = Views.QueryState.Finished;
+        }
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox box = sender as ComboBox;
+            ComboBox comboBox = (ComboBox)sender;
+            if (!comboBox.IsLoaded)
+                return;
             Location loc;
-            if (box.SelectedItem is Location)
+            if (comboBox.SelectedItem is Location)
             {
-                int index = box.SelectedIndex;
-                loc = box.Items[index] as Location;
+                int index = comboBox.SelectedIndex;
+                loc = comboBox.Items[index] as Location;
                 LocationsToSearch.Add(loc);
-                CityBox.Text = loc.City;
-                PostalBox.Text = loc.PostalCode;
             }
         }
+
+
+        private void PreviewText(object sender, TextCompositionEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            comboBox.IsDropDownOpen = true;
+        }
+
+        private async void FindMessages_Click(object sender, RoutedEventArgs e)
+        {
+            State = Views.QueryState.Executing;
+            string[] input = _citySearchText.Split('-');
+            if (input.Length > 1)
+            {
+                Location loc = new Location() { City = input[0], PostalCode = input[1] };
+                IEnumerable<Message> msgs = await Task.Run(() => repository.FindMessages(loc));
+                if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
+                else Messages.Clear();
+            }
+            State = Views.QueryState.Finished;
+        }
+    }
+    public enum QueryState
+    {
+        Standby = 0,
+        Executing = 1,
+        Finished = 2,
     }
 }

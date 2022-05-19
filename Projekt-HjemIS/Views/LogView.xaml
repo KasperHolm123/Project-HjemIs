@@ -13,47 +13,72 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ComboBox x:Name="CityBox" IsEditable="True" Text="{Binding CitySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="350,30,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="SelectionChanged">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Path=City}"/>
-                        <TextBlock Text="{Binding Path=PostalCode, StringFormat= - {0}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
+        <ComboBox x:Name="CityBox" IsEditable="True"  Text="{Binding CitySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="350,30,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel></VirtualizingStackPanel>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
         </ComboBox>
-        <ComboBox x:Name="PostalBox" IsEditable="True" Text="{Binding PostSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,30,0,0" VerticalAlignment="Top" Width="120">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Path=City}"/>
-                        <TextBlock Text="{Binding Path=PostalCode, StringFormat= - {0}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
+        <ComboBox x:Name="PostalBox" IsEditable="True"  Text="{Binding PostSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,30,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel></VirtualizingStackPanel>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
         </ComboBox>
-        <ComboBox x:Name="StreetBox" Text="{Binding StreetSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="{Binding Path=CanExecute, Mode=OneWay}" ItemsSource="{Binding Path=Streets}" HorizontalAlignment="Left" Margin="200,30,0,0" VerticalAlignment="Top" Width="120">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Path=Street}"/>
-                        <TextBlock Text="{Binding Path=City, StringFormat= - {0}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
+        <ComboBox x:Name="StreetBox"  Text="{Binding StreetSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="{Binding Path=CanExecute, Mode=OneWay}" ItemsSource="{Binding Path=Streets}" IsTextSearchEnabled="False" HorizontalAlignment="Left" Margin="200,30,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText" SelectionChanged="GetMessages">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel></VirtualizingStackPanel>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
         </ComboBox>
-        <Button x:Name="FindStreets" Content="Button" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="538,30,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
-        <ListBox Width="75" Height="250" Margin="50,150,675,50" ItemsSource="{Binding Path=LocationsToSearch}">
-            <ListBox.ItemTemplate>
+        <Button x:Name="FindStreets" Content="Button" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="540,30,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
+        <Button x:Name="FindMessages" Content="Button" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="600,30,0,0" VerticalAlignment="Top" Click="FindMessages_Click"/>
+        <ListBox x:Name="MessageLog" Width="500" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="300" ItemsSource="{Binding Path=Messages}" d:ItemsSource="{d:SampleData ItemCount=5}">
+            <ListBox.ItemTemplate >
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Path=City}"/>
-                        <TextBlock Text="{Binding Path=PostalCode, StringFormat= - {0}}"/>
-                        <TextBlock Text="{Binding Path=Street, TargetNullValue=-}"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" MaxWidth="250" Height="100" HorizontalAlignment="Left" Orientation="Vertical">
+                            <Label Content="{Binding Path=Type}"/>
+                            <Label Content="{Binding Path=Body}"/>
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Recipients}" Width="200" HorizontalAlignment="Right" VerticalAlignment="Top">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel></VirtualizingStackPanel>
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                        </ComboBox>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Ellipse x:Name="QueryState" Width="30" Height="30" Margin="650,30,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" >
+            <Ellipse.Resources>
+                <Style TargetType="Ellipse">
+                    <Setter Property="Fill" Value="Transparent"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding State}" Value="0">
+                            <Setter Property="Fill" Value="White"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="1">
+                            <Setter Property="Fill" Value="Gray"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="2">
+                            <Setter Property="Fill" Value="Green"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="3">
+                            <Setter Property="Fill" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Ellipse.Resources>
+        </Ellipse>
     </Grid>
 </UserControl>
