@@ -47,10 +47,16 @@ namespace Projekt_HjemIS
             repository = new LocationRepository();
             GridContent.Children.Add(userControl);
             lablUsername.Content = "Welcome " + User.Username.ToString();
-            //Task.Run(() => DatabaseHandler.GetCities());
             Loaded += Dashboard_Loaded;
+            if (User.Admin == false)
+            {
+                _Users.IsEnabled = false;
+            }
+            if (User.Admin == false)
+            {
+                _Users.IsEnabled = false;
+            }
         }
-
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
             //List<Location> locations = await Task.Run(() => repository.GetCities2());
@@ -60,13 +66,12 @@ namespace Projekt_HjemIS
             //{
             //    _locations.Add(location);
             //}
-            
+
             await Task.Delay(10000);
             _locations.Add(new Location() { City = "Skive", PostalCode = "7800" });
             _locations.Add(new Location() { City = "Holstebro", PostalCode = "7500" });
             _locations.Add(new Location() { City = "Gribskov", PostalCode = "3250" });
         }
-
         private void _Offers_Click(object sender, RoutedEventArgs e)
         {
             userControl = new OfferViews();
@@ -112,6 +117,13 @@ namespace Projekt_HjemIS
         private void OnPropertyChanged(string prop)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void _Emulator_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new EmulatorView();
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Projekt_HjemIS
         public string RequestPass(string fUsername)
         {
             SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
-            User fUser = new User();
+            User fUser = new User(fUsername);
             try
             {
                 if (connString.State == ConnectionState.Closed)

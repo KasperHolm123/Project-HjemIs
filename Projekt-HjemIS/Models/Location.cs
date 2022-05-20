@@ -24,12 +24,22 @@ namespace Projekt_HjemIS.Models
                 _street = CleanInput(value);
             }
         }
-
-
+        public bool IsRecipient { get; set; }
         public Location()
         {
 
         }
+
+        public Location(string streetCode, string countyCode, string street, string postalCode, string city, string postalDistrict)
+        {
+            Street = streetCode;
+            CountyCode = countyCode;
+            Street = street;
+            PostalCode = postalCode;
+            City = city;
+            PostalDistrict = postalDistrict;
+        }
+
         public override string ToString()
         {
             if (Street != null) return City + "-" + Street;

@@ -61,26 +61,117 @@ namespace Projekt_HjemIS.Systems
             ClearTables();
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
-                bulkCopy.DestinationTableName = "Locations";                
-                PropertyInfo[] properties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                bulkCopy.DestinationTableName = "Locations";
+                PropertyInfo[] allProperties = typeof(Location).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                List<PropertyInfo> properties = new List<PropertyInfo>();
+                foreach (PropertyInfo item in allProperties)
+                {
+                    if (item.PropertyType == typeof(String))
+                        properties.Add(item);
+                }
                 foreach (PropertyInfo property in properties)
                 {
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
                 }
-              
-                try
-                {
-                    bulkCopy.WriteToServer(dt);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                }
+
+                try { bulkCopy.WriteToServer(dt); }
+                catch (Exception ex) { Debug.WriteLine(ex.Message); }
+                finally { connection.Close(); }
             }
+        }
+
+        /// <summary>
+        /// Saves any type of message in a database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static int SaveMessage<T>(T message) where T : Message
+        {
+            try
+            {
+                connection.Open();
+                if (typeof(T) == typeof(Message_Mail))
+                {
+                    Message_Mail mail = message as Message_Mail;
+                    string query = "INSERT INTO [Messages] ([Type], [Subject], Body) OUTPUT Inserted.ID " +
+                        "VALUES (@messageType, @subject, @body)";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.Add(CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar));
+                    return (int)command.ExecuteScalar();
+                }
+                if (typeof(T) == typeof(Message_SMS))
+                {
+                    Message_SMS sms = message as Message_SMS;
+                    string query = "INSERT INTO [Messages] ([Type], Body) OUTPUT Inserted.ID " + 
+                        "VALUES(@messageType, @body)";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.Add(CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar));
+                    return (int)command.ExecuteScalar();
+                }
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return -1;
+            }
+            finally { connection.Close(); }
+        }
+
+        public static void ConnectMessage(int ID, string countyCode, string streetCode)
+        {
+            try
+            {
+                connection.Open();
+                string query = "INSERT INTO [Customers-Messages] (ID, PhoneNumber, [Date]) " +
+                    "SELECT @messageID, PhoneNumber, GETDATE() FROM Customers WHERE " +
+                    "CountyCode = @countyCode AND StreetCode = @streetCode;";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.Add(CreateParameter("@messageID", ID, SqlDbType.Int));
+                cmd.Parameters.Add(CreateParameter("@countyCode", countyCode, SqlDbType.NVarChar));
+                cmd.Parameters.Add(CreateParameter("@streetCode", streetCode, SqlDbType.NVarChar));
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            finally { connection.Close(); }
+        }
+
+        public static void GetLocation(ObservableCollection<Location> collection, string streetName)
+        {
+            try
+            {
+                connection.Open();
+                string query = $"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{streetName}%';";
+                SqlCommand command = new SqlCommand(query, connection);
+                int streetAmount = 0;
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Location newLocation = new Location(
+                            (string)reader[$"{nameof(Location.StreetCode)}"],
+                            (string)reader[$"{nameof(Location.CountyCode)}"],
+                            (string)reader[$"{nameof(Location.Street)}"],
+                            (string)reader[$"{nameof(Location.PostalCode)}"],
+                            (string)reader[$"{nameof(Location.City)}"],
+                            (string)reader[$"{nameof(Location.PostalDistrict)}"]
+                            );
+                        if (!collection.Contains(newLocation))
+                            collection.Add(newLocation);
+                        streetAmount++;
+                    }
+                }
+                Debug.WriteLine($"Returned: {streetAmount} streets");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            finally { connection.Close(); }
         }
 
         /// <summary>
@@ -103,8 +194,8 @@ namespace Projekt_HjemIS.Systems
                         // This makes it so we don't accidentally make a typo and spend 5 hours
                         // trying to figure out why it doesn't work.
                         InternalCustomers.Add(new Customer(
-                            (string)reader[$"{nameof(Customer.StreetCode)}"],
-                            (string)reader[$"{nameof(Customer.CountyCode)}"],
+                            (string)reader[$"{nameof(Customer.FirstName)}"],
+                            (string)reader[$"{nameof(Customer.LastName)}"],
                             (int)reader[$"{nameof(Customer.PhoneNumber)}"],
                             (string)reader[$"{nameof(Customer.StreetCode)}"],
                             (string)reader[$"{nameof(Customer.CountyCode)}"]
@@ -123,7 +214,36 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-        
+
+        public static ObservableCollection<User> GetUsers()
+        {
+            ObservableCollection<User> InternalUsers = new ObservableCollection<User>();
+            try
+            {
+                connection.Open();
+                string query = $@"SELECT [username] FROM Users";
+                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //InternalUsers.Add(new User(
+                        //    (string)reader[$"{nameof(User.Username)}"]));
+                    }
+
+                }
+                return InternalUsers;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
 
         /// <summary>
         /// Clear database tables to make room for new data.

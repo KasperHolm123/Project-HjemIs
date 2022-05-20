@@ -8,15 +8,15 @@ namespace Projekt_HjemIS.Models
 {
     public class Message
     {
+        public List<Location> RecipientsLocations { get; set; }
 
-        public List<Customer> Recipients { get; set; }
         public int ID { get; set; }
         public string Body { get; set; }
         public string Type { get; set; }
         public List<Product> Offers { get; set; }
         public DateTime Date { get; set; }
 
-        public Message()
+        public Message(string body, List<Location> recipients, string type, List<Product> offers = null)
         {
             Recipients = new List<Customer>();
         }

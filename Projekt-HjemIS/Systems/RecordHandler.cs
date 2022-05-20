@@ -13,90 +13,75 @@ namespace Projekt_HjemIS.Systems
     /// <summary>
     /// Handles record segmentation
     /// </summary>
-    public class RecordHandler
+    public static class RecordHandler
     {
-
-        public RecordHandler()
-        {
-            GetRecords();
-            //ObserveDropZone();
-        }
+        private static List<Location> _locationsList = new List<Location>();
 
         // Holds a single record.
-        private List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+        private static List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
-        // This dictionary holds all record types and their segment positional values.
-        private Dictionary<string, int[]> RecordTypeDict = new Dictionary<string, int[]>()
-        {
-            { "001", new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 } } // POSTDIST
-
-            //{ "001", new int[]{ 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } }, // AKTVEJ
-            //{ "003", new int[]{ 3, 4, 4, 4, 4, 1, 12, 34 } }, // BYNAVN
-            //{ "004", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 }}, //POSTDIST
-            //{ "009", new int[]{ 3, 4, 4, 4, 4, 1, 12, 2, 30 } }, // KIRKEDIST
-        };
+        // Record segments
+        private static int[] _postDist = new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 };
 
         /// <summary>
-        /// Read from .txt file
+        /// Populate a list with data from a .txt file.
         /// </summary>
-        private void GetRecords()
+        /// <returns></returns>
+        public static List<Location> GetRecords()
         {
-            Stopwatch sw = new Stopwatch();
-
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
 
             Location currentLocation = new Location();
             Location prevLocation = new Location();
-            List<Location> locationsList = new List<Location>();
-
-
             using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\tempRecords.txt"))
             {
                 string currentLine = string.Empty;
-                sw.Start();
 
                 // Read each line from current file.
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    if (RecordTypeDict.ContainsKey(currentLine.Substring(0, 3)))
-                        BuildLocation(currentLocation, SpliceRecord(currentLine, RecordTypeDict["001"]));
+                    if (currentLine.Substring(0, 3) == "001")
+                        BuildLocation(currentLocation, SpliceRecord(currentLine, _postDist));
                     switch (currentLine.Substring(0, 3))
                     {
                         case "001":
                             if (prevLocation.StreetCode != currentLocation.StreetCode)
-                                locationsList.Add(currentLocation);
+                                _locationsList.Add(currentLocation);
                             break;
-                        case "000":
-                            break;
-                        case "999":
+                        default:
                             break;
                     }
-                    //if (currentLocation.StreetCode != prevLocation.StreetCode && currentLine.Substring(0, 3) != "000")
-                    //    locationsList.Add(currentLocation);
                     prevLocation = currentLocation;
-                    if (currentLocation.StreetCode == null || currentLocation.StreetCode == "" || currentLocation.StreetCode == "    ")
-                    {
-                        Debug.WriteLine(currentLocation.Street);
-                    }
                     currentLocation = new Location();
 
                     // Keep count of handled records and total records
                     if (currentLine.Substring(0, 3) == "999")
                     {
                         Debug.WriteLine(
-                            "Amount of locations added to database: " + locationsList.Count +
+                            "Amount of locations decoded: " + _locationsList.Count +
                             "\nTotal records: " + Int32.Parse(currentLine.Substring(4)) +
-                            "\nAmount of handled records: " + (recordCount - 2));
+                            "\nAmount of handled records: " + (recordCount - 1));
                     }
                     recordCount++;
                 }
-                DataTable dt = ListToDataTableConverter.ToDataTable(locationsList);
-                DatabaseHandler.AddBulkData(dt);
-                Debug.WriteLine(sw.Elapsed);
-                sw.Stop();
+                return _locationsList;
             }
+        }
+
+        /// <summary>
+        /// Save a list of locations to a database.
+        /// </summary>
+        /// <param name="locations"></param>
+        public static void SaveRecords(List<Location> locations)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            DataTable dt = ListToDataTableConverter.ToDataTable(locations);
+            DatabaseHandler.AddBulkData(dt);
+            Debug.WriteLine(sw.Elapsed);
+            sw.Stop();
         }
 
         /// <summary>
@@ -104,7 +89,7 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         /// <param name="currentRecord"></param>
         /// <param name="recordType"></param>
-        private List<string> SpliceRecord(string currentRecord, int[] recordType)
+        private static List<string> SpliceRecord(string currentRecord, int[] recordType)
         {
             int currentCol = 0;
             for (int i = 0; i < recordType.Length; i++)
@@ -123,7 +108,7 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         /// <param name="loc"></param>
         /// <param name="record"></param>
-        private void BuildLocation(Location loc, List<string> record)
+        private static void BuildLocation(Location loc, List<string> record)
         {
             loc.CountyCode = record[1];
             loc.StreetCode = record[2];
@@ -134,31 +119,11 @@ namespace Projekt_HjemIS.Systems
 
         }
 
-        // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
-        FileSystemWatcher watcher = new FileSystemWatcher();
-
-        /// <summary>
-        /// Observes a folder for a new file.
-        /// </summary>
-        private void ObserveDropZone()
-        {
-            watcher.Path = $@"{GetCurrentDirectory()}\dropzone";
-            watcher.Filter = "*.txt";
-            watcher.Created += new FileSystemEventHandler(Watcher_Created);
-            watcher.IncludeSubdirectories = true;
-            watcher.EnableRaisingEvents = true;
-        }
-
-        private void Watcher_Created(object sender, FileSystemEventArgs e)
-        {
-            Debug.WriteLine($"new file: {e.FullPath}");
-        }
-
         /// <summary>
         /// Returns current directory.
         /// </summary>
         /// <returns></returns>
-        private string GetCurrentDirectory()
+        private static string GetCurrentDirectory()
         {
             var rootPathChild = Directory.GetCurrentDirectory();
             var rootPathParent = Directory.GetParent($"{rootPathChild}");
