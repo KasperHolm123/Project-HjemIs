@@ -99,7 +99,7 @@ namespace Projekt_HjemIS.Systems
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.Add(CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar));
                     command.Parameters.Add(CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", mail.Body, SqlDbType.NVarChar));
                     return (int)command.ExecuteScalar();
                 }
                 if (typeof(T) == typeof(Message_SMS))
@@ -109,7 +109,7 @@ namespace Projekt_HjemIS.Systems
                         "VALUES(@messageType, @body)";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.Add(CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", sms.Body, SqlDbType.NVarChar));
                     return (int)command.ExecuteScalar();
                 }
                 return -1;

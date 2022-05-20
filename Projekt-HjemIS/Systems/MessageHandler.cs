@@ -45,7 +45,7 @@ namespace Projekt_HjemIS.Systems
         private static string FormatSms(Message_SMS sms)
         {
             string internalMessage =
-                $"01/{sms.MessageBody}\n" +
+                $"01/{sms.Body}\n" +
                 $"02/{PrintMessageDescription(sms.Offers)}\n" +
                 $"03/{DateTime.Now}\n" +
                 $"04/";
@@ -56,7 +56,7 @@ namespace Projekt_HjemIS.Systems
         {
             string internalMessage =
                 $"00/{mail.Subject}\n" +
-                $"01/{mail.MessageBody}\n" +
+                $"01/{mail.Body}\n" +
                 $"02/{PrintMessageDescription(mail.Offers)}\n" +
                 $"03/{DateTime.Now}\n" +
                 $"04/";
