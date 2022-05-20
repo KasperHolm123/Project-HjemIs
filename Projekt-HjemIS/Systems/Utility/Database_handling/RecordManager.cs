@@ -60,13 +60,13 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                         {
                             // Foreach property in Customer class ??????
                             internalTable.Add(new Customer(values));
-                            internalTable.Add(new Customer(
-                            (string)reader[$"{nameof(Customer.FirstName)}"],
-                            (string)reader[$"{nameof(Customer.LastName)}"],
-                            (int)reader[$"{nameof(Customer.PhoneNumber)}"],
-                            (string)reader[$"{nameof(Customer.StreetCode)}"],
-                            (string)reader[$"{nameof(Customer.CountyCode)}"]
-                            ));
+                            //internalTable.Add(new Customer(
+                            //(string)reader[$"{nameof(Customer.FirstName)}"],
+                            //(string)reader[$"{nameof(Customer.LastName)}"],
+                            //(int)reader[$"{nameof(Customer.PhoneNumber)}"],
+                            //(string)reader[$"{nameof(Customer.StreetCode)}"],
+                            //(string)reader[$"{nameof(Customer.CountyCode)}"]
+                            //));
                         }
                     }
                     else if (typeof(T) == typeof(Location))
