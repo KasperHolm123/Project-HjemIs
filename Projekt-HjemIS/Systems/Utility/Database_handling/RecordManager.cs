@@ -52,38 +52,36 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 SqlCommand cmd = new SqlCommand(query, connection);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+                    object[] values = new object[Props.Count];
                     if (typeof(T) == typeof(Customer))
                     {
                         var internalTable = new List<Customer>();
-                        object[] values = new object[Props.Count];
                         while (reader.Read())
                         {
-                            // Foreach property in Customer class ??????
+                            reader.GetValues(values);
                             internalTable.Add(new Customer(values));
-                            //internalTable.Add(new Customer(
-                            //(string)reader[$"{nameof(Customer.FirstName)}"],
-                            //(string)reader[$"{nameof(Customer.LastName)}"],
-                            //(int)reader[$"{nameof(Customer.PhoneNumber)}"],
-                            //(string)reader[$"{nameof(Customer.StreetCode)}"],
-                            //(string)reader[$"{nameof(Customer.CountyCode)}"]
-                            //));
                         }
+                        return (List<T>)Convert.ChangeType(internalTable, typeof(List<T>)); // wtf dude
                     }
                     else if (typeof(T) == typeof(Location))
                     {
                         var internalTable = new List<Location>();
                         while (reader.Read())
                         {
-                            Location newLocation = new Location(
-                            (string)reader[$"{nameof(Location.StreetCode)}"],
-                            (string)reader[$"{nameof(Location.CountyCode)}"],
-                            (string)reader[$"{nameof(Location.Street)}"],
-                            (string)reader[$"{nameof(Location.PostalCode)}"],
-                            (string)reader[$"{nameof(Location.City)}"],
-                            (string)reader[$"{nameof(Location.PostalDistrict)}"]
-                            );
-                            if (!internalTable.Contains(newLocation))
-                                internalTable.Add(newLocation);
+                            reader.GetValues(values);
+                            Location location = new Location(values);
+
+                            if (!internalTable.Contains(location))
+                                internalTable.Add(location);
+
+                            //Location newLocation = new Location(
+                            //(string)reader[$"{nameof(Location.StreetCode)}"],
+                            //(string)reader[$"{nameof(Location.CountyCode)}"],
+                            //(string)reader[$"{nameof(Location.Street)}"],
+                            //(string)reader[$"{nameof(Location.PostalCode)}"],
+                            //(string)reader[$"{nameof(Location.City)}"],
+                            //(string)reader[$"{nameof(Location.PostalDistrict)}"]
+                            //);
                         }
                     }
                     else if (typeof(T) == typeof(User))

@@ -33,27 +33,11 @@ namespace Projekt_HjemIS.Models
 
         public Customer(object[] values)
         {
-            List<object> internalProperties = GetInternalProperties();
-            
-            // Sæt alle properties = værdierne af values array'et.
-            for (int i = 0; i < values.Length - 1; i++)
-            {
-                if ((Type)values[i] == typeof(int))
-                    internalProperties[2] = values[i];
-                else 
-                    internalProperties[i] = values[i];
-            }
-        }
-
-        private List<object> GetInternalProperties()
-        {
-            List<object> properties = new List<object>();
-            properties.Add(FirstName);
-            properties.Add(LastName);
-            properties.Add(PhoneNumber);
-            properties.Add(StreetCode);
-            properties.Add(CountyCode);
-            return properties;
+            FirstName = values[0].ToString();
+            LastName = values[1].ToString();
+            PhoneNumber = (int)values[2];
+            StreetCode = values[3].ToString();
+            CountyCode = values[4].ToString();
         }
 
         public override string ToString()

@@ -1,5 +1,6 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -25,9 +26,11 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class MainWindow : Window
     {
+        RecordManager rm = new RecordManager();
         public MainWindow()
         {
             InitializeComponent();
+            rm.GetTable<Customer>("SELECT * FROM Customers");
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

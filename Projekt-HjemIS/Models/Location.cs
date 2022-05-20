@@ -31,5 +31,15 @@ namespace Projekt_HjemIS.Models
             PostalDistrict = postalDistrict;
         }
 
+        public Location(object[] values)
+        {
+            PostalCode = values[0].ToString();
+            City = values[1].ToString();
+            PostalDistrict = values[2].ToString();
+            StreetCode = values[3].ToString();
+            CountyCode = values[4].ToString();
+            Street = values[5].ToString();
+        }
+
     }
 }
