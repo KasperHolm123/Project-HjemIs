@@ -53,18 +53,18 @@ namespace Projekt_HjemIS
 
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
-            List<Location> locations = await Task.Run(() => repository.GetCities2());
-            locations.Sort((x, y) => string.Compare(x.City, y.City));
+            //List<Location> locations = await Task.Run(() => repository.GetCities2());
+            //locations.Sort((x, y) => string.Compare(x.City, y.City));
             //Validate  data
-            foreach (Location location in locations)
-            {
-                _locations.Add(location);
-            }
+            //foreach (Location location in locations)
+            //{
+            //    _locations.Add(location);
+            //}
             
-            //await Task.Delay(10000);
-            //_locations.Add(new Location() { City = "Skive", PostalCode = "7800" });
-            //_locations.Add(new Location() { City = "Holstebro", PostalCode = "7500" });
-            //_locations.Add(new Location() { City = "Gribskov", PostalCode = "3250" });
+            await Task.Delay(10000);
+            _locations.Add(new Location() { City = "Skive", PostalCode = "7800" });
+            _locations.Add(new Location() { City = "Holstebro", PostalCode = "7500" });
+            _locations.Add(new Location() { City = "Gribskov", PostalCode = "3250" });
         }
 
         private void _Offers_Click(object sender, RoutedEventArgs e)

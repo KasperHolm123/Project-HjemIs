@@ -24,10 +24,27 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class LogView : UserControl, INotifyPropertyChanged
     {
-        private LocationRepository repository;
+        private LocationRepository locationRepository;
+        private CustomerRepository customerRepository;
         private ObservableCollection<Location> _locations;
         private ObservableCollection<Location> _streets;
         private ObservableCollection<Message> _messages;
+        private ObservableCollection<Customer> _customers;
+        public List<Location> InternalLocations { get; set; }
+        public Customer CurrentCustomer { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        private List<Location> _internalStreets = new List<Location>();
+        private ObservableCollection<Location> _locationsToSearch;
+
+        public ObservableCollection<Customer> Customers
+        {
+            get { return _customers; }
+            set
+            {
+                _customers = value;
+                OnPropertyChanged("Customers");
+            }
+        }
 
         public ObservableCollection<Message> Messages
         {
@@ -57,22 +74,6 @@ namespace Projekt_HjemIS.Views
                 OnPropertyChanged("Locations");
             }
         }
-        public List<Location> InternalLocations { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private List<Location> _internalStreets = new List<Location>();
-        private ObservableCollection<Location> _locationsToSearch;
-        private QueryState _state;
-
-        public QueryState State
-        {
-            get { return _state; }
-            set
-            {
-                _state = value;
-                OnPropertyChanged("State");
-            }
-        }
-
         public ObservableCollection<Location> LocationsToSearch
         {
             get { return _locationsToSearch; }
@@ -82,9 +83,6 @@ namespace Projekt_HjemIS.Views
                 OnPropertyChanged("LocationsToSearch");
             }
         }
-        string _streetSearchText = "";
-        string _citySearchText = "";
-        string _postSearchText = "";
         public List<Location> InternalStreets
         {
             get { return _internalStreets; }
@@ -95,6 +93,12 @@ namespace Projekt_HjemIS.Views
                 //Streets = new ObservableCollection<Location>(_internalStreets.Where(p => FilterLocations(p)));
             }
         }
+        //Text-field properties
+        #region
+        string _streetSearchText = "";
+        string _citySearchText = "";
+        string _postSearchText = "";
+        private QueryState _state;
         public string CitySearchText
         {
             get { return _citySearchText; }
@@ -127,6 +131,18 @@ namespace Projekt_HjemIS.Views
                 _streetSearchText = value;
             }
         }
+        private string _customerSearchText;
+
+        public string CustomerSearchText
+        {
+            get { return _customerSearchText; }
+            set
+            {
+                _customerSearchText = value;
+                OnPropertyChanged("CustomerSearchText");
+            }
+        }
+
         public bool CanExecute
         {
             get { return (CitySearchText.Length > 2 && PostSearchText.Length > 2); }
@@ -135,47 +151,51 @@ namespace Projekt_HjemIS.Views
         {
             get { return InternalLocations.Any() ? true : false; }
         }
+        public QueryState State
+        {
+            get { return _state; }
+            set
+            {
+                _state = value;
+                OnPropertyChanged("State");
+            }
+        }
+        #endregion
         public LogView(ref ObservableCollection<Location> locations)
         {
             InitializeComponent();
             DataContext = this;
-            repository = new LocationRepository(); 
+            locationRepository = new LocationRepository(); 
             Locations = locations;
+            customerRepository = new CustomerRepository();
         }
 
         public void OnPropertyChanged(string prop)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
+        private void PreviewText(object sender, TextCompositionEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            comboBox.IsDropDownOpen = true;
+        }
+        //Event handlers related to streets
+        #region 
         private async void FindStreets_Click(object sender, RoutedEventArgs e)
         {
-            State = Views.QueryState.Executing; 
+            State = Views.QueryState.Executing;
             string[] input = _citySearchText.Split('-');
-            if(input.Length > 1)
+            if (input.Length > 1)
             {
                 Location loc = new Location() { City = input[0], PostalCode = input[1], Street = _streetSearchText };
-                IEnumerable<Location> streets = await Task.Run(() => repository.GetLocations(loc));
+                IEnumerable<Location> streets = await Task.Run(() => locationRepository.GetLocations(loc));
                 if (streets != null) Streets = new ObservableCollection<Location>(streets);
             }
             State = Views.QueryState.Finished;
             //Streets = new ObservableCollection<Location>(streets.ToList().GetRange(0, 50));
         }
-        private async void GetMessages(object sender, SelectionChangedEventArgs e)
-        {
-            State = Views.QueryState.Executing;
-            ComboBox comboBox = (ComboBox)sender;
-            if (!comboBox.IsLoaded)
-                return;
-            if (comboBox.SelectedItem is Location)
-            {
-                int index = comboBox.SelectedIndex;
-                Location loc = comboBox.Items[index] as Location;
-                IEnumerable<Message> msgs = await Task.Run(()=>repository.FindMessages(loc));
-                if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
-                else Messages.Clear();
-            }
-            State = Views.QueryState.Finished;
-        }
+
+        //Useless
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
@@ -189,14 +209,27 @@ namespace Projekt_HjemIS.Views
                 LocationsToSearch.Add(loc);
             }
         }
+        #endregion
 
 
-        private void PreviewText(object sender, TextCompositionEventArgs e)
+        //Event handlers related to messages
+        #region
+        private async void GetMessages(object sender, SelectionChangedEventArgs e)
         {
+            State = Views.QueryState.Executing;
             ComboBox comboBox = (ComboBox)sender;
-            comboBox.IsDropDownOpen = true;
+            if (!comboBox.IsLoaded)
+                return;
+            if (comboBox.SelectedItem is Location)
+            {
+                int index = comboBox.SelectedIndex;
+                Location loc = comboBox.Items[index] as Location;
+                IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
+                if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
+                else Messages.Clear();
+            }
+            State = Views.QueryState.Finished;
         }
-
         private async void FindMessages_Click(object sender, RoutedEventArgs e)
         {
             State = Views.QueryState.Executing;
@@ -204,12 +237,46 @@ namespace Projekt_HjemIS.Views
             if (input.Length > 1)
             {
                 Location loc = new Location() { City = input[0], PostalCode = input[1] };
-                IEnumerable<Message> msgs = await Task.Run(() => repository.FindMessages(loc));
+                IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
                 if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
                 else Messages.Clear();
             }
             State = Views.QueryState.Finished;
         }
+        #endregion
+
+        //Event handlers related to customers
+        #region
+        private async void GetCustomers_Click(object sender, RoutedEventArgs e)
+        {
+            State = Views.QueryState.Executing;
+            string[] input = _citySearchText.Split('-');
+            if (input.Length > 1)
+            {
+                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = StreetSearchText };
+                Customer customer = new Customer() { Address = loc };
+                IEnumerable<Customer> cstms = await Task.Run(() => customerRepository.GetCustomers(customer));
+                if (cstms != null) Customers = new ObservableCollection<Customer>(cstms);
+                else Customers.Clear();
+            }
+            State = Views.QueryState.Finished;
+        }
+        private async void CustomerBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            State = Views.QueryState.Executing;
+            ComboBox comboBox = (ComboBox)sender;
+            if (!comboBox.IsLoaded)
+                return;
+            Customer customer;
+            if (comboBox.SelectedItem is Customer)
+            {
+                int index = comboBox.SelectedIndex;
+                customer = await Task.Run(() => locationRepository.FindMessagesByCustomer(comboBox.Items[index] as Customer));
+                if (customer != null) Messages = new ObservableCollection<Message>(customer.MsgReceived);
+            }
+            State = Views.QueryState.Finished;
+        }
+        #endregion
     }
     public enum QueryState
     {

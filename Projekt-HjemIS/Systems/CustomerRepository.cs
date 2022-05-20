@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,29 +18,29 @@ namespace Projekt_HjemIS.Systems
         {
 
         }
-        public async Task<IEnumerable<Location>> GetCustomers(Customer customer)
+        public async Task<IEnumerable<Customer>> GetCustomers(Customer customer)
         {
-            List<Location> locs = new List<Location>();
+            List<Customer> customers = new List<Customer>();
             try
             {
                 await connection.OpenAsync();
-                string query = $@"SELECT TOP 50 Street, City, PostalCode
-                                FROM Locations 
-                                WHERE City LIKE '%{loc.City}%' AND PostalCode LIKE '%{loc.PostalCode}%' AND Street LIKE '%{loc.Street}%'";
+                string query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode FROM Customers
+                                INNER JOIN (SELECT CountyCode, StreetCode FROM Locations WHERE City LIKE '%{customer.Address.City}%' AND PostalCode LIKE '%{customer.Address.PostalCode}%' AND Street LIKE '%{customer.Address.Street}%') AS DT
+                                ON DT.CountyCode = Customers.CountyCode AND DT.StreetCode = Customers.StreetCode";
                 SqlCommand command = new SqlCommand(query, connection);
                 using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        locs.Add(new Location()
+                        customers.Add(new Customer()
                         {
-                            City = (string)reader[$"{nameof(Location.City)}"].ToString().Trim(),
-                            PostalCode = (string)reader[$"{nameof(Location.PostalCode)}"],
-                            Street = (string)reader[$"{nameof(Location.Street)}"].ToString().Trim()
+                            FirstName = reader[$"{nameof(Customer.FirstName)}"].ToString().Trim(),
+                            LastName = reader[$"{nameof(Customer.LastName)}"].ToString().Trim(),
+                            PhoneNumber = (int)reader[$"{nameof(Customer.PhoneNumber)}"]
                         });
                     }
                 }
-                return locs;
+                return customers;
             }
             catch (Exception ex)
             {

@@ -14,6 +14,7 @@ namespace Projekt_HjemIS.Models
         public string Body { get; set; }
         public string Type { get; set; }
         public List<Product> Offers { get; set; }
+        public DateTime Date { get; set; }
 
         public Message()
         {

@@ -34,8 +34,16 @@
                 </ItemsPanelTemplate>
             </ComboBox.ItemsPanel>
         </ComboBox>
-        <Button x:Name="FindStreets" Content="Button" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="540,30,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
-        <Button x:Name="FindMessages" Content="Button" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="600,30,0,0" VerticalAlignment="Top" Click="FindMessages_Click"/>
+        <ComboBox x:Name="CustomerBox"  Text="{Binding CustomerSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" ItemsSource="{Binding Path=Customers}" IsTextSearchEnabled="False" HorizontalAlignment="Left" Margin="25,100,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText" SelectionChanged="CustomerBox_SelectionChanged">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel></VirtualizingStackPanel>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <Button x:Name="FindStreets" Content="Streets" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="540,30,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
+        <Button x:Name="FindMessages" Content="Search" IsEnabled="True"  HorizontalAlignment="Left" Margin="600,30,0,0" VerticalAlignment="Top" Click="FindMessages_Click"/>
+        <Button x:Name="GetCustomers" Content="Customers" IsEnabled="True"  HorizontalAlignment="Left" Margin="600,60,0,0" VerticalAlignment="Top" Click="GetCustomers_Click"/>
         <ListBox x:Name="MessageLog" Width="500" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="300" ItemsSource="{Binding Path=Messages}" d:ItemsSource="{d:SampleData ItemCount=5}">
             <ListBox.ItemTemplate >
                 <DataTemplate>
@@ -47,6 +55,7 @@
                         <StackPanel Grid.Column="0" MaxWidth="250" Height="100" HorizontalAlignment="Left" Orientation="Vertical">
                             <Label Content="{Binding Path=Type}"/>
                             <Label Content="{Binding Path=Body}"/>
+                            <Label Content="{Binding Path=Date, StringFormat=dd-MM-yyyy}"/>
                         </StackPanel>
                         <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Recipients}" Width="200" HorizontalAlignment="Right" VerticalAlignment="Top">
                             <ComboBox.ItemsPanel>

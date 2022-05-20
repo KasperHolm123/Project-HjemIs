@@ -184,6 +184,52 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
+        public async Task<Customer> FindMessagesByCustomer(Customer customer)
+        {
+            Dictionary<int, Customer> customers = new Dictionary<int, Customer>();
+            try
+            {
+                //await connection.OpenAsync();
+                await OpenAndSetArithAbort(connection);
+                string query = $@"SELECT [Messages].Body,[Messages].[Type], [Customers-Messages].Date, Customers.FirstName, Customers.LastName, Customers.PhoneNumber
+                                FROM Customers 
+                                INNER JOIN [Customers-Messages] ON Customers.PhoneNumber = [Customers-Messages].PhoneNumber
+                                INNER JOIN [Messages] ON [Customers-Messages].ID = [Messages].ID 
+                                WHERE Customers.PhoneNumber = {customer.PhoneNumber}";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.CommandTimeout = 0;
+                int number = 0;
+                //command.Parameters.Add(CreateParameter("@postalcode", loc.PostalCode, SqlDbType.NVarChar));
+                //command.Parameters.Add(CreateParameter("@city", loc.City, SqlDbType.NVarChar));
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        string body = reader[$"{nameof(Message.Body)}"].ToString().Trim();
+                        string type = reader[$"{nameof(Message.Type)}"].ToString().Trim();
+                        string fName = reader[$"FirstName"].ToString().Trim();
+                        string lName = reader[$"LastName"].ToString().Trim();
+                        var date = reader[$"Date"];
+                        number = (int)reader[$"PhoneNumber"];
+                        Message msg = new Message() { Body = body, Type = type, Date = (DateTime)date };
+                        Customer cust = new Customer() { FirstName = fName, LastName = lName, PhoneNumber = number };
+                        if (!customers.ContainsKey(number)) customers.Add(number, new Customer() { PhoneNumber = number, FirstName = fName, LastName = lName});
+                        customers[number].MsgReceived.Add(msg);
+                        msg.Recipients.Add(customers[number]);
+                    }
+                }
+                return customers[number];
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
         public async Task OpenAndSetArithAbort(SqlConnection MyConnection)
         {
             using (SqlCommand _Command = MyConnection.CreateCommand())
