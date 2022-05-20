@@ -61,7 +61,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                             reader.GetValues(values);
                             internalTable.Add(new Customer(values));
                         }
-                        return (List<T>)Convert.ChangeType(internalTable, typeof(List<T>)); // wtf dude
+                        return internalTable as List<T>;
                     }
                     else if (typeof(T) == typeof(Location))
                     {
