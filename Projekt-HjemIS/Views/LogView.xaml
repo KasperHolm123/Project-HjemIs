@@ -52,10 +52,29 @@
                             <ColumnDefinition Width="300"></ColumnDefinition>
                             <ColumnDefinition Width="200"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" MaxWidth="250" Height="100" HorizontalAlignment="Left" Orientation="Vertical">
-                            <Label Content="{Binding Path=Type}"/>
-                            <Label Content="{Binding Path=Body}"/>
-                            <Label Content="{Binding Path=Date, StringFormat=dd-MM-yyyy}"/>
+                        <StackPanel HorizontalAlignment="Left">
+                            <StackPanel.Background>
+                                <ImageBrush/>
+                            </StackPanel.Background>
+                            <Label Content="{Binding Path=Date, StringFormat=dd-MM-yyyy}" Width="75" VerticalAlignment="Stretch" HorizontalAlignment="Left"/>
+                            <Image Tag="{Binding Path=Type}" Grid.Column="0" HorizontalAlignment="Left"  Width="75" Height="75">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger  Binding="{Binding Path=Type}" Value="SMS">
+                                                <Setter Property="Source" Value="/Pictures/sms.png"/>
+                                            </DataTrigger >
+                                            <DataTrigger  Binding="{Binding Path=Type}" Value="Email">
+                                                <Setter Property="Source" Value="/Pictures/email.png"/>
+                                            </DataTrigger >
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </StackPanel>
+                        <StackPanel Grid.Column="0" MaxWidth="200" Height="100" HorizontalAlignment="Center" Margin="-75,0,0,0" Orientation="Vertical">
+                            <Label Content="{Binding Path=Subject}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <Label Content="{Binding Path=Body}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                         </StackPanel>
                         <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Recipients}" Width="200" HorizontalAlignment="Right" VerticalAlignment="Top">
                             <ComboBox.ItemsPanel>

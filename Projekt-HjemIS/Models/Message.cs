@@ -9,7 +9,6 @@ namespace Projekt_HjemIS.Models
     public class Message
     {
         public List<Location> RecipientsLocations { get; set; }
-
         public int ID { get; set; }
         public string Body { get; set; }
         public string Type { get; set; }

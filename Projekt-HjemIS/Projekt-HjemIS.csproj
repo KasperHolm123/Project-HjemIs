@@ -90,7 +90,7 @@
     <Compile Include="Models\Message_SMS.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Systems\DropzoneObserver.cs" />
-	<Compile Include="Systems\CustomerRepository.cs" />
+    <Compile Include="Systems\CustomerRepository.cs" />
     <Compile Include="Systems\Emulator.cs" />
     <Compile Include="Systems\LocationRepository.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
@@ -220,6 +220,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\mail-inbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\sms.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\email.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

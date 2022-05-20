@@ -143,8 +143,8 @@ namespace Projekt_HjemIS.Systems
             {
                 //await connection.OpenAsync();
                 await OpenAndSetArithAbort(connection);
-                string query = $@"SELECT Customers.PhoneNumber, [Messages].ID, [Messages].Body, [Messages].[Type], Customers.FirstName, Customers.LastName FROM 
-                                (SELECT DISTINCT [Customers-Messages].ID, PhoneNumber
+                string query = $@"SELECT Customers.PhoneNumber, [Messages].ID, [Messages].Body, [Messages].[Type], Customers.FirstName, Customers.LastName, DT.[Date] FROM 
+                                (SELECT DISTINCT [Customers-Messages].ID, PhoneNumber, [Customers-Messages].[Date]
                                     FROM [Customers-Messages]
                                     WHERE PhoneNumber IN
                                 (SELECT PhoneNumber
@@ -167,8 +167,9 @@ namespace Projekt_HjemIS.Systems
                         string fName = reader[$"FirstName"].ToString().Trim();
                         string lName = reader[$"LastName"].ToString().Trim();
                         int phoneNumber = (int)reader[$"PhoneNumber"];
+                        DateTime date = (DateTime)reader[$"{nameof(Message.Date)}"];
                         Customer customer = new Customer(){ FirstName = fName, LastName = lName, PhoneNumber=phoneNumber};
-                        if (!msgs.ContainsKey(id)) msgs.Add(id, new Message(){ ID = id, Body = body, Type = type });
+                        if (!msgs.ContainsKey(id)) msgs.Add(id, new Message(){ ID = id, Body = body, Type = type, Date = date });
                         msgs[id].Recipients.Add(customer);
                     }
                 }
