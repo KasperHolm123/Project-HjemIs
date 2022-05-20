@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 
 namespace Projekt_HjemIS.Systems
 {
@@ -76,11 +77,12 @@ namespace Projekt_HjemIS.Systems
         /// <param name="locations"></param>
         public static Task<string> SaveRecords(List<Location> locations)
         {
+            RecordManager rm = new RecordManager();
             string result = string.Empty;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            result = DatabaseHandler.AddBulkData(dt);
+            result = rm.AddBulkData(dt);
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
             return Task.FromResult(result);

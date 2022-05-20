@@ -50,7 +50,7 @@ namespace Projekt_HjemIS.Systems
                         CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatSms(message as Message_SMS));
-                    return rm.AddData(message, query, sp);
+                    return rm.AddDataReturn<Message_SMS>(query, sp);
                 }
                 if (typeof(T) == typeof(Message_Mail))
                 {
@@ -64,8 +64,7 @@ namespace Projekt_HjemIS.Systems
                         CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatMail(message as Message_Mail));
-
-                    return rm.AddData(message, query, sp);
+                    return rm.AddDataReturn<Message_Mail>(query, sp);
                 }
                 return -1;
             }

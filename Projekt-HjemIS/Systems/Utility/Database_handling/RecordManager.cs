@@ -46,6 +46,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     object[] values = new object[Props.Count];
+                    // Eventuel forbedring ville være at finde en måde at bruge T i et switch statement, samt en måde at "new T()" på.
                     if (typeof(T) == typeof(Customer))
                     {
                         var internalTable = new List<Customer>();
@@ -100,23 +101,26 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         }
         #endregion
 
-        public int AddData<T>(T message, string query, SqlParameter[] parameters) where T : Message
+        /// <summary>
+        /// Add data to specified database and return an int(ID).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public int AddDataReturn<T>(string query, SqlParameter[] parameters)
         {
             try
             {
                 connection.Open();
                 if (typeof(T) == typeof(Message_Mail))
                 {
-                    Message_Mail mail = message as Message_Mail;
-                    
                     SqlCommand cmd = new SqlCommand(query, connection);
                     cmd.Parameters.AddRange(parameters);
                     return (int)cmd.ExecuteScalar();
                 }
                 if (typeof(T) == typeof(Message_SMS))
-                {
-                    Message_SMS sms = message as Message_SMS;
-                    
+                {   
                     SqlCommand cmd = new SqlCommand(query, connection);
                     cmd.Parameters.AddRange(parameters);
                     return (int)cmd.ExecuteScalar();
@@ -131,9 +135,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally { connection.Close(); }
         }
 
-        public async Task AddBulkData(DataTable dt, Type type) // Hvordan bruger man en generisk type som parameter?
+        /// <summary>
+        /// Adds a large amount of data to a database.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public string AddBulkData(DataTable dt) //Type type // Hvordan bruger man en generisk type som parameter?
         {
-            await connection.OpenAsync();
+            connection.OpenAsync();
             ClearTable("Locations");
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
@@ -147,8 +156,8 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 }
                 foreach (PropertyInfo property in properties)
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
-                try { bulkCopy.WriteToServer(dt); }
-                catch (Exception ex) { Debug.WriteLine(ex.Message); }
+                try { bulkCopy.WriteToServer(dt); return "Saving successful"; }
+                catch (Exception ex) { return ex.Message; }
                 finally { connection.Close(); }
             }
         }
