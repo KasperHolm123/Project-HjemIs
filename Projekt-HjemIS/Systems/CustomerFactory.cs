@@ -32,13 +32,12 @@ namespace Projekt_HjemIS.Systems
         // Contains created phone numbers for checking against duplicates
         public static List<int> phoneBook = new List<int>();
 
-        public static Random rand = new Random();
-
         public List<Location> locations = new List<Location>();
 
-        // 
+        public static Random rand = new Random();
+ 
         public int temp;
-        public int street;
+        
 
         // Handles generating a unique 8 digit phone number
         public int GeneratePhoneNumber()
