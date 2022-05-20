@@ -1,5 +1,6 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,10 +29,15 @@ namespace Projekt_HjemIS.Views
 
         // Contains all available locations.
         public ObservableCollection<Location> InternalLocations { get; set; }
+        
         // Contains all filtered locations.
         public ObservableCollection<Location> SearchedLocations { get; set; }
+        
         // Contains all available products
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
+
+        private RecordManager rm = new RecordManager();
+
         // Locations to be treated as recipients
         public List<Location> RecipientsLocations { get; set; }
 
@@ -87,7 +93,9 @@ namespace Projekt_HjemIS.Views
                 SearchedLocations.Clear();
             if (searchTxt.Text != "" || searchTxt.Text != null)
             {
-                DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
+                string query = $@"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{searchTxt.Text}%';";
+                SearchedLocations = new ObservableCollection<Location>(rm.GetTable<Location>(query)); // Tjek om det virker
+                //DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
                 recipientsDataGrid.ItemsSource = SearchedLocations;
             }
             else

@@ -73,22 +73,16 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                             if (!internalTable.Contains(location))
                                 internalTable.Add(location);
-
-                            //Location newLocation = new Location(
-                            //(string)reader[$"{nameof(Location.StreetCode)}"],
-                            //(string)reader[$"{nameof(Location.CountyCode)}"],
-                            //(string)reader[$"{nameof(Location.Street)}"],
-                            //(string)reader[$"{nameof(Location.PostalCode)}"],
-                            //(string)reader[$"{nameof(Location.City)}"],
-                            //(string)reader[$"{nameof(Location.PostalDistrict)}"]
-                            //);
                         }
+                        return internalTable as List<T>;
                     }
                     else if (typeof(T) == typeof(User))
                     {
                         var internalTable = new List<User>();
                         while (reader.Read())
                         {
+                            reader.GetValues(values);
+                            internalTable.Add(new User(values)); // mangler constructor
                             //InternalUsers.Add(new User(
                             //    (string)reader[$"{nameof(User.Username)}"]));
                         }

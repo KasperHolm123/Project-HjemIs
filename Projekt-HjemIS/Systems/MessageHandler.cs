@@ -1,4 +1,5 @@
 ﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,7 +19,8 @@ namespace Projekt_HjemIS.Systems
 
         public static void GetCustomers()
         {
-            DatabaseHandler.GetCustomers();
+            RecordManager rm = new RecordManager();
+            rm.GetTable<Customer>("SELECT * FROM Customers");
         }
 
         /// <summary>
