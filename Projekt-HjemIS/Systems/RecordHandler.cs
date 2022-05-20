@@ -15,7 +15,7 @@ namespace Projekt_HjemIS.Systems
     /// </summary>
     public class RecordHandler
     {
-        private List<Location> _locationsList = new List<Location>();
+        public List<Location> _locationsList = new List<Location>();
 
         public RecordHandler()
         {
@@ -32,7 +32,7 @@ namespace Projekt_HjemIS.Systems
         /// <summary>
         /// Read from .txt file
         /// </summary>
-        private List<Location> GetRecords()
+        public List<Location> GetRecords()
         {
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;

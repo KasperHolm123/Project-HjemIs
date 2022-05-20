@@ -11,26 +11,35 @@ using System.Diagnostics;
 namespace Projekt_HjemIS.Systems
 {
     class CustomerFactory
-    { 
+    {
         // Call the CreateNewCustomer method when CustomerFactory gets instantiated in Main
         public CustomerFactory()
         {
             CreateNewCustomer();
         }
 
+
+
         // Allow access to the fields of Customer
         Customer customer = new Customer();
 
+        public static RecordHandler recordHandler = new RecordHandler();
+
         // Contains the customers with values assigned to them
         List<Customer> createdCustomers = new List<Customer>();
-        
+
         // Contains created phone numbers for checking against duplicates
         public static List<int> phoneBook = new List<int>();
 
         public static Random rand = new Random();
 
+        //private List<Location> locations = new List<Location>();
+
+        // 
+        public int temp;
+
         // Handles generating a unique 8 digit phone number
-        public int generatePhoneNumber()
+        public int GeneratePhoneNumber()
         {
             int result;
             do // Do atleast once, repeat if the generated phone number ends up already existing in the phoneBook
@@ -45,12 +54,26 @@ namespace Projekt_HjemIS.Systems
                 // convert int[] to string and parse the string to end up with result as a int
                 result = Int32.Parse(string.Join("", phoneNum));
 
-                phoneBook.Add(result);
+                // temp stores the value of IndexOf
+                temp = phoneBook.IndexOf(result);
 
-            } while (phoneBook.Contains(result));
+            } while (temp > 0);
 
+            phoneBook.Add(result);
             return result;
         }
+
+        public void GenerateAddress()
+        {
+            List<Location> locations = recordHandler.GetRecords();
+            
+
+
+        }
+
+
+
+
 
         // Handles assigning values to the customer and storing them in a list
         public void CreateNewCustomer()
@@ -70,18 +93,26 @@ namespace Projekt_HjemIS.Systems
                     {
                         // Split each name into first name and last name
                         string[] fullName = currentLine.Split(' ');
-
+                        customer = new Customer();
                         customer.FirstName = fullName[0];
                         customer.LastName = fullName[fullName.Length - 1]; // Takes the last word in each line as the last name, skipping all middle names
-                        customer.PhoneNumber = generatePhoneNumber();
+                        customer.PhoneNumber = GeneratePhoneNumber();
+                        //customer.StreetCode = 
+                        //customer.CountyCode = 
 
                         createdCustomers.Add(customer);
 
-                        Debug.WriteLine(customer);
                     }
                 }
             }
+            foreach (var item in createdCustomers)
+            {
+                Debug.WriteLine(customer);
+
+            }
         }
+
+        
 
         private string GetCurrentDirectory()
         {
