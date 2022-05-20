@@ -73,7 +73,7 @@
                             </Image>
                         </StackPanel>
                         <StackPanel Grid.Column="0" MaxWidth="200" Height="100" HorizontalAlignment="Center" Margin="-75,0,0,0" Orientation="Vertical">
-                            <Label Content="{Binding Path=Subject}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <Label Content="{Binding Path=ID}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                             <Label Content="{Binding Path=Body}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                         </StackPanel>
                         <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Recipients}" Width="200" HorizontalAlignment="Right" VerticalAlignment="Top">

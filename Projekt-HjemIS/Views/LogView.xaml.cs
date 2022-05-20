@@ -168,6 +168,8 @@ namespace Projekt_HjemIS.Views
             locationRepository = new LocationRepository(); 
             Locations = locations;
             customerRepository = new CustomerRepository();
+            Messages = new ObservableCollection<Message>();
+            Messages.Add(new Message() { Body = "lONG ASS STRING \n sdadaodjsaonasdaidanodsandoaindsoaindsaiodnada \r asdadaodadoaimsoadmaoidmsaoidsmaodimasodmaiodmao \n kmaomaomlmaomlmaomlmaom lmaom almoa mlama lam l", Type = "Email", Date = DateTime.Now, ID = 1 });
         }
 
         public void OnPropertyChanged(string prop)
