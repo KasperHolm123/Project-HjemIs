@@ -25,6 +25,7 @@ namespace Projekt_HjemIS.Systems
 
         public static RecordHandler recordHandler = new RecordHandler();
 
+        
         // Contains the customers with values assigned to them
         List<Customer> createdCustomers = new List<Customer>();
 
@@ -33,10 +34,11 @@ namespace Projekt_HjemIS.Systems
 
         public static Random rand = new Random();
 
-        //private List<Location> locations = new List<Location>();
+        public List<Location> locations = new List<Location>();
 
         // 
         public int temp;
+        public int street;
 
         // Handles generating a unique 8 digit phone number
         public int GeneratePhoneNumber()
@@ -63,11 +65,28 @@ namespace Projekt_HjemIS.Systems
             return result;
         }
 
-        public void GenerateAddress()
+        
+        // Parameter 0 returns street, 1 returns county
+        public string GenerateAddress(int chooseOne)
         {
-            List<Location> locations = recordHandler.GetRecords();
-            
+            Location loc = new Location();
 
+            temp = rand.Next(recordHandler._locationsList.Count());
+
+            loc = recordHandler._locationsList[temp];
+
+            string street = loc.StreetCode;
+            string county = loc.CountyCode;
+
+            if (chooseOne > 1)
+            {
+                return street;
+            }
+            else
+            {
+                return county;
+            }
+            
 
         }
 
@@ -97,8 +116,9 @@ namespace Projekt_HjemIS.Systems
                         customer.FirstName = fullName[0];
                         customer.LastName = fullName[fullName.Length - 1]; // Takes the last word in each line as the last name, skipping all middle names
                         customer.PhoneNumber = GeneratePhoneNumber();
-                        //customer.StreetCode = 
-                        //customer.CountyCode = 
+                        customer.StreetCode = GenerateAddress(0);
+                        customer.CountyCode = GenerateAddress(1);
+                        
 
                         createdCustomers.Add(customer);
 
