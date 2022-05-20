@@ -30,8 +30,22 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
         }
 
+        /*
+         * Hver klasse kan have en constructor som tager et dictionary som parameter.
+         * På den måde kan man bruge reflection til at lave et dictionary der
+         * har samme tabeller med samme key som hver property i en klasse.
+         */
+
         public List<T> GetTable<T>(string query)
         {
+            PropertyInfo[] AllProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance); // Get all the properties
+            List<PropertyInfo> Props = new List<PropertyInfo>();
+            foreach (PropertyInfo prop in AllProps)
+            {
+                if (prop.PropertyType == typeof(String) || prop.PropertyType == typeof(int))
+                    Props.Add(prop);
+            }
+
             try
             {
                 connection.Open();
@@ -41,9 +55,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                     if (typeof(T) == typeof(Customer))
                     {
                         var internalTable = new List<Customer>();
+                        object[] values = new object[Props.Count];
                         while (reader.Read())
                         {
                             // Foreach property in Customer class ??????
+                            internalTable.Add(new Customer(values));
                             internalTable.Add(new Customer(
                             (string)reader[$"{nameof(Customer.FirstName)}"],
                             (string)reader[$"{nameof(Customer.LastName)}"],
