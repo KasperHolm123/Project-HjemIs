@@ -15,7 +15,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <summary>
         /// Send a small amount of data to a database.
         /// </summary>
-        void AddData(string query, SqlParameter[] parameters, string[] paramSource);
+        void AddData(string query, SqlParameter[] parameters);
 
         /// <summary>
         /// Gets a table from a database and returns it.

@@ -39,7 +39,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             throw new NotImplementedException();
         }
 
-        public void AddData(string query, SqlParameter[] parameters, string[] paramSource)
+        public void AddData(string query, SqlParameter[] parameters)
         {
             throw new NotImplementedException();
         } 

@@ -30,12 +30,6 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
         }
 
-        /*
-         * Hver klasse kan have en constructor som tager et dictionary som parameter.
-         * På den måde kan man bruge reflection til at lave et dictionary der
-         * har samme tabeller med samme key som hver property i en klasse.
-         */
-
         public List<T> GetTable<T>(string query)
         {
             PropertyInfo[] AllProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance); // Get all the properties
@@ -45,7 +39,6 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 if (prop.PropertyType == typeof(String) || prop.PropertyType == typeof(int))
                     Props.Add(prop);
             }
-
             try
             {
                 connection.Open();
@@ -83,21 +76,8 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                         {
                             reader.GetValues(values);
                             internalTable.Add(new User(values)); // mangler constructor
-                            //InternalUsers.Add(new User(
-                            //    (string)reader[$"{nameof(User.Username)}"]));
                         }
                     }
-
-                    /*
-                    switch (typeof(T))
-                    {
-                        case Customer:
-
-                            break;
-                        default:
-                            break;
-                    }
-                    */
                 }
             }
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
@@ -105,7 +85,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             return null;
         }
 
-        public void AddData(string query, SqlParameter[] parameters, string[] paramSource)
+        public void AddData(string query, SqlParameter[] parameters)
         {
             try
             {
@@ -120,7 +100,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         }
         #endregion
 
-        public async Task AddBulkData(DataTable dt, Type type) // Hvordan bruger man en gerenisk type som parameter?
+        public async Task AddBulkData(DataTable dt, Type type) // Hvordan bruger man en generisk type som parameter?
         {
             await connection.OpenAsync();
             ClearTable("Locations");
