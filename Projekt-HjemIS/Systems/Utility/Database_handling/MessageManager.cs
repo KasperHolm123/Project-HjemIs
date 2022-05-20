@@ -34,31 +34,15 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
         }
 
-        public void GetTable()
+        public List<T> GetTable<T>(string query)
         {
             throw new NotImplementedException();
         }
 
-        public T ReturnTable<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddData()
+        public void AddData(string query, SqlParameter[] parameters, string[] paramSource)
         {
             throw new NotImplementedException();
         } 
-
-        SqlParameter IDatabase.CreateParameter(string paramName, object value, SqlDbType type)
-        {
-            SqlParameter param = new SqlParameter
-            {
-                ParameterName = paramName,
-                Value = value,
-                SqlDbType = type
-            };
-            return param;
-        }
         #endregion
 
         public int AddData<T>(T message) where T : Message

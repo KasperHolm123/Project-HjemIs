@@ -15,34 +15,20 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <summary>
         /// Send a small amount of data to a database.
         /// </summary>
-        void AddData();
-
-        /// <summary>
-        /// Gets a table from a database.
-        /// </summary>
-        void GetTable();
+        void AddData(string query, SqlParameter[] parameters, string[] paramSource);
 
         /// <summary>
         /// Gets a table from a database and returns it.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        T ReturnTable<T>();
+        List<T> GetTable<T>(string query);
 
         /// <summary>
         /// Clears a table in a database.
         /// </summary>
         /// <param name="tableName"></param>
         void ClearTable(string tableName);
-
-        /// <summary>
-        /// Shorthand method of creating an SqlParamater.
-        /// </summary>
-        /// <param name="paramName"></param>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        SqlParameter CreateParameter(string paramName, object value, SqlDbType type);
 
     }
 }
