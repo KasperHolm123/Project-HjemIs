@@ -2,6 +2,8 @@
 using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,6 +32,7 @@ namespace Projekt_HjemIS.Systems
         /// <param name="message"></param>
         public static int SendMessages<T>(T message) where T : Message
         {
+            RecordManager rm = new RecordManager();
             string products = string.Empty;
             if (message.Offers != null)
                 foreach (Product item in message.Offers)
@@ -37,11 +40,36 @@ namespace Projekt_HjemIS.Systems
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
                 if (typeof(T) == typeof(Message_SMS))
+                {
+                    Message_SMS sms = message as Message_SMS;
+                    string query = "INSERT INTO [Messages] ([Type], Body) OUTPUT Inserted.ID " +
+                        "VALUES(@messageType, @body)";
+                    SqlParameter[] sp = new SqlParameter[]
+                    {
+                        CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar),
+                        CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar)
+                    };
                     sw.WriteLine(FormatSms(message as Message_SMS));
+                    return rm.AddData(message, query, sp);
+                }
                 if (typeof(T) == typeof(Message_Mail))
+                {
+                    Message_Mail mail = message as Message_Mail;
+                    string query = "INSERT INTO [Messages] ([Type], [Subject], Body) OUTPUT Inserted.ID " +
+                        "VALUES (@messageType, @subject, @body)";
+                    SqlParameter[] sp = new SqlParameter[]
+                    {
+                        CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar),
+                        CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar),
+                        CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar)
+                    };
                     sw.WriteLine(FormatMail(message as Message_Mail));
+
+                    return rm.AddData(message, query, sp);
+                }
+                return -1;
             }
-            return DatabaseHandler.SaveMessage(message);
+            //return DatabaseHandler.SaveMessage(message);
         }
 
         private static string FormatSms(Message_SMS sms)
@@ -86,6 +114,24 @@ namespace Projekt_HjemIS.Systems
             var rootPathFolder = Directory.GetParent($"{rootPathParent}");
             var rootPath = rootPathFolder.ToString();
             return rootPath;
+        }
+
+        /// <summary>
+        /// Create parameter for SQL command.
+        /// </summary>
+        /// <param name="paramName"></param>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
+        {
+            SqlParameter param = new SqlParameter
+            {
+                ParameterName = paramName,
+                Value = value,
+                SqlDbType = type
+            };
+            return param;
         }
     }
 }

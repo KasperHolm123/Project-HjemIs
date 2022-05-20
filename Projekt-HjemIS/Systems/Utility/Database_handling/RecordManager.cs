@@ -100,6 +100,37 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         }
         #endregion
 
+        public int AddData<T>(T message, string query, SqlParameter[] parameters) where T : Message
+        {
+            try
+            {
+                connection.Open();
+                if (typeof(T) == typeof(Message_Mail))
+                {
+                    Message_Mail mail = message as Message_Mail;
+                    
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.Parameters.AddRange(parameters);
+                    return (int)cmd.ExecuteScalar();
+                }
+                if (typeof(T) == typeof(Message_SMS))
+                {
+                    Message_SMS sms = message as Message_SMS;
+                    
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    cmd.Parameters.AddRange(parameters);
+                    return (int)cmd.ExecuteScalar();
+                }
+                return -1;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return -1;
+            }
+            finally { connection.Close(); }
+        }
+
         public async Task AddBulkData(DataTable dt, Type type) // Hvordan bruger man en generisk type som parameter?
         {
             await connection.OpenAsync();
