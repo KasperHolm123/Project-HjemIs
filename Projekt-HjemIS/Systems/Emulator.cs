@@ -14,7 +14,7 @@ namespace Projekt_HjemIS.Systems
     {
         public ObservableCollection<string> InternalMessages { get; set; }
         public ObservableCollection<Customer> InternalCustomers { get; set; }
-        private RecordManager rm = new RecordManager();
+        private DatabaseHandler dh = new DatabaseHandler();
 
         private string _rootPath = $@"\tempMessages\InternalMessages.txt";
 
@@ -51,7 +51,7 @@ namespace Projekt_HjemIS.Systems
         {
             // Hent data af modtagerne af sendte beskeder i gennem DatabaseHandler.
             string _getCustomerQuery = "SELECT * FROM Customers";
-            InternalCustomers = new ObservableCollection<Customer>(rm.GetTable<Customer>(_getCustomerQuery));
+            InternalCustomers = new ObservableCollection<Customer>(dh.GetTable<Customer>(_getCustomerQuery));
         }
 
         /// <summary>

@@ -77,12 +77,12 @@ namespace Projekt_HjemIS.Systems
         /// <param name="locations"></param>
         public static Task<string> SaveRecords(List<Location> locations)
         {
-            RecordManager rm = new RecordManager();
+            DatabaseHandler dh = new DatabaseHandler();
             string result = string.Empty;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            result = rm.AddBulkData(dt);
+            result = dh.AddBulkData(dt);
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
             return Task.FromResult(result);

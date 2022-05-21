@@ -26,7 +26,7 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class MainWindow : Window
     {
-        RecordManager rm = new RecordManager();
+        DatabaseHandler rm = new DatabaseHandler();
         public MainWindow()
         {
             InitializeComponent();

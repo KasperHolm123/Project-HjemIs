@@ -21,8 +21,8 @@ namespace Projekt_HjemIS.Systems
 
         public static void GetCustomers()
         {
-            RecordManager rm = new RecordManager();
-            rm.GetTable<Customer>("SELECT * FROM Customers");
+            DatabaseHandler dh = new DatabaseHandler();
+            dh.GetTable<Customer>("SELECT * FROM Customers");
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Projekt_HjemIS.Systems
         /// <param name="message"></param>
         public static int SendMessages<T>(T message) where T : Message
         {
-            RecordManager rm = new RecordManager();
+            DatabaseHandler dh = new DatabaseHandler();
             string products = string.Empty;
             if (message.Offers != null)
                 foreach (Product item in message.Offers)
@@ -50,7 +50,7 @@ namespace Projekt_HjemIS.Systems
                         CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatSms(message as Message_SMS));
-                    return rm.AddDataReturn<Message_SMS>(query, sp);
+                    return dh.AddDataReturn<Message_SMS>(query, sp);
                 }
                 if (typeof(T) == typeof(Message_Mail))
                 {
@@ -64,7 +64,7 @@ namespace Projekt_HjemIS.Systems
                         CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatMail(message as Message_Mail));
-                    return rm.AddDataReturn<Message_Mail>(query, sp);
+                    return dh.AddDataReturn<Message_Mail>(query, sp);
                 }
                 return -1;
             }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems.Utility.Database_handling
 {
-    public class RecordManager : IDatabase
+    public class DatabaseHandler : IDatabase
     {
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);

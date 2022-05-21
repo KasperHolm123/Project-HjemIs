@@ -27,12 +27,12 @@ namespace Projekt_HjemIS.Views
         //// Contains all available users.
         public ObservableCollection<User> InternalUsers { get; set; }
 
-        private RecordManager rm = new RecordManager();
+        private DatabaseHandler dh = new DatabaseHandler();
 
         public UsersViews()
         {
             InitializeComponent();
-            InternalUsers = new ObservableCollection<User>(rm.GetTable<User>("SELECT [username] FROM Users"));
+            InternalUsers = new ObservableCollection<User>(dh.GetTable<User>("SELECT [username] FROM Users"));
             //bind combobox
             comboUsers.ItemsSource = InternalUsers;
             comboUsers.DisplayMemberPath = $"{nameof(User.userUsername)}";

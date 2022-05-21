@@ -13,7 +13,7 @@ using Projekt_HjemIS.Models;
 
 namespace Projekt_HjemIS.Systems
 {
-    public static class DatabaseHandler
+    public static class DatabaseHandler_Old
     {
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);

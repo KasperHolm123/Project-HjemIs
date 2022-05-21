@@ -38,7 +38,7 @@ namespace Projekt_HjemIS.Views
         // Contains all available products
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
 
-        private RecordManager rm = new RecordManager();
+        private DatabaseHandler dh = new DatabaseHandler();
 
         // Locations to be treated as recipients
         public List<Location> RecipientsLocations { get; set; }
@@ -75,7 +75,7 @@ namespace Projekt_HjemIS.Views
                     CreateParameter("@countyCode", location.CountyCode, SqlDbType.NVarChar),
                     CreateParameter("@streetCode", location.StreetCode, SqlDbType.NVarChar)
                 };
-                rm.AddData(query, parameters);
+                dh.AddData(query, parameters);
                 //DatabaseHandler.ConnectMessage(MessageHandler.SendMessages(type), location.CountyCode, location.StreetCode);
             }
         }
@@ -108,7 +108,7 @@ namespace Projekt_HjemIS.Views
             if (searchTxt.Text != "" || searchTxt.Text != null)
             {
                 string query = $@"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{searchTxt.Text}%';";
-                SearchedLocations = new ObservableCollection<Location>(rm.GetTable<Location>(query)); // Tjek om det virker
+                SearchedLocations = new ObservableCollection<Location>(dh.GetTable<Location>(query)); // Tjek om det virker
                 //DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
                 recipientsDataGrid.ItemsSource = SearchedLocations;
             }
