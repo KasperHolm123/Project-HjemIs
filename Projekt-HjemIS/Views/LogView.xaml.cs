@@ -31,10 +31,9 @@ namespace Projekt_HjemIS.Views
         private ObservableCollection<Message> _messages;
         private ObservableCollection<Customer> _customers;
         public List<Location> InternalLocations { get; set; }
-        public Customer CurrentCustomer { get; set; }
+        public CollectionViewSource FilteredView { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         private List<Location> _internalStreets = new List<Location>();
-        private ObservableCollection<Location> _locationsToSearch;
 
         public ObservableCollection<Customer> Customers
         {
@@ -52,6 +51,7 @@ namespace Projekt_HjemIS.Views
             set
             {
                 _messages = value;
+                if (FilteredView.View != null) FilteredView.Source = Messages;
                 OnPropertyChanged("Messages");
             }
         }
@@ -74,27 +74,10 @@ namespace Projekt_HjemIS.Views
                 OnPropertyChanged("Locations");
             }
         }
-        public ObservableCollection<Location> LocationsToSearch
-        {
-            get { return _locationsToSearch; }
-            set
-            {
-                _locationsToSearch = value;
-                OnPropertyChanged("LocationsToSearch");
-            }
-        }
-        public List<Location> InternalStreets
-        {
-            get { return _internalStreets; }
-            set
-            {
-                _internalStreets = value;
-                OnPropertyChanged("SearchCanExecute");
-                //Streets = new ObservableCollection<Location>(_internalStreets.Where(p => FilterLocations(p)));
-            }
-        }
+
         //Text-field properties
         #region
+        private DateTime _endDate;
         string _streetSearchText = "";
         string _citySearchText = "";
         string _postSearchText = "";
@@ -145,7 +128,7 @@ namespace Projekt_HjemIS.Views
 
         public bool CanExecute
         {
-            get { return (CitySearchText.Length > 2 && PostSearchText.Length > 2); }
+            get { return (CitySearchText.Contains('-')) ; }
         }
         public bool SearchCanExecute
         {
@@ -160,6 +143,17 @@ namespace Projekt_HjemIS.Views
                 OnPropertyChanged("State");
             }
         }
+
+        public DateTime EndDate
+        {
+            get { return _endDate; }
+            set
+            {
+                _endDate = value;
+                OnPropertyChanged("EndDate");
+            }
+        }
+
         #endregion
         public LogView(ref ObservableCollection<Location> locations)
         {
@@ -168,8 +162,17 @@ namespace Projekt_HjemIS.Views
             locationRepository = new LocationRepository(); 
             Locations = locations;
             customerRepository = new CustomerRepository();
+            FilteredView = new CollectionViewSource();
             Messages = new ObservableCollection<Message>();
-            Messages.Add(new Message() { Body = "lONG ASS STRING \n sdadaodjsaonasdaidanodsandoaindsoaindsaiodnada \r asdadaodadoaimsoadmaoidmsaoidsmaodimasodmaiodmao \n kmaomaomlmaomlmaomlmaom lmaom almoa mlama lam l", Type = "Email", Date = DateTime.Now, ID = 1 });
+            FilteredView.Source = Messages;
+            FilteredView.Filter += (s, e) =>
+            {
+                Message msg = e.Item as Message;
+                if (msg.Date == null) e.Accepted = true;
+                if (msg.Date.Date >= _endDate.Date && DateTime.Now.Date <= msg.Date.Date) e.Accepted = true;
+                if (msg.Date.Date <= _endDate.Date && DateTime.Now.Date >= msg.Date.Date) e.Accepted = true;
+                else e.Accepted = false;
+            };
         }
 
         public void OnPropertyChanged(string prop)
@@ -208,7 +211,7 @@ namespace Projekt_HjemIS.Views
             {
                 int index = comboBox.SelectedIndex;
                 loc = comboBox.Items[index] as Location;
-                LocationsToSearch.Add(loc);
+                //LocationsToSearch.Add(loc);
             }
         }
         #endregion
@@ -216,6 +219,10 @@ namespace Projekt_HjemIS.Views
 
         //Event handlers related to messages
         #region
+        private void OnDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilteredView.View.Refresh();
+        }
         private async void GetMessages(object sender, SelectionChangedEventArgs e)
         {
             State = Views.QueryState.Executing;
@@ -255,7 +262,7 @@ namespace Projekt_HjemIS.Views
             string[] input = _citySearchText.Split('-');
             if (input.Length > 1)
             {
-                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = StreetSearchText };
+                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = _streetSearchText };
                 Customer customer = new Customer() { Address = loc };
                 IEnumerable<Customer> cstms = await Task.Run(() => customerRepository.GetCustomers(customer));
                 if (cstms != null) Customers = new ObservableCollection<Customer>(cstms);
@@ -279,6 +286,7 @@ namespace Projekt_HjemIS.Views
             State = Views.QueryState.Finished;
         }
         #endregion
+
     }
     public enum QueryState
     {
