@@ -16,7 +16,6 @@ namespace Projekt_HjemIS.Models
         public string CountyCode { get; set; }
         public List<Message> MsgReceived { get; set; }
         
-
         public Customer()
         {
 

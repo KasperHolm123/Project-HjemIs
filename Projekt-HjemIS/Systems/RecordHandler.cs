@@ -17,7 +17,7 @@ namespace Projekt_HjemIS.Systems
     public static class RecordHandler
     {
 
-        private static List<Location> _locationsList = new List<Location>();
+        public static List<Location> _locationsList = new List<Location>();
 
 
         // Holds a single record.
@@ -85,7 +85,7 @@ namespace Projekt_HjemIS.Systems
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            result = dh.AddBulkData(dt);
+            result = dh.AddBulkData<Location>(dt, "Locations");
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
             return Task.FromResult(result);

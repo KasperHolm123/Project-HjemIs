@@ -10,38 +10,22 @@ using System.Diagnostics;
 
 namespace Projekt_HjemIS.Systems
 {
-    class CustomerFactory
+    public static class CustomerFactory
     {
-        // Call the CreateNewCustomer method when CustomerFactory gets instantiated in Main
-        public CustomerFactory()
-        {
-            CreateNewCustomer();
-        }
-
-
-
-        // Allow access to the fields of Customer
-        Customer customer = new Customer();
-
-        public static RecordHandler recordHandler = new RecordHandler();
-
-
-        
         // Contains the customers with values assigned to them
-        List<Customer> createdCustomers = new List<Customer>();
+        public static List<Customer> createdCustomers = new List<Customer>();
 
         // Contains created phone numbers for checking against duplicates
         public static List<int> phoneBook = new List<int>();
 
-        public List<Location> locations = new List<Location>();
+        public static List<Location> locations = new List<Location>();
 
         public static Random rand = new Random();
- 
-        public int temp;
-        
+
+        public static int temp;
 
         // Handles generating a unique 8 digit phone number
-        public int GeneratePhoneNumber()
+        public static int GeneratePhoneNumber()
         {
             int result;
             do // Do atleast once, repeat if the generated phone number ends up already existing in the phoneBook
@@ -65,15 +49,15 @@ namespace Projekt_HjemIS.Systems
             return result;
         }
 
-        
+
         // Parameter 0 returns street, 1 returns county
-        public string GenerateAddress(int chooseOne)
+        public static string GenerateAddress(int chooseOne)
         {
             Location loc = new Location();
 
-            temp = rand.Next(recordHandler._locationsList.Count());
+            temp = rand.Next(RecordHandler._locationsList.Count());
 
-            loc = recordHandler._locationsList[temp];
+            loc = RecordHandler._locationsList[temp];
 
             string street = loc.StreetCode;
             string county = loc.CountyCode;
@@ -86,16 +70,10 @@ namespace Projekt_HjemIS.Systems
             {
                 return county;
             }
-            
-
         }
 
-
-
-
-
         // Handles assigning values to the customer and storing them in a list
-        public void CreateNewCustomer()
+        public static List<Customer> CreateNewCustomer()
         {
             // Only create customers if no customers have been created 
             if (createdCustomers.Count == 0)
@@ -110,7 +88,7 @@ namespace Projekt_HjemIS.Systems
                     // Read each line from current file.
                     while ((currentLine = sr.ReadLine()) != null)
                     {
-                        customer = new Customer();
+                        var customer = new Customer();
                         // Split each name into first name and last name
                         string[] fullName = currentLine.Split(' ');
                         customer.FirstName = fullName[0];
@@ -118,19 +96,16 @@ namespace Projekt_HjemIS.Systems
                         customer.PhoneNumber = GeneratePhoneNumber();
                         customer.StreetCode = GenerateAddress(0);
                         customer.CountyCode = GenerateAddress(1);
-                        
 
                         createdCustomers.Add(customer);
-
                     }
                 }
             }
-            
+            return createdCustomers;
+
         }
 
-        
-
-        private string GetCurrentDirectory()
+        private static string GetCurrentDirectory()
         {
             var rootPathChild = Directory.GetCurrentDirectory();
             var rootPathParent = Directory.GetParent($"{rootPathChild}");

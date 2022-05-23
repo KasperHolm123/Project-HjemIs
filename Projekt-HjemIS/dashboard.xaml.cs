@@ -1,5 +1,6 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace Projekt_HjemIS
     public partial class dashboard : Window
     {
         DropzoneObserver dzObserver = new DropzoneObserver();
+        DatabaseHandler dh = new DatabaseHandler();
 
         UserControl userControl = null;
         public dashboard()
@@ -37,8 +39,10 @@ namespace Projekt_HjemIS
             }
 
             Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
+            // Setup customers
+            dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
+                CustomerFactory.CreateNewCustomer()), "Customers");
         }
-
         
 
         #region View Control

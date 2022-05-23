@@ -140,14 +140,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public string AddBulkData(DataTable dt) //Type type // Hvordan bruger man en generisk type som parameter?
+        public string AddBulkData<T>(DataTable dt, string tableName)
         {
             connection.OpenAsync();
-            ClearTable("Locations");
+            ClearTable($"{tableName}");
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
-                bulkCopy.DestinationTableName = "Locations";
-                PropertyInfo[] allProperties = typeof(Location /* type */).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                bulkCopy.DestinationTableName = $"{tableName}";
+                PropertyInfo[] allProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 List<PropertyInfo> properties = new List<PropertyInfo>();
                 foreach (PropertyInfo item in allProperties)
                 {
