@@ -1,5 +1,6 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -25,14 +26,13 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class MainWindow : Window
     {
+        DatabaseHandler rm = new DatabaseHandler();
         public MainWindow()
         {
             InitializeComponent();
 
-            // Comment out the line below while testing other things, otherwise it will run GetRecords every time the program is opened.
-            RecordHandler record = new RecordHandler();
 
-            CustomerFactory factory = new CustomerFactory();
+            //rm.GetTable<Customer>("SELECT * FROM Customers");
 
         }
 

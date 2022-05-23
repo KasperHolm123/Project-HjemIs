@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +24,18 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class UsersViews : UserControl
     {
+        //// Contains all available users.
+        public ObservableCollection<User> InternalUsers { get; set; }
+
+        private DatabaseHandler dh = new DatabaseHandler();
+
         public UsersViews()
         {
             InitializeComponent();
+            InternalUsers = new ObservableCollection<User>(dh.GetTable<User>("SELECT [username] FROM Users"));
+            //bind combobox
+            comboUsers.ItemsSource = InternalUsers;
+            comboUsers.DisplayMemberPath = $"{nameof(User.userUsername)}";
         }
     }
 }

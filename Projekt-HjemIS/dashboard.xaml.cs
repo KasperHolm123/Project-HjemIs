@@ -1,4 +1,5 @@
 ﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
 using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class dashboard : Window
     {
+        DropzoneObserver dzObserver = new DropzoneObserver();
+
         UserControl userControl = null;
         public dashboard()
         {
@@ -28,8 +31,17 @@ namespace Projekt_HjemIS
             userControl = new HomeViews();
             GridContent.Children.Add(userControl);
             lablUsername.Content = "Welcome " + User.Username.ToString();
+            if (User.Admin == false)
+            {
+                _Users.IsEnabled = false;
+            }
+
+            Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
         }
 
+        
+
+        #region View Control
         private void _Offers_Click(object sender, RoutedEventArgs e)
         {
             userControl = new OfferViews();
@@ -72,5 +84,13 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
+
+        private void _Emulator_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new EmulatorView();
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
+        #endregion
     }
 }

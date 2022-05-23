@@ -7,32 +7,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 
 namespace Projekt_HjemIS.Systems
 {
     /// <summary>
     /// Handles record segmentation
     /// </summary>
-    public class RecordHandler
+    public static class RecordHandler
     {
-        public List<Location> _locationsList = new List<Location>();
 
-        public RecordHandler()
-        {
-            GetRecords();
-            //ObserveDropZone();
-        }
+        private static List<Location> _locationsList = new List<Location>();
+
 
         // Holds a single record.
-        private List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+        private static List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
-        private int[] _postDist = new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 };
+        // Record segments
+        private static int[] _postDist = new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 };
 
         /// <summary>
-        /// Read from .txt file
+        /// Populate a list with data from a .txt file.
         /// </summary>
-        public List<Location> GetRecords()
+
+        /// <returns></returns>
+        public static List<Location> GetRecords()
         {
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
@@ -64,7 +64,7 @@ namespace Projekt_HjemIS.Systems
                     if (currentLine.Substring(0, 3) == "999")
                     {
                         Debug.WriteLine(
-                            "Amount of locations added to database: " + _locationsList.Count +
+                            "Amount of locations decoded: " + _locationsList.Count +
                             "\nTotal records: " + Int32.Parse(currentLine.Substring(4)) +
                             "\nAmount of handled records: " + (recordCount - 1));
                     }
@@ -74,14 +74,21 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
-        public void SaveRecords(List<Location> locations)
+        /// <summary>
+        /// Save a list of locations to a database.
+        /// </summary>
+        /// <param name="locations"></param>
+        public static Task<string> SaveRecords(List<Location> locations)
         {
+            DatabaseHandler dh = new DatabaseHandler();
+            string result = string.Empty;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            DatabaseHandler.AddBulkData(dt);
+            result = dh.AddBulkData(dt);
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
+            return Task.FromResult(result);
         }
 
         /// <summary>
@@ -89,7 +96,7 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         /// <param name="currentRecord"></param>
         /// <param name="recordType"></param>
-        private List<string> SpliceRecord(string currentRecord, int[] recordType)
+        private static List<string> SpliceRecord(string currentRecord, int[] recordType)
         {
             int currentCol = 0;
             for (int i = 0; i < recordType.Length; i++)
@@ -108,7 +115,7 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
         /// <param name="loc"></param>
         /// <param name="record"></param>
-        private void BuildLocation(Location loc, List<string> record)
+        private static void BuildLocation(Location loc, List<string> record)
         {
             loc.CountyCode = record[1];
             loc.StreetCode = record[2];
@@ -119,31 +126,11 @@ namespace Projekt_HjemIS.Systems
 
         }
 
-        // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
-        FileSystemWatcher watcher = new FileSystemWatcher();
-
-        /// <summary>
-        /// Observes a folder for a new file.
-        /// </summary>
-        private void ObserveDropZone()
-        {
-            watcher.Path = $@"{GetCurrentDirectory()}\dropzone";
-            watcher.Filter = "*.txt";
-            watcher.Created += new FileSystemEventHandler(Watcher_Created);
-            watcher.IncludeSubdirectories = true;
-            watcher.EnableRaisingEvents = true;
-        }
-
-        private void Watcher_Created(object sender, FileSystemEventArgs e)
-        {
-            SaveRecords(_locationsList);
-        }
-
         /// <summary>
         /// Returns current directory.
         /// </summary>
         /// <returns></returns>
-        private string GetCurrentDirectory()
+        private static string GetCurrentDirectory()
         {
             var rootPathChild = Directory.GetCurrentDirectory();
             var rootPathParent = Directory.GetParent($"{rootPathChild}");

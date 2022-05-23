@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Projekt_HjemIS.Models
         public string StreetCode { get; set; }
         public string CountyCode { get; set; }
         public List<Message> MsgReceived { get; set; }
-
+        
 
         public Customer()
         {
@@ -30,9 +31,18 @@ namespace Projekt_HjemIS.Models
             CountyCode = countyCode;
         }
 
+        public Customer(object[] values)
+        {
+            FirstName = values[0].ToString();
+            LastName = values[1].ToString();
+            PhoneNumber = (int)values[2];
+            StreetCode = values[3].ToString();
+            CountyCode = values[4].ToString();
+        }
+
         public override string ToString()
         {
-            return $"{FirstName} {LastName}; ";
+            return $"{FirstName} {LastName}, {PhoneNumber}; ";
         }
     }
 }

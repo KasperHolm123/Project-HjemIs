@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projekt_HjemIS.Systems.Utility.Database_handling;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -16,7 +17,13 @@ namespace Projekt_HjemIS.Systems
             DataTable dataTable = new DataTable(typeof(T).Name);
 
             // typeof(T) works by checking the type of the passed-in List<T>
-            PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance); // Get all the properties
+            PropertyInfo[] AllProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance); // Get all the properties
+            List<PropertyInfo> Props = new List<PropertyInfo>();
+            foreach (PropertyInfo prop in AllProps)
+            {
+                if (prop.PropertyType == typeof(String))
+                    Props.Add(prop);
+            }
 
             foreach (PropertyInfo prop in Props)
             {
@@ -26,16 +33,16 @@ namespace Projekt_HjemIS.Systems
 
             foreach (T item in items)
             {
-                // Values is an object array because it resembles each column in the DataTable/item
-                var values = new object[Props.Length];
-                for (int i = 0; i < Props.Length; i++)
+                // Values is an object array because it resembles each row in the DataTable/item
+                var values = new object[Props.Count];
+                for (int i = 0; i < Props.Count; i++)
                 {
                     // Inserting property values to datatable rows
                     values[i] = Props[i].GetValue(item);
                 }
                 dataTable.Rows.Add(values);
             }
-            
+
             return dataTable;
         }
     }
