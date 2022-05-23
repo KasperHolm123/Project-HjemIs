@@ -1,4 +1,5 @@
 ﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,8 +14,10 @@ namespace Projekt_HjemIS.Systems
     {
         public ObservableCollection<string> InternalMessages { get; set; }
         public ObservableCollection<Customer> InternalCustomers { get; set; }
+        private DatabaseHandler dh = new DatabaseHandler();
 
         private string _rootPath = $@"\tempMessages\InternalMessages.txt";
+
 
         public Emulator()
         {
@@ -47,7 +50,8 @@ namespace Projekt_HjemIS.Systems
         public void GetReceivers()
         {
             // Hent data af modtagerne af sendte beskeder i gennem DatabaseHandler.
-            InternalCustomers = DatabaseHandler.GetCustomers();
+            string _getCustomerQuery = "SELECT * FROM Customers";
+            InternalCustomers = new ObservableCollection<Customer>(dh.GetTable<Customer>(_getCustomerQuery));
         }
 
         /// <summary>

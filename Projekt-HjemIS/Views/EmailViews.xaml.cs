@@ -1,9 +1,12 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -28,10 +31,15 @@ namespace Projekt_HjemIS.Views
 
         // Contains all available locations.
         public ObservableCollection<Location> InternalLocations { get; set; }
+
         // Contains all filtered locations.
         public ObservableCollection<Location> SearchedLocations { get; set; }
+
         // Contains all available products
         public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
+
+        private DatabaseHandler dh = new DatabaseHandler();
+
         // Locations to be treated as recipients
         public List<Location> RecipientsLocations { get; set; }
 
@@ -52,24 +60,44 @@ namespace Projekt_HjemIS.Views
             ComboOffers.ItemsSource = InternalProducts;
         }
 
+
+
+        private void ConnectMessage<T>(T type) where T : Message
+        {
+            string query = "INSERT INTO [Customers-Messages] (ID, PhoneNumber, [Date]) " +
+                    "SELECT @messageID, PhoneNumber, GETDATE() FROM Customers WHERE " +
+                    "CountyCode = @countyCode AND StreetCode = @streetCode;";
+            foreach (Location location in RecipientsLocations) // IsRecipient virker stadig ikke.
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    CreateParameter("@messageID", MessageHandler.SendMessages(type), SqlDbType.Int),
+                    CreateParameter("@countyCode", location.CountyCode, SqlDbType.NVarChar),
+                    CreateParameter("@streetCode", location.StreetCode, SqlDbType.NVarChar)
+                };
+                dh.AddData(query, parameters);
+                //DatabaseHandler.ConnectMessage(MessageHandler.SendMessages(type), location.CountyCode, location.StreetCode);
+            }
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)isSMS.IsChecked) // SMS
             {
                 Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                MessageHandler.SendMessages(sms);
+                ConnectMessage(sms);
             }
             if ((bool)isMAIL.IsChecked) // Mail
             {
                 Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                MessageHandler.SendMessages(mail);
+                ConnectMessage(mail);
             }
             if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
             {
                 Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                MessageHandler.SendMessages(mail);
+                ConnectMessage(mail);
                 Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                MessageHandler.SendMessages(sms);
+                ConnectMessage(sms);
             }
         }
 
@@ -79,13 +107,16 @@ namespace Projekt_HjemIS.Views
                 SearchedLocations.Clear();
             if (searchTxt.Text != "" || searchTxt.Text != null)
             {
-                DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
+                string query = $@"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{searchTxt.Text}%';";
+                SearchedLocations = new ObservableCollection<Location>(dh.GetTable<Location>(query)); // Tjek om det virker
+                //DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
                 recipientsDataGrid.ItemsSource = SearchedLocations;
             }
             else
                 recipientsDataGrid.ItemsSource = InternalLocations;
         }
 
+        // Virker ikke
         private void recipientsDataGrid_LostFocus(object sender, RoutedEventArgs e)
         {
             Location loc = recipientsDataGrid.SelectedItem as Location;
@@ -93,8 +124,26 @@ namespace Projekt_HjemIS.Views
                 RecipientsLocations.Add(loc);
             else
                 if (RecipientsLocations.Contains(loc))
-                    RecipientsLocations.Remove(loc);
-                    
+                RecipientsLocations.Remove(loc);
+
+        }
+
+        /// <summary>
+        /// Create parameter for SQL command.
+        /// </summary>
+        /// <param name="paramName"></param>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
+        {
+            SqlParameter param = new SqlParameter
+            {
+                ParameterName = paramName,
+                Value = value,
+                SqlDbType = type
+            };
+            return param;
         }
     }
 }

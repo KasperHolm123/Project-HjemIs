@@ -1,4 +1,6 @@
 ﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,9 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class dashboard : Window
     {
+        DropzoneObserver dzObserver = new DropzoneObserver();
+        DatabaseHandler dh = new DatabaseHandler();
+
         UserControl userControl = null;
         public dashboard()
         {
@@ -33,8 +38,15 @@ namespace Projekt_HjemIS
                 _Users.IsEnabled = false;
                 _Users.Visibility = Visibility.Collapsed;
             }
-        }
 
+            Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
+            // Setup customers
+            dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
+                CustomerFactory.CreateNewCustomer()), "Customers");
+        }
+        
+
+        #region View Control
         private void _Offers_Click(object sender, RoutedEventArgs e)
         {
             userControl = new OfferViews();
@@ -77,5 +89,13 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
+
+        private void _Emulator_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new EmulatorView();
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
+        #endregion
     }
 }

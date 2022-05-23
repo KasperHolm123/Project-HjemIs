@@ -28,5 +28,11 @@ namespace Projekt_HjemIS.Models
                 Admin = value;
             }
         }
+
+        public User(object[] values)
+        {
+
+        }
+
     }
 }

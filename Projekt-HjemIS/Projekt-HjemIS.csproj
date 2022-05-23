@@ -89,12 +89,21 @@
     <Compile Include="Models\Message_Mail.cs" />
     <Compile Include="Models\Message_SMS.cs" />
     <Compile Include="Models\Product.cs" />
+
+    <Compile Include="Systems\CustomerFactory.cs" />
+
     <Compile Include="Systems\DropzoneObserver.cs" />
+
     <Compile Include="Systems\Emulator.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
+    <Compile Include="Systems\Utility\Database_handling\DatabaseHandler.cs" />
     <Compile Include="Views\EmailViews.xaml.cs">
       <DependentUpon>EmailViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmulatorView.xaml.cs">
+      <DependentUpon>EmulatorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeViews.xaml.cs">
       <DependentUpon>HomeViews.xaml</DependentUpon>
@@ -118,7 +127,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Models\Location.cs" />
-    <Compile Include="Systems\DatabaseHandler.cs" />
+    <Compile Include="Systems\DatabaseHandler_Old.cs" />
     <Compile Include="Systems\ListToDataTableConverter.cs" />
     <Compile Include="Systems\RecordDataReader.cs" />
     <Compile Include="Systems\RecordHandler.cs" />
@@ -138,6 +147,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\EmailViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EmulatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -201,6 +214,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\sign-out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\mail-inbox.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
