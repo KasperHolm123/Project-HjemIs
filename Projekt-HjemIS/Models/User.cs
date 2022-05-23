@@ -17,5 +17,16 @@ namespace Projekt_HjemIS.Models
         public static bool Admin { get; set; } //skal implementeres.
         public static string Username { set; get; } //bliver brugt til at se, hvilken user der er logget ind på applikationen. 
         public string userUsername { get; set; } //bliver brugt i UsersView til at importere alle unikke Usernames.
+        public bool adminAdmin
+        {
+            get
+            {
+                return Admin;
+            }
+            set
+            {
+                Admin = value;
+            }
+        }
     }
 }

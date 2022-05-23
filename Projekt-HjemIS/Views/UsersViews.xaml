@@ -14,14 +14,40 @@
                        VerticalAlignment="Center" HorizontalAlignment="Center"
                        Text="Users"/>
         </StackPanel>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <ComboBox x:Name="comboUsers" IsEditable="True" Width="150" Height="30" Margin="100,0,0,0"/>
-            <DataGrid x:Name="dataUsers" AutoGenerateColumns="False" Height="Auto" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Username" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Is Admin" IsReadOnly="False"/>
-                </DataGrid.Columns>
-            </DataGrid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Width="500" Height="300">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Pick A User To Make/Or Demote Them Administator" Grid.Column="0" Margin="15,0,0,0"/>
+                <ComboBox x:Name="comboUsers" IsEditable="True" Width="150" Height="30" Grid.Column="1"/>
+                <DataGrid x:Name="dataUsers" AutoGenerateColumns="False" Height="Auto" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="False" CanUserSortColumns="False" BorderThickness="3" Grid.Column="0" Grid.Row="1">
+                    <DataGrid.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Username" IsReadOnly="True" Binding="{Binding [username]}" Width="180"/>
+                        <DataGridTextColumn Header="Is Admin" IsReadOnly="True" Binding="{Binding [admin]}" Width="70"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </StackPanel>
+        <Button x:Name="btnAdmin" Content="Confirm" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnAdmin_Click" Width="150" Height="50" FontSize="20" FontWeight="Bold">
+            <Button.Background>
+                <SolidColorBrush Color="LimeGreen"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="7"/>
+                </Style>
+            </Button.Resources>
+        </Button>
     </Grid>
 </UserControl>
