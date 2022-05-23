@@ -16,7 +16,9 @@ namespace Projekt_HjemIS.Systems
     /// </summary>
     public static class RecordHandler
     {
+
         private static List<Location> _locationsList = new List<Location>();
+
 
         // Holds a single record.
         private static List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
@@ -28,6 +30,7 @@ namespace Projekt_HjemIS.Systems
         /// <summary>
         /// Populate a list with data from a .txt file.
         /// </summary>
+
         /// <returns></returns>
         public static List<Location> GetRecords()
         {

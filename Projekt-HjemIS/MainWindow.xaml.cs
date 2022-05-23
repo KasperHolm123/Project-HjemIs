@@ -30,7 +30,10 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
+
+
             //rm.GetTable<Customer>("SELECT * FROM Customers");
+
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
