@@ -36,6 +36,7 @@ namespace Projekt_HjemIS
             if (User.Admin == false)
             {
                 _Users.IsEnabled = false;
+                _Users.Visibility = Visibility.Collapsed;
             }
 
             Task.Factory.StartNew(() => dzObserver.ObserveDropzone());

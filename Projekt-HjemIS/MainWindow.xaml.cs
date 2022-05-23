@@ -30,10 +30,6 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
-
-
-            //rm.GetTable<Customer>("SELECT * FROM Customers");
-
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -53,9 +49,28 @@ namespace Projekt_HjemIS
                     sqlCommand.Parameters.AddWithValue("@password", password.Password);
                     int count = Convert.ToInt32(sqlCommand.ExecuteScalar());
 
+                    //hvis brugernavn og adgangskode stemmer overens med databasen, giver den et output på 1
                     if (count == 1)
                     {
                         User.Username = username.Text.ToString();
+
+                        //bestemmer om ud fra databasen om den loggede ind bruger er en admin eller ej. 
+                        using (SqlCommand cmd = new SqlCommand($"SELECT [admin] FROM Users WHERE [username] = @username", connString))
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Parameters.AddWithValue("@username", username.Text);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    string result = reader[0].ToString();
+                                    User.Admin = bool.Parse(result);
+                                    MessageBox.Show("User is a Admin = " + User.Admin.ToString()); // skal slettes på et tidspunkt
+                                }
+                                reader.Close();
+                            }
+                        }
+
                         dashboard dashbord = new dashboard();
                         dashbord.Show();
                         this.Close();
