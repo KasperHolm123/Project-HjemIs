@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Projekt_HjemIS.Systems
 {
@@ -13,7 +14,7 @@ namespace Projekt_HjemIS.Systems
 
         public DropzoneObserver()
         {
-            ObserveDropzone();
+
         }
 
         // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
@@ -22,7 +23,7 @@ namespace Projekt_HjemIS.Systems
         /// <summary>
         /// Observes a folder for a new file.
         /// </summary>
-        private void ObserveDropzone()
+        public void ObserveDropzone()
         {
             watcher.Path = $@"{GetCurrentDirectory()}\dropzone";
             watcher.Filter = "*.txt";
@@ -31,9 +32,25 @@ namespace Projekt_HjemIS.Systems
             watcher.EnableRaisingEvents = true;
         }
 
-        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        private async void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            RecordHandler.SaveRecords(RecordHandler.GetRecords());
+            string result = await PromptRecordHandling();
+            MessageBox.Show($"{result}");
+        }
+
+        private async Task<string> PromptRecordHandling()
+        {
+            string result = string.Empty;
+            MessageBoxResult msgPrompt = MessageBox.Show("Nyt dataudtræk opdaget. Start behandling?", "Record handling", MessageBoxButton.YesNo);
+            switch (msgPrompt)
+            {
+                case MessageBoxResult.Yes:
+                    result = await RecordHandler.SaveRecords(RecordHandler.GetRecords());
+                    break;
+                default:
+                    break;
+            }
+            return result;
         }
 
         /// <summary>

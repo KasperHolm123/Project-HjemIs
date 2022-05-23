@@ -13,7 +13,7 @@ using Projekt_HjemIS.Models;
 
 namespace Projekt_HjemIS.Systems
 {
-    public static class DatabaseHandler
+    public static class DatabaseHandler_Old
     {
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
@@ -54,7 +54,7 @@ namespace Projekt_HjemIS.Systems
             }
         }
 
-        public static void AddBulkData(DataTable dt)
+        public static string AddBulkData(DataTable dt)
         {
             connection.Open();
             ClearTables();
@@ -73,8 +73,8 @@ namespace Projekt_HjemIS.Systems
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
                 }
 
-                try { bulkCopy.WriteToServer(dt); }
-                catch (Exception ex) { Debug.WriteLine(ex.Message); }
+                try { bulkCopy.WriteToServer(dt); return "Saving successful"; }
+                catch (Exception ex) { return ex.Message; }
                 finally { connection.Close(); }
             }
         }
