@@ -79,6 +79,15 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                             internalTable.Add(new User(values)); // mangler constructor
                         }
                     }
+                    else if (typeof(T) == typeof(Product))
+                    {
+                        var internalTable = new List<Product>();
+                        while (reader.Read())
+                        {
+                            reader.GetValues(values);
+                            internalTable.Add(new Product(values));
+                        }
+                    }
                 }
             }
             catch (Exception ex) { Debug.WriteLine(ex.Message); }

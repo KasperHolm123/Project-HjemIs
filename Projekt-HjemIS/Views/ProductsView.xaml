@@ -25,7 +25,7 @@
         <Label Content="New Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="70" Height="25" Margin="0,0,210,63"/>
         <TextBox Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,160,60"/>
 
-        <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20"/>
+        <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="Button_Click"/>
         <Button Content="DELETE" Background="Red" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,20"/>
     </Grid>
 </UserControl>

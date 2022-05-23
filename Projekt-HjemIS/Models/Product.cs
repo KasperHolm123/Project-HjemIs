@@ -21,6 +21,11 @@ namespace Projekt_HjemIS.Models
             DiscountedPrice = discountedPrice;
         }
 
+        public Product(object[] values)
+        {
+
+        }
+
         public override string ToString()
         {
             return $"Name: {Name} | Price: {Price} | Discount: {Discount} | Discounted Price: {DiscountedPrice} ";

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +23,21 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class ProductsView : UserControl
     {
+        DatabaseHandler dh = new DatabaseHandler();
+
+        public ObservableCollection<Product> InternalProducts { get; set; }
+
         public ProductsView()
         {
             InitializeComponent();
+
+            //Setup collections
+            InternalProducts = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
