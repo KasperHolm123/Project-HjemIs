@@ -25,6 +25,7 @@ namespace Projekt_HjemIS.Systems
 
         public static RecordHandler recordHandler = new RecordHandler();
 
+
         
         // Contains the customers with values assigned to them
         List<Customer> createdCustomers = new List<Customer>();
@@ -58,7 +59,7 @@ namespace Projekt_HjemIS.Systems
                 // temp stores the value of IndexOf
                 temp = phoneBook.IndexOf(result);
 
-            } while (temp > 0);
+            } while (temp >= 0);
 
             phoneBook.Add(result);
             return result;
@@ -109,9 +110,9 @@ namespace Projekt_HjemIS.Systems
                     // Read each line from current file.
                     while ((currentLine = sr.ReadLine()) != null)
                     {
+                        customer = new Customer();
                         // Split each name into first name and last name
                         string[] fullName = currentLine.Split(' ');
-                        customer = new Customer();
                         customer.FirstName = fullName[0];
                         customer.LastName = fullName[fullName.Length - 1]; // Takes the last word in each line as the last name, skipping all middle names
                         customer.PhoneNumber = GeneratePhoneNumber();
@@ -124,11 +125,7 @@ namespace Projekt_HjemIS.Systems
                     }
                 }
             }
-            foreach (var item in createdCustomers)
-            {
-                Debug.WriteLine(customer);
-
-            }
+            
         }
 
         
