@@ -71,6 +71,16 @@
                             <Image Source="/Pictures/mail-inbox.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
+                    
+                    <!--Products-->
+                    <MenuItem Name="_Products" FontSize="16" Foreground="White" Click="_Products_Click" Height="70" Width="80" Margin="10,10,10,10">
+                        <MenuItem.Background>
+                            <ImageBrush/>
+                        </MenuItem.Background>
+                        <MenuItem.Icon>
+                            <Image Source="/Pictures/ice-cream.png" Margin="0,-10,-55,-10"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </Menu>
             </StackPanel>
 

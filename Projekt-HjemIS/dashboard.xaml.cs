@@ -95,6 +95,14 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
+
+        private void _Products_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new ProductsView();
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
         #endregion
+
     }
 }
