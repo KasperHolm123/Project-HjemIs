@@ -29,6 +29,7 @@ namespace Projekt_HjemIS
         {
             InitializeComponent();
             //RecordHandler.SaveRecords(RecordHandler.GetRecords());
+
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
