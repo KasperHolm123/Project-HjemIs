@@ -16,16 +16,16 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBox x:Name="nameTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,200,280"/>
-        <TextBox x:Name="idTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,50,280"/>
+        <TextBox x:Name="nameTxt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,200,280"/>
+        <TextBox x:Name="idTxt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,50,280" />
         <Label Content="Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,220,203"/>
-        <TextBox x:Name="priceTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,170,200"/>
+        <TextBox x:Name="priceTxt" PreviewTextInput="Validation_Numbers_Only" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,170,200"/>
         <Label Content="Discount:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,220,133"/>
-        <TextBox x:Name="discountTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,165,130"/>
+        <TextBox x:Name="discountTxt" PreviewTextInput="Validation_Numbers_Only" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,165,130"/>
         <Label Content="New Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="70" Height="25" Margin="0,0,210,63"/>
-        <TextBox x:Name="discountedPriceTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,160,60"/>
+        <TextBox x:Name="discountedPriceTxt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,160,60" IsReadOnly="True"/>
 
-        <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="Button_Click"/>
-        <Button Content="DELETE" Background="Red" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,20"/>
+        <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="UpdateProduct"/>
+        <Button Content="DELETE" Background="Red" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,20" Click="DeleteProduct"/>
     </Grid>
 </UserControl>

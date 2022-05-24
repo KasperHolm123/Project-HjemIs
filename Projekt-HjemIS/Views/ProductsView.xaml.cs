@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,11 +36,20 @@ namespace Projekt_HjemIS.Views
             InitializeComponent();
 
             //Setup collections
-            InternalProducts = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
-            mainGrid.ItemsSource = InternalProducts;
+            UpdateGrid();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void UpdateGrid()
+        {
+            try
+            {
+                InternalProducts = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
+                mainGrid.ItemsSource= InternalProducts;
+            }
+            catch (Exception ex) { MessageBox.Show("No products found"); }
+        }
+
+        private void UpdateProduct(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -53,7 +63,8 @@ namespace Projekt_HjemIS.Views
                     CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
                     CreateParameter("@ID", int.Parse(idTxt.Text), SqlDbType.NVarChar),
                 };
-                PromptProductCreation(dh.AddData(query, sp));
+                PromptProductHandling(dh.AddData(query, sp));
+                UpdateGrid();
             }
             catch (Exception ex)
             {
@@ -61,7 +72,24 @@ namespace Projekt_HjemIS.Views
             }
         }
 
-        private void PromptProductCreation(int notFound)
+        private void DeleteProduct(object sender, RoutedEventArgs e)
+        {
+            Product selectedProduct = mainGrid.SelectedItem as Product;
+            try
+            {
+                string query = "DELETE FROM Products WHERE ID = @ID;";
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    CreateParameter("@ID", selectedProduct.ID, SqlDbType.Int)
+                };
+                dh.AddData(query, sp);
+                UpdateGrid();
+                MessageBox.Show("Produkt slettet.");
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+            private void PromptProductHandling(int notFound)
         {
             if (notFound == 0)
             {
@@ -109,14 +137,27 @@ namespace Projekt_HjemIS.Views
 
         private void mainGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Product selectedProduct = mainGrid.SelectedItem as Product;
-            nameTxt.Text = selectedProduct.Name;
-            idTxt.Text = selectedProduct.ID.ToString();
-            priceTxt.Text = selectedProduct.Price.ToString();
-            discountTxt.Text = selectedProduct.Discount.ToString();
+            try
+            {
+                Product selectedProduct = mainGrid.SelectedItem as Product;
+                nameTxt.Text = selectedProduct.Name;
+                idTxt.Text = selectedProduct.ID.ToString();
+                priceTxt.Text = selectedProduct.Price.ToString();
+                discountTxt.Text = selectedProduct.Discount.ToString();
 
-            decimal discountedPrice = decimal.Parse(discountTxt.Text);
-            discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
+                decimal discountedPrice = decimal.Parse(discountTxt.Text);
+                discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
+
+        #region Validaton
+
+        private void Validation_Numbers_Only(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+        #endregion
     }
 }
