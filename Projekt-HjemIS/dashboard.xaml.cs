@@ -40,8 +40,8 @@ namespace Projekt_HjemIS
 
             Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
             // Setup customers
-            dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
-                CustomerFactory.CreateNewCustomer()), "Customers");
+            //dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
+            //    CustomerFactory.CreateNewCustomer()), "Customers");
         }
         
 

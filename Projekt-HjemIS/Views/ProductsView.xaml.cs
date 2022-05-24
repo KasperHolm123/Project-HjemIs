@@ -36,6 +36,7 @@ namespace Projekt_HjemIS.Views
 
             //Setup collections
             InternalProducts = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
+            mainGrid.ItemsSource = InternalProducts;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -49,7 +50,7 @@ namespace Projekt_HjemIS.Views
                 {
                     CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
                     CreateParameter("@discount", int.Parse(discountTxt.Text), SqlDbType.Int),
-                    CreateParameter("@name", int.Parse(nameTxt.Text), SqlDbType.NVarChar),
+                    CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
                     CreateParameter("@ID", int.Parse(idTxt.Text), SqlDbType.NVarChar),
                 };
                 PromptProductCreation(dh.AddData(query, sp));
@@ -72,7 +73,7 @@ namespace Projekt_HjemIS.Views
                             "VALUES(@name, @price, @discount);";
                         SqlParameter[] insertSp = new SqlParameter[]
                         {
-                            CreateParameter("@name", int.Parse(nameTxt.Text), SqlDbType.NVarChar),
+                            CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
                             CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
                             CreateParameter("@discount", int.Parse(discountTxt.Text), SqlDbType.Int),
                         };
@@ -104,6 +105,18 @@ namespace Projekt_HjemIS.Views
                 SqlDbType = type
             };
             return param;
+        }
+
+        private void mainGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Product selectedProduct = mainGrid.SelectedItem as Product;
+            nameTxt.Text = selectedProduct.Name;
+            idTxt.Text = selectedProduct.ID.ToString();
+            priceTxt.Text = selectedProduct.Price.ToString();
+            discountTxt.Text = selectedProduct.Discount.ToString();
+
+            decimal discountedPrice = decimal.Parse(discountTxt.Text);
+            discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
         }
     }
 }
