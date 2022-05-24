@@ -54,5 +54,6 @@ namespace Projekt_HjemIS.Models
                 return msg.ID == this.ID;
             }
         }
+
     }
 }

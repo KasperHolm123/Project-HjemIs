@@ -34,7 +34,12 @@
                 </ItemsPanelTemplate>
             </ComboBox.ItemsPanel>
         </ComboBox>
-        <DatePicker HorizontalAlignment="Right" SelectedDate="{Binding Path=EndDate}" SelectedDateChanged="OnDateChanged" IsTodayHighlighted="True" DisplayDate="05/23/2022" VerticalAlignment="Top" Name="datePicker1" />
+        <DatePicker HorizontalAlignment="Right" Margin="0,30,340,0" SelectedDate="{Binding Path=EndDate}" SelectedDateChanged="OnDateChanged" IsTodayHighlighted="True" DisplayDate="05/23/2022" VerticalAlignment="Top" Name="datePicker1" />
+        <Button x:Name="SortListbox" HorizontalAlignment="Right" BorderBrush="White" Background="White" Margin="0,30,470,0" VerticalAlignment="Top" Click="SortList_Click">
+            <StackPanel>
+                <Image Source="/Pictures/sort.png" Width="20" Height="20" />
+            </StackPanel>
+        </Button>
         <Button x:Name="FindStreets" Content="Streets" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="230,5,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
         <Button x:Name="FindMessages" Content="Search" IsEnabled="True"  HorizontalAlignment="Left" Margin="180,5,0,0" VerticalAlignment="Top" Click="FindMessages_Click"/>
         <Button x:Name="GetCustomers" Content="Customers" IsEnabled="True"  HorizontalAlignment="Left" Margin="435,5,0,0" VerticalAlignment="Top" Click="GetCustomers_Click"/>
@@ -81,7 +86,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Ellipse x:Name="QueryState" Width="30" Height="30" Margin="700,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" >
+        <Ellipse x:Name="QueryState" Width="30" Height="30" Margin="700,-5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" >
             <Ellipse.Resources>
                 <Style TargetType="Ellipse">
                     <Setter Property="Fill" Value="Transparent"/>

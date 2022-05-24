@@ -1,6 +1,7 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -30,10 +31,9 @@ namespace Projekt_HjemIS.Views
         private ObservableCollection<Location> _streets;
         private ObservableCollection<Message> _messages;
         private ObservableCollection<Customer> _customers;
-        public List<Location> InternalLocations { get; set; }
+        private bool SortOrder;
         public CollectionViewSource FilteredView { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
-        private List<Location> _internalStreets = new List<Location>();
 
         public ObservableCollection<Customer> Customers
         {
@@ -130,10 +130,7 @@ namespace Projekt_HjemIS.Views
         {
             get { return (CitySearchText.Contains('-')) ; }
         }
-        public bool SearchCanExecute
-        {
-            get { return InternalLocations.Any() ? true : false; }
-        }
+
         public QueryState State
         {
             get { return _state; }
@@ -165,16 +162,21 @@ namespace Projekt_HjemIS.Views
             FilteredView = new CollectionViewSource();
             Messages = new ObservableCollection<Message>();
             FilteredView.Source = Messages;
+            FilterAndSort();
+        }
+        private void FilterAndSort()
+        {
             FilteredView.Filter += (s, e) =>
             {
                 Message msg = e.Item as Message;
+                e.Accepted = false;
                 if (msg.Date == null) e.Accepted = true;
-                if (msg.Date.Date >= _endDate.Date && DateTime.Now.Date <= msg.Date.Date) e.Accepted = true;
-                if (msg.Date.Date <= _endDate.Date && DateTime.Now.Date >= msg.Date.Date) e.Accepted = true;
-                else e.Accepted = false;
+                if (msg.Date.Date >= _endDate.Date && DateTime.Now.Date >= msg.Date.Date) e.Accepted = true;
+                if (msg.Date.Date <= _endDate.Date && DateTime.Now.Date <= msg.Date.Date) e.Accepted = false;
             };
+            ListCollectionView view = FilteredView.View as ListCollectionView;
+            view.CustomSort = new CustomMessageComparer();
         }
-
         public void OnPropertyChanged(string prop)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
@@ -219,6 +221,20 @@ namespace Projekt_HjemIS.Views
 
         //Event handlers related to messages
         #region
+        private void SortList_Click(object sender, RoutedEventArgs e)
+        {
+            MessageLog.Items.SortDescriptions.Clear();
+            if (SortOrder)
+            {
+                MessageLog.Items.SortDescriptions.Add(new SortDescription("Date", ListSortDirection.Ascending));
+                SortOrder = false;
+            }
+            else
+            {
+                MessageLog.Items.SortDescriptions.Add(new SortDescription("Date", ListSortDirection.Descending));
+                SortOrder = true;
+            }
+        }
         private void OnDateChanged(object sender, SelectionChangedEventArgs e)
         {
             FilteredView.View.Refresh();
@@ -284,6 +300,20 @@ namespace Projekt_HjemIS.Views
                 if (customer != null) Messages = new ObservableCollection<Message>(customer.MsgReceived);
             }
             State = Views.QueryState.Finished;
+        }
+        #endregion
+
+        #region
+        protected class CustomMessageComparer : IComparer
+        {
+            public int Compare(object x, object y)
+            {
+                Message msg1 = (Message)x;
+                Message msg2 = (Message)y;
+                if (msg1.Date > msg2.Date) return -1;
+                else if (msg1.Date < msg2.Date) return 1;
+                else return 0;
+            }
         }
         #endregion
 
