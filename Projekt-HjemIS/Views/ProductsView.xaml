@@ -16,12 +16,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBox Text="PLACEHOLDER" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,200,280"/>
-        <TextBox Text="PLACEHOLDER" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,50,280"/>
+        <TextBox x:Name="nameTxt" Text="PLACEHOLDER" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,200,280"/>
+        <TextBox x:Name="idTxt" Text="PLACEHOLDER" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,50,280"/>
         <Label Content="Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,220,203"/>
-        <TextBox Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,170,200"/>
+        <TextBox x:Name="priceTxt" Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,170,200"/>
         <Label Content="Discount:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,220,133"/>
-        <TextBox Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,165,130"/>
+        <TextBox x:Name="discountTxt" Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,165,130"/>
         <Label Content="New Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="70" Height="25" Margin="0,0,210,63"/>
         <TextBox Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,160,60"/>
 

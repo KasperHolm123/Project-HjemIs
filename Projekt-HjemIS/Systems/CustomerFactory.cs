@@ -20,6 +20,8 @@ namespace Projekt_HjemIS.Systems
 
         public static List<Location> locations = new List<Location>();
 
+        private static List<Location> _innateLocations = new List<Location>(RecordHandler.GetRecords());
+
         public static Random rand = new Random();
 
         public static int temp;
@@ -55,9 +57,9 @@ namespace Projekt_HjemIS.Systems
         {
             Location loc = new Location();
 
-            temp = rand.Next(RecordHandler._locationsList.Count());
+            temp = rand.Next(_innateLocations.Count());
 
-            loc = RecordHandler._locationsList[temp];
+            loc = _innateLocations[temp];
 
             string street = loc.StreetCode;
             string county = loc.CountyCode;

@@ -17,7 +17,7 @@ namespace Projekt_HjemIS.Systems
     public static class RecordHandler
     {
 
-        public static List<Location> _locationsList = new List<Location>();
+        private static List<Location> _locationsList = new List<Location>();
 
 
         // Holds a single record.
