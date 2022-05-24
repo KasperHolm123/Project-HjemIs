@@ -89,12 +89,17 @@
     <Compile Include="Models\Message_Mail.cs" />
     <Compile Include="Models\Message_SMS.cs" />
     <Compile Include="Models\Product.cs" />
+
+    <Compile Include="Systems\CustomerFactory.cs" />
+
     <Compile Include="Systems\DropzoneObserver.cs" />
     <Compile Include="Systems\CustomerRepository.cs" />
     <Compile Include="Systems\Emulator.cs" />
     <Compile Include="Systems\LocationRepository.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
+    <Compile Include="Systems\Utility\Database_handling\DatabaseHandler.cs" />
     <Compile Include="Views\EmailViews.xaml.cs">
       <DependentUpon>EmailViews.xaml</DependentUpon>
     </Compile>
@@ -126,7 +131,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Models\Location.cs" />
-    <Compile Include="Systems\DatabaseHandler.cs" />
+    <Compile Include="Systems\DatabaseHandler_Old.cs" />
     <Compile Include="Systems\ListToDataTableConverter.cs" />
     <Compile Include="Systems\RecordDataReader.cs" />
     <Compile Include="Systems\RecordHandler.cs" />

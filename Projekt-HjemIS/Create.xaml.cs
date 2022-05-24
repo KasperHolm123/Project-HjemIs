@@ -70,7 +70,7 @@ namespace Projekt_HjemIS
                     {
                         string b = string.Empty;
                         
-                        SqlCommand command = new SqlCommand($"INSERT INTO Users (username, [Password]) VALUES ('{Username.Text}', '{Password.Password}')", connString);
+                        SqlCommand command = new SqlCommand($"INSERT INTO Users (username, [Password], [Admin]) VALUES ('{Username.Text}', '{Password.Password}', '0')", connString);
                         command.ExecuteNonQuery();
                         MessageBoxResult result = MessageBox.Show("User Has Been Created Succesfully", "User Record", MessageBoxButton.OK, MessageBoxImage.Information);
                         if (result == MessageBoxResult.OK)
