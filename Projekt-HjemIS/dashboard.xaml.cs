@@ -41,8 +41,8 @@ namespace Projekt_HjemIS
 
             Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
             // Setup customers
-            dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
-                CustomerFactory.CreateNewCustomer()), "Customers");
+            //dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
+            //    CustomerFactory.CreateNewCustomer()), "Customers");
         }
         
 
@@ -96,6 +96,14 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
+
+        private void _Products_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new ProductsView();
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
         #endregion
+
     }
 }
