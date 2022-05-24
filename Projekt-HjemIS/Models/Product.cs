@@ -8,27 +8,30 @@ namespace Projekt_HjemIS.Models
 {
     public class Product
     {
-        public int Price { get; set; }
-        public int DiscountedPrice { get; set; }
-        public int Discount { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
+        public int Price { get; set; }
+        public int Discount { get; set; }
         
-        public Product(string name, int price, int discount, int discountedPrice)
+        public Product(int id, string name, int price, int discount)
         {
+            ID = id;
             Name = name;
             Price = price;
             Discount = discount;
-            DiscountedPrice = discountedPrice;
         }
 
         public Product(object[] values)
         {
-
+            ID = (int)values[0];
+            Name = values[1].ToString();
+            Price = (int)values[2];
+            Discount = (int)values[3];
         }
 
         public override string ToString()
         {
-            return $"Name: {Name} | Price: {Price} | Discount: {Discount} | Discounted Price: {DiscountedPrice} ";
+            return $"Name: {Name} | Price: {Price} | Discount: {Discount}";
         }
     }
 }

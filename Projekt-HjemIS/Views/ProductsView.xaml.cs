@@ -35,7 +35,7 @@ namespace Projekt_HjemIS.Views
             InitializeComponent();
 
             //Setup collections
-            InternalProducts = new ObservableCollection<Product>();//dh.GetTable<Product>("SELECT * FROM Products"));
+            InternalProducts = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -52,11 +52,39 @@ namespace Projekt_HjemIS.Views
                     CreateParameter("@name", int.Parse(nameTxt.Text), SqlDbType.NVarChar),
                     CreateParameter("@ID", int.Parse(idTxt.Text), SqlDbType.NVarChar),
                 };
-                dh.AddData(query, sp);
+                PromptProductCreation(dh.AddData(query, sp));
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void PromptProductCreation(int notFound)
+        {
+            if (notFound == 0)
+            {
+                MessageBoxResult msgResult = MessageBox.Show("Produkt ikke fundet. Ønsker du at oprette et nyt?", "Error", MessageBoxButton.YesNo);
+                switch (msgResult)
+                {
+                    case MessageBoxResult.Yes:
+                        string insertQuery = "INSERT INTO Products ([Name], Price, Discount) " +
+                            "VALUES(@name, @price, @discount);";
+                        SqlParameter[] insertSp = new SqlParameter[]
+                        {
+                            CreateParameter("@name", int.Parse(nameTxt.Text), SqlDbType.NVarChar),
+                            CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
+                            CreateParameter("@discount", int.Parse(discountTxt.Text), SqlDbType.Int),
+                        };
+                        dh.AddData(insertQuery, insertSp);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                MessageBoxResult confirmBox = MessageBox.Show("Produkt opdateret.", "Success", MessageBoxButton.OK);
             }
         }
 

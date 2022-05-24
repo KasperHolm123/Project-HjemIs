@@ -7,23 +7,23 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <DataGrid HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False">
+        <DataGrid HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" ItemsSource="{Binding InternalProducts}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding }"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding }" />
-                <DataGridTextColumn Header="%" Binding="{Binding }" />
-                <DataGridTextColumn Header="ID" Binding="{Binding }" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
+                <DataGridTextColumn Header="%" Binding="{Binding Discount}" />
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBox x:Name="nameTxt" Text="PLACEHOLDER" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,200,280"/>
-        <TextBox x:Name="idTxt" Text="PLACEHOLDER" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,50,280"/>
+        <TextBox x:Name="nameTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,200,280"/>
+        <TextBox x:Name="idTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,50,280"/>
         <Label Content="Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,220,203"/>
-        <TextBox x:Name="priceTxt" Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,170,200"/>
+        <TextBox x:Name="priceTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,170,200"/>
         <Label Content="Discount:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,220,133"/>
-        <TextBox x:Name="discountTxt" Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,165,130"/>
+        <TextBox x:Name="discountTxt" Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,165,130"/>
         <Label Content="New Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="70" Height="25" Margin="0,0,210,63"/>
-        <TextBox Text="100" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,160,60"/>
+        <TextBox Text="" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,160,60"/>
 
         <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="Button_Click"/>
         <Button Content="DELETE" Background="Red" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,20"/>

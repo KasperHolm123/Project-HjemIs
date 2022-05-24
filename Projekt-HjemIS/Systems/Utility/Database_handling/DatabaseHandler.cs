@@ -46,48 +46,13 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     object[] values = new object[Props.Count];
-                    // Eventuel forbedring ville være at finde en måde at bruge T i et switch statement, samt en måde at "new T()" på.
-                    if (typeof(T) == typeof(Customer))
+                    var internalTable = new List<T>();
+                    while (reader.Read())
                     {
-                        var internalTable = new List<Customer>();
-                        while (reader.Read())
-                        {
-                            reader.GetValues(values);
-                            internalTable.Add(new Customer(values));
-                        }
-                        return internalTable as List<T>;
+                        reader.GetValues(values);
+                        internalTable.Add((T)Activator.CreateInstance(typeof(T), values)); // Instantier T med argumenter.
                     }
-                    else if (typeof(T) == typeof(Location))
-                    {
-                        var internalTable = new List<Location>();
-                        while (reader.Read())
-                        {
-                            reader.GetValues(values);
-                            Location location = new Location(values);
-
-                            if (!internalTable.Contains(location))
-                                internalTable.Add(location);
-                        }
-                        return internalTable as List<T>;
-                    }
-                    else if (typeof(T) == typeof(User))
-                    {
-                        var internalTable = new List<User>();
-                        while (reader.Read())
-                        {
-                            reader.GetValues(values);
-                            internalTable.Add(new User(values)); // mangler constructor
-                        }
-                    }
-                    else if (typeof(T) == typeof(Product))
-                    {
-                        var internalTable = new List<Product>();
-                        while (reader.Read())
-                        {
-                            reader.GetValues(values);
-                            internalTable.Add(new Product(values));
-                        }
-                    }
+                    return internalTable;
                 }
             }
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
@@ -95,17 +60,17 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             return null;
         }
 
-        public void AddData(string query, SqlParameter[] parameters)
+        public int AddData(string query, SqlParameter[] parameters)
         {
             try
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddRange(parameters);
-                cmd.ExecuteNonQuery();
+                return cmd.ExecuteNonQuery();
 
             }
-            catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            catch (Exception ex) { Debug.WriteLine(ex.Message); return -1; }
             finally { connection.Close(); }
         }
         #endregion
@@ -151,7 +116,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <returns></returns>
         public string AddBulkData<T>(DataTable dt, string tableName)
         {
-            connection.OpenAsync();
+            connection.Open();
             ClearTable($"{tableName}");
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
@@ -160,7 +125,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 List<PropertyInfo> properties = new List<PropertyInfo>();
                 foreach (PropertyInfo item in allProperties)
                 {
-                    if (item.PropertyType == typeof(string))
+                    if (item.PropertyType == typeof(string) || item.PropertyType == typeof(int))
                         properties.Add(item);
                 }
                 foreach (PropertyInfo property in properties)
