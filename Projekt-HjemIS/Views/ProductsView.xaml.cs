@@ -140,13 +140,16 @@ namespace Projekt_HjemIS.Views
             try
             {
                 Product selectedProduct = mainGrid.SelectedItem as Product;
-                nameTxt.Text = selectedProduct.Name;
-                idTxt.Text = selectedProduct.ID.ToString();
-                priceTxt.Text = selectedProduct.Price.ToString();
-                discountTxt.Text = selectedProduct.Discount.ToString();
+                if (selectedProduct != null)
+                {
+                    nameTxt.Text = selectedProduct.Name;
+                    idTxt.Text = selectedProduct.ID.ToString();
+                    priceTxt.Text = selectedProduct.Price.ToString();
+                    discountTxt.Text = selectedProduct.Discount.ToString();
 
-                decimal discountedPrice = decimal.Parse(discountTxt.Text);
-                discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
+                    decimal discountedPrice = decimal.Parse(discountTxt.Text);
+                    discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
+                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
