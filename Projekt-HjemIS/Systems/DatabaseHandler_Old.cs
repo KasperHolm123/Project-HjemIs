@@ -18,6 +18,7 @@ namespace Projekt_HjemIS.Systems
         private static SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
+        public static List<Location> Locations { get; set; }
         /// <summary>
         /// Execute SQL query to add data to designated database.
         /// </summary>
@@ -98,7 +99,7 @@ namespace Projekt_HjemIS.Systems
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.Add(CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar));
                     command.Parameters.Add(CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", mail.Body, SqlDbType.NVarChar));
                     return (int)command.ExecuteScalar();
                 }
                 if (typeof(T) == typeof(Message_SMS))
@@ -108,7 +109,7 @@ namespace Projekt_HjemIS.Systems
                         "VALUES(@messageType, @body)";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.Add(CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar));
-                    command.Parameters.Add(CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar));
+                    command.Parameters.Add(CreateParameter("@body", sms.Body, SqlDbType.NVarChar));
                     return (int)command.ExecuteScalar();
                 }
                 return -1;
@@ -277,6 +278,39 @@ namespace Projekt_HjemIS.Systems
                 SqlDbType = type
             };
             return param;
+        }
+        public static void GetCities()
+        {
+            List<Location> locs = new List<Location>();
+            try
+            {
+                connection.Open();
+                string query = $@"SELECT DISTINCT PostalCode, City FROM Locations WHERE PostalCode LIKE '%%' AND City LIKE '%%'";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.CommandTimeout = 0;
+                //command.Parameters.Add(CreateParameter("@postalcode", loc.PostalCode, SqlDbType.NVarChar));
+                //command.Parameters.Add(CreateParameter("@city", loc.City, SqlDbType.NVarChar));
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        locs.Add(new Location()
+                        {
+                            City = (string)reader[$"{nameof(Location.City)}"].ToString().Trim(),
+                            PostalCode = (string)reader[$"{nameof(Location.PostalCode)}"]
+                        });
+                    }
+                }
+                Locations = locs;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
     public static class DbValueExtensions

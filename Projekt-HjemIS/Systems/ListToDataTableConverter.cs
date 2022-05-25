@@ -42,7 +42,6 @@ namespace Projekt_HjemIS.Systems
                 }
                 dataTable.Rows.Add(values);
             }
-
             return dataTable;
         }
     }
