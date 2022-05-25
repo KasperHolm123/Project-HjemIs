@@ -112,5 +112,10 @@ namespace Projekt_HjemIS
                 btnLogin_Click(sender, e);
             }
         }
+
+        private void username_GotFocus(object sender, RoutedEventArgs e)
+        {
+            username.Text = "";
+        }
     }
 }
