@@ -89,9 +89,7 @@
     <Compile Include="Models\Message_Mail.cs" />
     <Compile Include="Models\Message_SMS.cs" />
     <Compile Include="Models\Product.cs" />
-
     <Compile Include="Systems\CustomerFactory.cs" />
-
     <Compile Include="Systems\DropzoneObserver.cs" />
     <Compile Include="Systems\CustomerRepository.cs" />
     <Compile Include="Systems\Emulator.cs" />
@@ -114,6 +112,9 @@
     </Compile>
     <Compile Include="Views\OfferViews.xaml.cs">
       <DependentUpon>OfferViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductsView.xaml.cs">
+      <DependentUpon>ProductsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UsersViews.xaml.cs">
       <DependentUpon>UsersViews.xaml</DependentUpon>
@@ -167,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OfferViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -235,5 +240,8 @@
   <ItemGroup>
     <Resource Include="Pictures\sort.png" />
   </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Pictures\ice-cream.png" />
+	</ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
