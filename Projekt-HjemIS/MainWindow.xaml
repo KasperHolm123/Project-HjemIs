@@ -39,10 +39,10 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1" Grid.Column="1">
-                    <TextBox x:Name="username" Text="Username" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="username" Text="Username" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" VerticalContentAlignment="Center" GotFocus="username_GotFocus"/>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="1">
-                    <PasswordBox x:Name="password" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                    <PasswordBox x:Name="password" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" KeyDown="password_KeyDown"/>
                 </Grid>
                 <Grid Grid.Row="3" Grid.Column="1">
                     <Button x:Name="btnLogin" Content="Login" Width="300" Height="30" FontWeight="Bold" Click="btnLogin_Click" FontSize="15">

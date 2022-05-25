@@ -12,7 +12,7 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="messageBodytxt" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="1" Text="Test test test test test " FontSize="15" Width="850" Height="400" Margin="0,100,0,0"/>
+            <TextBox x:Name="messageBodytxt" Grid.Row="1" Text="Test test test test test " FontSize="15" Width="850" Height="400" Margin="0,100,0,0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
