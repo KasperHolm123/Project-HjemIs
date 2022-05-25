@@ -15,10 +15,12 @@ namespace Projekt_HjemIS.Models
         public string StreetCode { get; set; }
         public string CountyCode { get; set; }
         public List<Message> MsgReceived { get; set; }
+        public Location Address { get; set; }
         
         public Customer()
         {
-
+            Address = new Location();
+            MsgReceived = new List<Message>();
         }
 
         public Customer(string firstName, string lastName, int phoneNumber, string streetCode, string countyCode)

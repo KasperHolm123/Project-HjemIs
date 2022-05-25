@@ -91,7 +91,9 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Systems\CustomerFactory.cs" />
     <Compile Include="Systems\DropzoneObserver.cs" />
+    <Compile Include="Systems\CustomerRepository.cs" />
     <Compile Include="Systems\Emulator.cs" />
+    <Compile Include="Systems\LocationRepository.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
@@ -104,6 +106,9 @@
     </Compile>
     <Compile Include="Views\HomeViews.xaml.cs">
       <DependentUpon>HomeViews.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OfferViews.xaml.cs">
       <DependentUpon>OfferViews.xaml</DependentUpon>
@@ -155,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HomeViews.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -223,7 +232,16 @@
     <Resource Include="Pictures\mail-inbox.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Pictures\ice-cream.png" />
+    <Resource Include="Pictures\sms.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\email.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\sort.png" />
+  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Pictures\ice-cream.png" />
+	</ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

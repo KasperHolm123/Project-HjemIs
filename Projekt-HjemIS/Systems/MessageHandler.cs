@@ -47,7 +47,7 @@ namespace Projekt_HjemIS.Systems
                     SqlParameter[] sp = new SqlParameter[]
                     {
                         CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar),
-                        CreateParameter("@body", sms.MessageBody, SqlDbType.NVarChar)
+                        CreateParameter("@body", sms.Body, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatSms(message as Message_SMS));
                     return dh.AddDataReturn<Message_SMS>(query, sp);
@@ -61,7 +61,7 @@ namespace Projekt_HjemIS.Systems
                     {
                         CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar),
                         CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar),
-                        CreateParameter("@body", mail.MessageBody, SqlDbType.NVarChar)
+                        CreateParameter("@body", mail.Body, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatMail(message as Message_Mail));
                     return dh.AddDataReturn<Message_Mail>(query, sp);
