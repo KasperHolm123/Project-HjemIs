@@ -11,7 +11,6 @@ namespace Projekt_HjemIS.Models
     {
         public string StreetCode { get; set; }
         public string CountyCode { get; set; }
-        public string Street { get; set; }
         public string PostalCode { get; set; }
         public string City { get; set; }
         public string PostalDistrict { get; set; }
@@ -25,7 +24,6 @@ namespace Projekt_HjemIS.Models
                 _street = CleanInput(value);
             }
         }
-        public bool IsRecipient { get; set; }
         public Location()
         {
 

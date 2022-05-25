@@ -142,7 +142,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <returns></returns>
         public string AddBulkData<T>(DataTable dt, string tableName)
         {
-            connection.OpenAsync();
+            connection.Open();
             ClearTable($"{tableName}");
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
             {
@@ -161,6 +161,66 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 finally { connection.Close(); }
             }
         }
-
+        public int UpdateBulkData(DataTable dt)
+        {
+            int affected = -1;
+            dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };
+            string selectQuery = "SELECT * FROM Locations";
+            try
+            {
+                connection.Open();
+                DataSet dbdataSet = new DataSet("Locations");
+                DataTable table = new DataTable("Locations");
+                SqlDataAdapter adapter = new SqlDataAdapter(selectQuery, connection);
+                SqlCommandBuilder cb = new SqlCommandBuilder(adapter);
+                adapter.FillSchema(table, SchemaType.Source);
+                adapter.Fill(table);
+                adapter.SelectCommand = new SqlCommand(selectQuery, connection);
+                adapter.DeleteCommand = cb.GetDeleteCommand(true);
+                adapter.UpdateCommand = cb.GetUpdateCommand(true);
+                adapter.InsertCommand = cb.GetInsertCommand(true);
+                //int rowsreturned = adapter.Fill(dbdataSet, "Locations");
+                table.Merge(dt, false, MissingSchemaAction.Error);
+                Debug.WriteLine($"Merged");
+                //dbdataSet.Merge(dt, false, MissingSchemaAction.Ignore);
+                //dbdataSet.Tables[0].AcceptChanges();
+                //table.AcceptChanges();
+                //foreach (DataRow row in table.Rows)
+                //{
+                //    row.SetModified();
+                //}
+                //adapter.UpdateCommand = new SqlCommand(@"UPDATE Locations
+                //                SET City = '@city', Street = '@street', PostalCode = '@postalcode', PostalDistrict = '@postaldistrict'
+                //                WHERE StreetCode = '@streetcode' AND CountyCode = '@countycode'", connection);
+                //adapter.UpdateCommand.Parameters.Add("@street", SqlDbType.NVarChar, 100, "Street");
+                //adapter.UpdateCommand.Parameters.Add("@city", SqlDbType.NVarChar, 100, "City");
+                //adapter.UpdateCommand.Parameters.Add("@countycode", SqlDbType.NVarChar, 100, "CountyCode");
+                //adapter.UpdateCommand.Parameters.Add("@streetcode", SqlDbType.NVarChar, 100, "StreetCode");
+                //adapter.UpdateCommand.Parameters.Add("@postalcode", SqlDbType.NVarChar, 100, "PostalCode");
+                //adapter.UpdateCommand.Parameters.Add("@postaldistrict", SqlDbType.NVarChar, 100, "PostalDistrict");
+                adapter.AcceptChangesDuringUpdate = true;
+                affected = adapter.Update(table);
+                Debug.WriteLine($"Update completed with {affected} rows");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return affected;
+        }
+        private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
+        {
+            SqlParameter param = new SqlParameter
+            {
+                ParameterName = paramName,
+                Value = value,
+                SqlDbType = type
+            };
+            return param;
+        }
     }
 }

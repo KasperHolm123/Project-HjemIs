@@ -39,10 +39,9 @@ namespace Projekt_HjemIS.Systems
 
             Location currentLocation = new Location();
             Location prevLocation = new Location();
-            using (StreamReader sr = File.OpenText(GetCurrentDirectory() + @"\dropzone\tempRecords.txt"))
+            using (StreamReader sr = new StreamReader(GetCurrentDirectory() + @"\dropzone\tempRecords.txt", Encoding.Default, true))
             {
                 string currentLine = string.Empty;
-
                 // Read each line from current file.
                 while ((currentLine = sr.ReadLine()) != null)
                 {
@@ -80,12 +79,16 @@ namespace Projekt_HjemIS.Systems
         /// <param name="locations"></param>
         public static Task<string> SaveRecords(List<Location> locations)
         {
+            Dictionary<string, Location> loc = new Dictionary<string, Location>();
+
+
             DatabaseHandler dh = new DatabaseHandler();
             string result = string.Empty;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            result = dh.AddBulkData<Location>(dt, "Locations");
+            int a = dh.UpdateBulkData(dt);
+            //result = dh.AddBulkData<Location>(dt, "Locations");
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
             return Task.FromResult(result);
@@ -125,7 +128,10 @@ namespace Projekt_HjemIS.Systems
             loc.PostalDistrict = record[9];
 
         }
-
+        private static void ReplaceChars(Location city)
+        {
+            //if (city.Street.Contains("å"))  
+        }
         /// <summary>
         /// Returns current directory.
         /// </summary>
