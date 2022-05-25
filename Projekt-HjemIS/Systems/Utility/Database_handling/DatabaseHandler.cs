@@ -179,25 +179,8 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 adapter.DeleteCommand = cb.GetDeleteCommand(true);
                 adapter.UpdateCommand = cb.GetUpdateCommand(true);
                 adapter.InsertCommand = cb.GetInsertCommand(true);
-                //int rowsreturned = adapter.Fill(dbdataSet, "Locations");
                 table.Merge(dt, false, MissingSchemaAction.Error);
                 Debug.WriteLine($"Merged");
-                //dbdataSet.Merge(dt, false, MissingSchemaAction.Ignore);
-                //dbdataSet.Tables[0].AcceptChanges();
-                //table.AcceptChanges();
-                //foreach (DataRow row in table.Rows)
-                //{
-                //    row.SetModified();
-                //}
-                //adapter.UpdateCommand = new SqlCommand(@"UPDATE Locations
-                //                SET City = '@city', Street = '@street', PostalCode = '@postalcode', PostalDistrict = '@postaldistrict'
-                //                WHERE StreetCode = '@streetcode' AND CountyCode = '@countycode'", connection);
-                //adapter.UpdateCommand.Parameters.Add("@street", SqlDbType.NVarChar, 100, "Street");
-                //adapter.UpdateCommand.Parameters.Add("@city", SqlDbType.NVarChar, 100, "City");
-                //adapter.UpdateCommand.Parameters.Add("@countycode", SqlDbType.NVarChar, 100, "CountyCode");
-                //adapter.UpdateCommand.Parameters.Add("@streetcode", SqlDbType.NVarChar, 100, "StreetCode");
-                //adapter.UpdateCommand.Parameters.Add("@postalcode", SqlDbType.NVarChar, 100, "PostalCode");
-                //adapter.UpdateCommand.Parameters.Add("@postaldistrict", SqlDbType.NVarChar, 100, "PostalDistrict");
                 adapter.AcceptChangesDuringUpdate = true;
                 affected = adapter.Update(table);
                 Debug.WriteLine($"Update completed with {affected} rows");
