@@ -50,7 +50,7 @@ namespace Projekt_HjemIS.Models
         }
         public override string ToString()
         {
-            if (Street != null) return City + "-" + Street;
+            if (Street != null) return Street;
             return City + "-" + PostalCode;
         }
         static string CleanInput(string strIn)

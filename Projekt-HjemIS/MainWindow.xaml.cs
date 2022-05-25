@@ -31,6 +31,7 @@ namespace Projekt_HjemIS
         {
             InitializeComponent();
             DatabaseHandler dh = new DatabaseHandler();
+            //RecordHandler.SaveRecords(RecordHandler.GetRecords());
             DataTable dt = ListToDataTableConverter.ToDataTable(RecordHandler.GetRecords());
             Task.Run(()=> dh.UpdateBulkData(dt));
         }

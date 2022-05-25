@@ -73,7 +73,9 @@
                         </StackPanel>
                         <StackPanel Grid.Column="0" MaxWidth="425" Width="415" Height="140" HorizontalAlignment="Left" Margin="80,0,0,0" Orientation="Vertical">
                             <Label Content="{Binding Path=ID}" HorizontalContentAlignment="Stretch" VerticalAlignment="Top"  HorizontalAlignment="Right" VerticalContentAlignment="Stretch"/>
-                            <TextBlock Text="{Binding Path=Body}" Height="110" Width="410"  HorizontalAlignment="Left"/>
+                            <Border BorderThickness="1" BorderBrush="Black">
+                                <TextBlock Text="{Binding Path=Body}" Height="110" Width="410"  HorizontalAlignment="Left"/>
+                            </Border>
                         </StackPanel>
                         <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Recipients}" Width="200" HorizontalAlignment="Right" VerticalAlignment="Top">
                             <ComboBox.ItemsPanel>
@@ -86,7 +88,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Ellipse x:Name="QueryState" Width="30" Height="30" Margin="700,-5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" >
+        <Ellipse x:Name="QueryState" Width="30" Height="30" Margin="500,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" >
             <Ellipse.Resources>
                 <Style TargetType="Ellipse">
                     <Setter Property="Fill" Value="Transparent"/>
