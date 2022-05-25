@@ -104,5 +104,13 @@ namespace Projekt_HjemIS
             forgotPass.Show();
             this.Close();
         }
+
+        private void password_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                btnLogin_Click(sender, e);
+            }
+        }
     }
 }
