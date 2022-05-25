@@ -69,7 +69,7 @@ namespace Projekt_HjemIS
         }
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
-            List<Location> locations = await Task.Run(() => repository.GetCities2());
+            List<Location> locations = await Task.Run(() => repository.GetCities());
             locations.Sort((x, y) => string.Compare(x.City, y.City));
             foreach (Location location in locations)
             {
