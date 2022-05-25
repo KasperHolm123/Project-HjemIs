@@ -76,29 +76,44 @@ namespace Projekt_HjemIS.Views
                     CreateParameter("@streetCode", location.StreetCode, SqlDbType.NVarChar)
                 };
                 dh.AddData(query, parameters);
-                //DatabaseHandler.ConnectMessage(MessageHandler.SendMessages(type), location.CountyCode, location.StreetCode);
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)isSMS.IsChecked) // SMS
+            try
             {
-                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                ConnectMessage(sms);
+                if (RecipientsLocations.Count != 0)
+                {
+                    if ((bool)isSMS.IsChecked) // SMS
+                    {
+                        Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
+                        ConnectMessage(sms);
+                    }
+                    else if ((bool)isMAIL.IsChecked) // Mail
+                    {
+                        Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
+                        ConnectMessage(mail);
+                    }
+                    else if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
+                    {
+                        Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
+                        ConnectMessage(mail);
+                        Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
+                        ConnectMessage(sms);
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                else
+                {
+                    throw new Exception();
+                }
+                MessageBox.Show("Besked sendt.");
             }
-            if ((bool)isMAIL.IsChecked) // Mail
-            {
-                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                ConnectMessage(mail);
-            }
-            if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
-            {
-                Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                ConnectMessage(mail);
-                Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                ConnectMessage(sms);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
@@ -108,8 +123,7 @@ namespace Projekt_HjemIS.Views
             if (searchTxt.Text != "" || searchTxt.Text != null)
             {
                 string query = $@"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{searchTxt.Text}%';";
-                SearchedLocations = new ObservableCollection<Location>(dh.GetTable<Location>(query)); // Tjek om det virker
-                //DatabaseHandler.GetLocation(SearchedLocations, searchTxt.Text);
+                SearchedLocations = new ObservableCollection<Location>(dh.GetTable<Location>(query));
                 recipientsDataGrid.ItemsSource = SearchedLocations;
             }
             else

@@ -44,16 +44,26 @@ namespace Projekt_HjemIS.Views
 
                 while ((currentLine = sr.ReadLine()) != null)
                 {
-                    string sub = currentLine.Substring(0, 3);
-                    switch (sub)
+                    if (currentLine == "")
+                        currentMessage += "\n";
+                    if (currentLine != "")
                     {
-                        case @"04/":
-                            mainListBox.Items.Add(currentMessage);
-                            currentMessage = string.Empty;
-                            break;
-                        default:
-                            currentMessage += currentLine.Substring(3) + "\n";
-                            break;
+                        string sub = currentLine.Substring(0, 3);
+                        switch (sub)
+                        {
+                            case @"00/":
+                            case @"02/":
+                            case @"03/":
+                                currentMessage += currentLine.Substring(3) + "\n";
+                                break;
+                            case @"04/":
+                                mainListBox.Items.Add(currentMessage);
+                                currentMessage = string.Empty;
+                                break;
+                            default:
+                                currentMessage += currentLine + "\n";
+                                break;
+                        }
                     }
                 }
             }
