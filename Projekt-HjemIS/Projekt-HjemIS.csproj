@@ -110,8 +110,8 @@
     <Compile Include="Views\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OfferViews.xaml.cs">
-      <DependentUpon>OfferViews.xaml</DependentUpon>
+    <Compile Include="Views\EditCustomerView.xaml.cs">
+      <DependentUpon>EditCustomerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductsView.xaml.cs">
       <DependentUpon>ProductsView.xaml</DependentUpon>
@@ -167,7 +167,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OfferViews.xaml">
+    <Page Include="Views\EditCustomerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -240,8 +240,8 @@
   <ItemGroup>
     <Resource Include="Pictures\sort.png" />
   </ItemGroup>
-	<ItemGroup>
-		<Resource Include="Pictures\ice-cream.png" />
-	</ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\ice-cream.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
