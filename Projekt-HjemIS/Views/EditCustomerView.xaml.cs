@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems.Utility.Database_handling;
 
 namespace Projekt_HjemIS.Views
 {
@@ -20,14 +23,25 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class EditCustomerView : UserControl
     {
+        DatabaseHandler dh = new DatabaseHandler();
+
+        public ObservableCollection<Customer> _customers { get; set; }
+
         public EditCustomerView()
         {
             InitializeComponent();
+
+            UpdateGrid();
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void UpdateGrid()
         {
-
+            try
+            {
+                _customers = new ObservableCollection<Customer>(dh.GetTable<Customer>("SELECT FirstName, LastName, PhoneNumber FROM Customers"));
+                customerInfoGrid.ItemsSource = _customers;
+            }
+            catch (Exception ex) { MessageBox.Show($"Oops, something went wrong. Error code: {ex}"); }
         }
     }
 }

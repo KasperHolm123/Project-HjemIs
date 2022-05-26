@@ -17,7 +17,7 @@
         <Label Content="Last Name" HorizontalAlignment="Left" Margin="218,37,0,0" VerticalAlignment="Top"/>
         <Label Content="First Name" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top"/>
         <Label Content="Search customer" HorizontalAlignment="Left" Margin="20,11,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="108"/>
+        <TextBox HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="108" />
         <TextBox HorizontalAlignment="Left" Height="15" Margin="289,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="108"/>
         <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66"/>
         <Label Content="First name" HorizontalAlignment="Left" Height="37" Margin="535,118,0,0" VerticalAlignment="Top" Width="104"/>
