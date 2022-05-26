@@ -79,7 +79,7 @@ namespace Projekt_HjemIS
         #region View Control
         private void _Offers_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new OfferViews();
+            userControl = new EditCustomerView();
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }

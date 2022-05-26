@@ -18,9 +18,9 @@ namespace Projekt_HjemIS.Views
     /// <summary>
     /// Interaction logic for OfferViews.xaml
     /// </summary>
-    public partial class OfferViews : UserControl
+    public partial class EditCustomerView : UserControl
     {
-        public OfferViews()
+        public EditCustomerView()
         {
             InitializeComponent();
         }
