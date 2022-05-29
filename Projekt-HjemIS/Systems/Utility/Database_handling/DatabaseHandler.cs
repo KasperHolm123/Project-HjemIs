@@ -135,7 +135,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 finally { connection.Close(); }
             }
         }
-        public int UpdateBulkData(DataTable dt)
+        public int UpdateBulkData(DataTable dt) // Metoden får programmet til at gå i stå.
         {
             int affected = -1;
             dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };

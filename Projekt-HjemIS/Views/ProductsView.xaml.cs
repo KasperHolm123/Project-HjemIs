@@ -148,7 +148,7 @@ namespace Projekt_HjemIS.Views
                     discountTxt.Text = selectedProduct.Discount.ToString();
 
                     decimal discountedPrice = decimal.Parse(discountTxt.Text);
-                    discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
+                    discountedPriceTxt.Text = (selectedProduct.Price * (1- (discountedPrice / 100))).ToString();
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
