@@ -20,6 +20,11 @@ namespace Projekt_HjemIS.Systems
         {
 
         }
+        /// <summary>
+        /// Gets all streets based on city/postalcode/street input from user
+        /// </summary>
+        /// <param name="loc"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<Location>> GetLocations(Location loc)
         {
             List<Location> locs = new List<Location>();
@@ -54,7 +59,11 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-
+        /// <summary>
+        /// Gets all customers related to a specific city, postalcode and street
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<Customer>> GetCustomers(Customer customer)
         {
             List<Customer> customers = new List<Customer>();
@@ -89,26 +98,32 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-
+        /// <summary>
+        /// Gets every unique pair of city and associated postalcode. This is what makes the combobox searchable
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Location>> GetCities()
         {
             List<Location> locs = new List<Location>();
             try
             {
-                await connection.OpenAsync();
-                string query = $@"SELECT DISTINCT PostalCode, City FROM Locations WHERE PostalCode LIKE '%%' AND City LIKE '%%'";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.CommandTimeout = 0;
-                
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                using(SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString))
                 {
-                    while (await reader.ReadAsync())
+                    await connection.OpenAsync();
+                    string query = $@"SELECT DISTINCT PostalCode, City FROM Locations WHERE PostalCode LIKE '%%' AND City LIKE '%%'";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.CommandTimeout = 0;
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        locs.Add(new Location()
+                        while (await reader.ReadAsync())
                         {
-                            City = (string)reader[$"{nameof(Location.City)}"].ToString().Trim(),
-                            PostalCode = (string)reader[$"{nameof(Location.PostalCode)}"]
-                        });
+                            locs.Add(new Location()
+                            {
+                                City = (string)reader[$"{nameof(Location.City)}"].ToString().Trim(),
+                                PostalCode = (string)reader[$"{nameof(Location.PostalCode)}"]
+                            });
+                        }
                     }
                 }
                 return locs;
@@ -123,7 +138,11 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-
+        /// <summary>
+        /// Finds all messages and related customers in a specific geographical location, city/postalcode/street.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<Message>> FindMessages(Location location)
         {
             Dictionary<int, Message> msgs = new Dictionary<int, Message>();
@@ -170,7 +189,11 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-
+        /// <summary>
+        /// Finds all messages related to a specific customer
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public async Task<Customer> FindMessagesByCustomer(Customer customer)
         {
             Dictionary<int, Customer> customers = new Dictionary<int, Customer>();
@@ -216,7 +239,11 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-
+        /// <summary>
+        /// Enables Arithabort on a query, allegedly increases performance specifically for stored procedures
+        /// </summary>
+        /// <param name="MyConnection"></param>
+        /// <returns></returns>
         public async Task OpenAndSetArithAbort(SqlConnection MyConnection)
         {
             using (SqlCommand _Command = MyConnection.CreateCommand())

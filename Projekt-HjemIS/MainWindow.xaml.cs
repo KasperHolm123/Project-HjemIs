@@ -33,8 +33,8 @@ namespace Projekt_HjemIS
             DatabaseHandler dh = new DatabaseHandler();
             //RecordHandler.SaveRecords(RecordHandler.GetRecords());
             DataTable dt = ListToDataTableConverter.ToDataTable(RecordHandler.GetRecords());
-            Task.Factory.StartNew(()=>dh.UpdateBulkData<Location>(dt, "Locations")); 
-            //Task.Run(()=> dh.UpdateBulkData<Location>(dt, "Locations"));
+            //Task.Factory.StartNew(()=>dh.UpdateBulkData<Location>(dt, "Locations")); 
+            Task.Run(()=> dh.UpdateBulkData(dt));
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
