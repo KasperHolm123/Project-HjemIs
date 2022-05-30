@@ -25,7 +25,7 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class LogView : UserControl, INotifyPropertyChanged
     {
-        private LocationRepository locationRepository;
+        private LogViewRepository locationRepository;
         private CustomerRepository customerRepository;
         private ObservableCollection<Location> _locations;
         private ObservableCollection<Location> _streets;
@@ -156,7 +156,7 @@ namespace Projekt_HjemIS.Views
         {
             InitializeComponent();
             DataContext = this;
-            locationRepository = new LocationRepository(); 
+            locationRepository = new LogViewRepository(); 
             Locations = locations;
             customerRepository = new CustomerRepository();
             FilteredView = new CollectionViewSource();

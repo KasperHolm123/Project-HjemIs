@@ -29,7 +29,7 @@ namespace Projekt_HjemIS
         DatabaseHandler dh = new DatabaseHandler();
 
         UserControl userControl = null;
-        LocationRepository repository;
+        LogViewRepository repository;
         private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
         public event PropertyChangedEventHandler PropertyChanged;
         #region
@@ -63,7 +63,7 @@ namespace Projekt_HjemIS
             DataContext = this;
             InitializeComponent();
             userControl = new HomeViews();
-            repository = new LocationRepository();
+            repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
             lablUsername.Content = "Welcome " + User.Username.ToString();
             Loaded += Dashboard_Loaded;
