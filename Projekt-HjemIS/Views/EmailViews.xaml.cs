@@ -35,8 +35,6 @@ namespace Projekt_HjemIS.Views
         // Contains all filtered locations.
         public ObservableCollection<Location> SearchedLocations { get; set; }
 
-        // Contains all available products
-        public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
 
         private DatabaseHandler dh = new DatabaseHandler();
 
@@ -56,8 +54,6 @@ namespace Projekt_HjemIS.Views
 
             // Bind comboboxes
             recipientsDataGrid.ItemsSource = InternalLocations;
-
-            ComboOffers.ItemsSource = InternalProducts;
         }
 
 

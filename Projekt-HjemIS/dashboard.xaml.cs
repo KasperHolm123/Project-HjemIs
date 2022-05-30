@@ -29,7 +29,7 @@ namespace Projekt_HjemIS
         DatabaseHandler dh = new DatabaseHandler();
 
         UserControl userControl = null;
-        LocationRepository repository;
+        LogViewRepository repository;
         private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<Location> Locations
@@ -48,7 +48,7 @@ namespace Projekt_HjemIS
         {
             InitializeComponent();
             userControl = new HomeViews();
-            repository = new LocationRepository();
+            repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
             lablUsername.Content = "Welcome " + User.Username.ToString();
             Loaded += Dashboard_Loaded;
@@ -86,8 +86,7 @@ namespace Projekt_HjemIS
 
         private void _Email_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new LogView(ref _locations);
-            //userControl = new EmailViews();
+            userControl = new EmailViews();
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
@@ -140,5 +139,11 @@ namespace Projekt_HjemIS
         }
         #endregion
 
+        private void _MessageLog_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new LogView(ref _locations);
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
     }
 }
