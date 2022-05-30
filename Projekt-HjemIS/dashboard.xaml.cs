@@ -32,6 +32,7 @@ namespace Projekt_HjemIS
         LocationRepository repository;
         private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
         public event PropertyChangedEventHandler PropertyChanged;
+        #region
         public ObservableCollection<Location> Locations
         {
             get { return _locations; }
@@ -44,8 +45,22 @@ namespace Projekt_HjemIS
                     view.OnPropertyChanged("SearchCanExecute");                }
             }
         }
+        private bool _loaded = false;
+
+        public bool LoadCompleted
+        {
+            get { return _loaded; }
+            set
+            {
+                _loaded = value;
+                OnPropertyChanged("LoadCompleted");
+            }
+        }
+
+        #endregion
         public dashboard()
         {
+            DataContext = this;
             InitializeComponent();
             userControl = new HomeViews();
             repository = new LocationRepository();
@@ -69,12 +84,13 @@ namespace Projekt_HjemIS
         }
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
-            List<Location> locations = await Task.Run(() => repository.GetCities());
+            List<Location> locations = await Task.Run(() => repository.GetCities2());
             locations.Sort((x, y) => string.Compare(x.City, y.City));
             foreach (Location location in locations)
             {
                 _locations.Add(location);
             }
+            LoadCompleted = true;
         }
         #region View Control
         private void _Offers_Click(object sender, RoutedEventArgs e)
@@ -86,8 +102,7 @@ namespace Projekt_HjemIS
 
         private void _Email_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new LogView(ref _locations);
-            //userControl = new EmailViews();
+            userControl = new EmailViews();
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
@@ -140,5 +155,11 @@ namespace Projekt_HjemIS
         }
         #endregion
 
+        private void _Logs_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new LogView(ref _locations);
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
     }
 }

@@ -240,8 +240,14 @@
   <ItemGroup>
     <Resource Include="Pictures\sort.png" />
   </ItemGroup>
-	<ItemGroup>
-		<Resource Include="Pictures\ice-cream.png" />
-	</ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\ice-cream.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\filesd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\files.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -18,7 +18,7 @@ namespace Projekt_HjemIS.Systems
         public static List<Customer> Customers { get; set; }
 
         private static string _rootPath = $@"\tempMessages\InternalMessages.txt";
-
+        const char newLine = (char)10;
         public static void GetCustomers()
         {
             DatabaseHandler dh = new DatabaseHandler();
