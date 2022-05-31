@@ -15,7 +15,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 {
     public class DatabaseHandler : IDatabase
     {
-        private static SqlConnection connection = new SqlConnection
+        private SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
         #region IDatabase Implementation
@@ -137,8 +137,9 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         }
         public int UpdateBulkData(DataTable dt)
         {
+            ClearTable($"Locations");
             int affected = -1;
-            dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };
+            //dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };
             string selectQuery = "SELECT * FROM Locations";
             try
             {

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <DataGrid x:Name="customerInfoGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True">
+        <DataGrid x:Name="customerInfoGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True" MouseDoubleClick="customerInfoGrid_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
@@ -17,17 +17,21 @@
         <Label Content="Last Name" HorizontalAlignment="Left" Margin="218,37,0,0" VerticalAlignment="Top"/>
         <Label Content="First Name" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top"/>
         <Label Content="Search customer" HorizontalAlignment="Left" Margin="20,11,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="108" />
-        <TextBox HorizontalAlignment="Left" Height="15" Margin="289,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="108"/>
+        <TextBox HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108" />
+        <TextBox HorizontalAlignment="Left" Height="15" Margin="289,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108"/>
         <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66"/>
-        <Label Content="First name" HorizontalAlignment="Left" Height="37" Margin="535,118,0,0" VerticalAlignment="Top" Width="104"/>
-        <Label Content="Last Name" HorizontalAlignment="Left" Height="37" Margin="535,160,0,0" VerticalAlignment="Top" Width="104"/>
+        <Label Content="First name" HorizontalAlignment="Left" Height="37" Margin="511,118,0,0" VerticalAlignment="Top" Width="104" RenderTransformOrigin="-0.093,0.459"/>
+        <Label Content="Last Name" HorizontalAlignment="Left" Height="37" Margin="511,160,0,0" VerticalAlignment="Top" Width="104"/>
         <Label Content="Phone Number" HorizontalAlignment="Left" Height="37" Margin="511,197,0,0" VerticalAlignment="Top" Width="104"/>
-        <TextBox HorizontalAlignment="Left" Height="22" Margin="605,122,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="145"/>
-        <TextBox HorizontalAlignment="Left" Height="22" Margin="605,164,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="145"/>
-        <TextBox HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="145"/>
+        <TextBox x:Name="firstName" HorizontalAlignment="Left" Height="22" Margin="605,122,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <TextBox x:Name="lastName" HorizontalAlignment="Left" Height="22" Margin="605,164,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <TextBox x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <Button Content="Update customer info" HorizontalAlignment="Left" Height="50" Margin="639,365,0,0" VerticalAlignment="Top" Width="136"/>
         <Label Content="Edit Customer Info" HorizontalAlignment="Left" Margin="535,75,0,0" VerticalAlignment="Top"/>
         <Button Content="Delete Customer" Background="Red" HorizontalAlignment="Left" Height="50" Margin="454,365,0,0" VerticalAlignment="Top" Width="136"/>
+        <TextBox x:Name="streetCode" HorizontalAlignment="Left" Height="22" Margin="605,239,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <Label Content="Street Code" HorizontalAlignment="Left" Height="37" Margin="511,234,0,0" VerticalAlignment="Top" Width="104"/>
+        <TextBox x:Name="countyCode" HorizontalAlignment="Left" Height="22" Margin="605,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <Label Content="County Code" HorizontalAlignment="Left" Height="37" Margin="511,266,0,0" VerticalAlignment="Top" Width="104"/>
     </Grid>
 </UserControl>
