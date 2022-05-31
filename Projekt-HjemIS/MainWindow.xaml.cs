@@ -30,11 +30,11 @@ namespace Projekt_HjemIS
         public MainWindow()
         {
             InitializeComponent();
-            DatabaseHandler dh = new DatabaseHandler();
+            //DatabaseHandler dh = new DatabaseHandler();
             //RecordHandler.SaveRecords(RecordHandler.GetRecords());
-            DataTable dt = ListToDataTableConverter.ToDataTable(RecordHandler.GetRecords());
+            //DataTable dt = ListToDataTableConverter.ToDataTable(RecordHandler.GetRecords());
             //Task.Factory.StartNew(()=>dh.UpdateBulkData<Location>(dt, "Locations")); 
-            Task.Run(()=> dh.UpdateBulkData(dt));
+            //Task.Run(()=> dh.UpdateBulkData(dt));
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

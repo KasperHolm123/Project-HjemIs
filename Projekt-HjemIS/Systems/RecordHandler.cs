@@ -88,8 +88,8 @@ namespace Projekt_HjemIS.Systems
             Stopwatch sw = new Stopwatch();
             sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            //int a = dh.UpdateBulkData(dt);
-            result = dh.AddBulkData<Location>(dt, "Locations");
+            int a = dh.UpdateBulkData(dt);
+            //result = dh.AddBulkData<Location>(dt, "Locations");
             Debug.WriteLine(sw.Elapsed);
             sw.Stop();
             return Task.FromResult(result);

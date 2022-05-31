@@ -77,11 +77,16 @@ namespace Projekt_HjemIS
                 _Users.Visibility = Visibility.Collapsed;
             }
 
-            Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
+           Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
             // Setup customers
             //dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
             //    CustomerFactory.CreateNewCustomer()), "Customers");
         }
+        /// <summary>
+        /// Loads all cities and postalcodes into memory, long runnning operation 2-3> minutes 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
             List<Location> locations = await Task.Run(() => repository.GetCities());

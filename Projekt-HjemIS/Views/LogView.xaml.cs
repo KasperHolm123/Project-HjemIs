@@ -202,20 +202,6 @@ namespace Projekt_HjemIS.Views
             //Streets = new ObservableCollection<Location>(streets.ToList().GetRange(0, 50));
         }
 
-        //Useless
-        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            if (!comboBox.IsLoaded)
-                return;
-            Location loc;
-            if (comboBox.SelectedItem is Location)
-            {
-                int index = comboBox.SelectedIndex;
-                loc = comboBox.Items[index] as Location;
-                //LocationsToSearch.Add(loc);
-            }
-        }
         #endregion
 
 
@@ -261,7 +247,7 @@ namespace Projekt_HjemIS.Views
             string[] input = _citySearchText.Split('-');
             if (input.Length > 1)
             {
-                Location loc = new Location() { City = input[0], PostalCode = input[1] };
+                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = StreetSearchText };
                 IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
                 if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
                 else Messages.Clear();
