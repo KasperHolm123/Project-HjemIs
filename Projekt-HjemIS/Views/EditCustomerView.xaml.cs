@@ -65,11 +65,13 @@ namespace Projekt_HjemIS.Views
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
+
+        // Method redundant, moved to Button_Click
         private void UpdateCustomer(object sender, RoutedEventArgs e)
         {
             try
             {
-                string query = "UPDATE Customer " +
+                string query = "UPDATE Customers " +
                     "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
                     "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode, StreetCode = @streetCode";
                 SqlParameter[] sp = new SqlParameter[]
@@ -99,6 +101,35 @@ namespace Projekt_HjemIS.Views
                 SqlDbType = type
             };
             return param;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string query = "UPDATE Customers " +
+                    "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
+                    "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
+                    CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
+                    CreateParameter("@phoneNum", phoneNum.Text, SqlDbType.Int),
+                    CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
+                    CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
+                };
+                dh.AddData(query, sp);
+                UpdateGrid();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void customerInfoGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
