@@ -78,7 +78,7 @@ namespace Projekt_HjemIS.Views
                 {
                     CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
                     CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                    CreateParameter("@phoneNum", phoneNum.Text, SqlDbType.Int),
+                    CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
                     CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
                     CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
                 };
@@ -114,11 +114,11 @@ namespace Projekt_HjemIS.Views
                 {
                     CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
                     CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                    CreateParameter("@phoneNum", phoneNum.Text, SqlDbType.Int),
+                    CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
                     CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
                     CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
                 };
-                dh.AddData(query, sp);
+                PromptProductHandling(dh.AddData(query, sp));
                 UpdateGrid();
             }
             catch (Exception ex)
@@ -127,9 +127,44 @@ namespace Projekt_HjemIS.Views
             }
         }
 
-        private void customerInfoGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PromptProductHandling(int notFound)
         {
+            try
+            {
 
+
+                if (notFound == 0)
+                {
+                    MessageBoxResult msgResult = MessageBox.Show("Kunden er ikke fundet. Ønsker du at oprette en ny?", "Error", MessageBoxButton.YesNo);
+                    switch (msgResult)
+                    {
+                        case MessageBoxResult.Yes:
+                            string insertQuery = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
+                                "VALUES ('@firstName', '@lastName', '@phoneNum', '@streetCode', '@countyCode');";
+                            SqlParameter[] insertSp = new SqlParameter[]
+                            {
+                            CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
+                            CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
+                            CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
+                            CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
+                            CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
+                            };
+                            dh.AddData(insertQuery, insertSp);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    MessageBoxResult confirmBox = MessageBox.Show("Kunden er opdateret.", "Success", MessageBoxButton.OK);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
         }
     }
 }
