@@ -38,14 +38,14 @@ namespace Projekt_HjemIS.Systems
             MessageBox.Show($"{result}");
         }
 
-        private async Task<string> PromptRecordHandling()
+        private async Task<string> PromptRecordHandling(string fileName)
         {
             string result = string.Empty;
             MessageBoxResult msgPrompt = MessageBox.Show("Nyt dataudtræk opdaget. Start behandling?", "Record handling", MessageBoxButton.YesNo);
             switch (msgPrompt)
             {
                 case MessageBoxResult.Yes:
-                    result = await RecordHandler.SaveRecords(RecordHandler.GetRecords());
+                    result = await RecordHandler.SaveRecords(RecordHandler.GetRecords(fileName));
                     break;
                 default:
                     break;

@@ -32,7 +32,7 @@ namespace Projekt_HjemIS.Systems
         /// </summary>
 
         /// <returns></returns>
-        public static List<Location> GetRecords()
+        public static List<Location> GetRecords(string fileName)
         {
             // Keep count of how many record have been decoded and sent to the database.
             int recordCount = 0;
@@ -40,7 +40,7 @@ namespace Projekt_HjemIS.Systems
             Location currentLocation = new Location();
             Location prevLocation = new Location();
             //new StreamReader(GetCurrentDirectory() + @"\dropzone\tempRecords.txt", Encoding.Default, true)
-            using (StreamReader sr = new StreamReader(GetCurrentDirectory() + @"\dropzone\tempRecords.txt", Encoding.Default, true))
+            using (StreamReader sr = new StreamReader(GetCurrentDirectory() + $@"\dropzone\{fileName}.txt", Encoding.Default, true))
             {
                 string currentLine = string.Empty;
                 // Read each line from current file.
