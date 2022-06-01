@@ -131,7 +131,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 }
                 foreach (PropertyInfo property in properties)
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
-                try { bulkCopy.WriteToServer(dt); return "Saving successful"; }
+                try 
+                { 
+                    bulkCopy.WriteToServer(dt);
+                    return "Saving successful"; 
+                }
                 catch (Exception ex) { return ex.Message; }
                 finally { connection.Close(); }
             }

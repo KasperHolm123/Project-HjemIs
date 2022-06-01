@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,18 +32,22 @@ namespace Projekt_HjemIS
         UserControl userControl = null;
         LogViewRepository repository;
         private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
+
+        private List<Location> _locationsList;
+
         public event PropertyChangedEventHandler PropertyChanged;
-        #region
+        #region Properties
         public ObservableCollection<Location> Locations
         {
             get { return _locations; }
             set
             {
                 _locations = value;
-                if(userControl is LogView)
+                if (userControl is LogView)
                 {
                     LogView view = (LogView)userControl;
-                    view.OnPropertyChanged("SearchCanExecute");                }
+                    view.OnPropertyChanged("SearchCanExecute");
+                }
             }
         }
         private bool _loaded = false;
@@ -77,11 +82,19 @@ namespace Projekt_HjemIS
                 _Users.Visibility = Visibility.Collapsed;
             }
 
-           Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
+            ClearInternalMessages();
+
+            Task.Factory.StartNew(() => _locationsList = new List<Location>(dzObserver.ObserveDropzone()));
             // Setup customers
             //dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
             //    CustomerFactory.CreateNewCustomer()), "Customers");
         }
+
+        private void ClearInternalMessages()
+        {
+            File.WriteAllText($@"{GetCurrentDirectory()}\tempMessages\InternalMessages.txt", string.Empty);
+        }
+
         /// <summary>
         /// Loads all cities and postalcodes into memory, long runnning operation 2-3> minutes 
         /// </summary>
@@ -107,7 +120,7 @@ namespace Projekt_HjemIS
 
         private void _Email_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new EmailViews();
+            userControl = new EmailViews(_locationsList);
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
@@ -122,7 +135,7 @@ namespace Projekt_HjemIS
         private void _SignOut_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Are You Sure You Want To Log Out?", "Log Out", MessageBoxButton.YesNo);
-            switch(result)
+            switch (result)
             {
                 case MessageBoxResult.Yes:
                     this.Close();
@@ -156,13 +169,22 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
-        #endregion
 
         private void _Logs_Click(object sender, RoutedEventArgs e)
         {
             userControl = new LogView(ref _locations);
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
+        }
+        #endregion
+
+        private static string GetCurrentDirectory()
+        {
+            var rootPathChild = Directory.GetCurrentDirectory();
+            var rootPathParent = Directory.GetParent($"{rootPathChild}");
+            var rootPathFolder = Directory.GetParent($"{rootPathParent}");
+            var rootPath = rootPathFolder.ToString();
+            return rootPath;
         }
     }
 }

@@ -140,39 +140,39 @@ namespace Projekt_HjemIS.Systems
             finally { connection.Close(); }
         }
 
-        public static void GetLocation(ObservableCollection<Location> collection, string streetName)
-        {
-            try
-            {
-                connection.Open();
-                string query = $"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{streetName}%';";
-                SqlCommand command = new SqlCommand(query, connection);
-                int streetAmount = 0;
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Location newLocation = new Location(
-                            (string)reader[$"{nameof(Location.StreetCode)}"],
-                            (string)reader[$"{nameof(Location.CountyCode)}"],
-                            (string)reader[$"{nameof(Location.Street)}"],
-                            (string)reader[$"{nameof(Location.PostalCode)}"],
-                            (string)reader[$"{nameof(Location.City)}"],
-                            (string)reader[$"{nameof(Location.PostalDistrict)}"]
-                            );
-                        if (!collection.Contains(newLocation))
-                            collection.Add(newLocation);
-                        streetAmount++;
-                    }
-                }
-                Debug.WriteLine($"Returned: {streetAmount} streets");
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            finally { connection.Close(); }
-        }
+        //public static void GetLocation(ObservableCollection<Location> collection, string streetName)
+        //{
+        //    try
+        //    {
+        //        connection.Open();
+        //        string query = $"SELECT TOP (100) * FROM Locations WHERE Street LIKE '%{streetName}%';";
+        //        SqlCommand command = new SqlCommand(query, connection);
+        //        int streetAmount = 0;
+        //        using (SqlDataReader reader = command.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                Location newLocation = new Location(
+        //                    (string)reader[$"{nameof(Location.StreetCode)}"],
+        //                    (string)reader[$"{nameof(Location.CountyCode)}"],
+        //                    (string)reader[$"{nameof(Location.Street)}"],
+        //                    (string)reader[$"{nameof(Location.PostalCode)}"],
+        //                    (string)reader[$"{nameof(Location.City)}"],
+        //                    (string)reader[$"{nameof(Location.PostalDistrict)}"]
+        //                    );
+        //                if (!collection.Contains(newLocation))
+        //                    collection.Add(newLocation);
+        //                streetAmount++;
+        //            }
+        //        }
+        //        Debug.WriteLine($"Returned: {streetAmount} streets");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.WriteLine(e.Message);
+        //    }
+        //    finally { connection.Close(); }
+        //}
 
         /// <summary>
         /// Get all Customers from database and return them as an ObservableCollection.

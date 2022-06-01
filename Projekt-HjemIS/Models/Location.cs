@@ -29,16 +29,6 @@ namespace Projekt_HjemIS.Models
 
         }
 
-        public Location(string streetCode, string countyCode, string street, string postalCode, string city, string postalDistrict)
-        {
-            Street = streetCode;
-            CountyCode = countyCode;
-            Street = street;
-            PostalCode = postalCode;
-            City = city;
-            PostalDistrict = postalDistrict;
-        }
-
         public Location(object[] values)
         {
             StreetCode = values[0].ToString();
@@ -48,11 +38,24 @@ namespace Projekt_HjemIS.Models
             City = values[4].ToString();
             PostalDistrict = values[5].ToString();
         }
+
+        public Location(string streetCode, string countyCode, string street, string postalCode, string city, string postalDistrict)
+        {
+            StreetCode = streetCode;
+            CountyCode = countyCode;
+            Street = street;
+            PostalCode = postalCode;
+            City = city;
+            PostalDistrict = postalDistrict;
+        }
+
+
         public override string ToString()
         {
             if (Street != null) return Street;
             return City + "-" + PostalCode;
         }
+        
         static string CleanInput(string strIn)
         {
             // Replace invalid characters with empty strings.

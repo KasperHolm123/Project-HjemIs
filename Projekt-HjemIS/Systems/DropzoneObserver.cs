@@ -20,21 +20,25 @@ namespace Projekt_HjemIS.Systems
         // Watcher needs to be declared at the global scope to insure that it won't be disposed of.
         private FileSystemWatcher watcher = new FileSystemWatcher();
 
+        // List of locations to be returned
+        private List<Location> _internalLocations = new List<Location>();
+
         /// <summary>
         /// Observes a folder for a new file.
         /// </summary>
-        public void ObserveDropzone()
+        public List<Location> ObserveDropzone()
         {
             watcher.Path = $@"{GetCurrentDirectory()}\dropzone";
             watcher.Filter = "*.txt";
             watcher.Created += new FileSystemEventHandler(Watcher_Created);
             watcher.IncludeSubdirectories = true;
             watcher.EnableRaisingEvents = true;
+            return _internalLocations;
         }
 
         private async void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            string result = await PromptRecordHandling();
+            string result = await PromptRecordHandling(e.Name);
             MessageBox.Show($"{result}");
         }
 
@@ -45,7 +49,8 @@ namespace Projekt_HjemIS.Systems
             switch (msgPrompt)
             {
                 case MessageBoxResult.Yes:
-                    result = await RecordHandler.SaveRecords(RecordHandler.GetRecords(fileName));
+                    _internalLocations = RecordHandler.GetRecords(fileName);
+                    result = await RecordHandler.SaveRecords(_internalLocations);
                     break;
                 default:
                     break;

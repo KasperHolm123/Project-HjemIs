@@ -20,7 +20,7 @@ namespace Projekt_HjemIS.Systems
 
         public static List<Location> locations = new List<Location>();
 
-        private static List<Location> _innateLocations = new List<Location>(RecordHandler.GetRecords());
+        private static List<Location> _innateLocations; //= new List<Location>(RecordHandler.GetRecords());
 
         public static Random rand = new Random();
 

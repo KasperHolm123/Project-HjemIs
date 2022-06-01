@@ -68,7 +68,6 @@ namespace Projekt_HjemIS.Systems
                 }
                 return -1;
             }
-            //return DatabaseHandler.SaveMessage(message);
         }
 
         private static string FormatSms(Message_SMS sms)

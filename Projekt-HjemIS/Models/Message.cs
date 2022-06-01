@@ -32,7 +32,9 @@ namespace Projekt_HjemIS.Models
         }
         public Message(string body, List<Location> recipients, string type, List<Product> offers = null)
         {
+            Body = body;
             Recipients = new List<Customer>();
+            Type = type;
         }
 
 
