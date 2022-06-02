@@ -77,7 +77,7 @@ namespace Projekt_HjemIS.Systems
         }
 
         /// <summary>
-        /// Save a list of locations to a database.
+        /// Save or update a list of locations to the database
         /// </summary>
         /// <param name="locations"></param>
         public async static Task<string> SaveRecords(List<Location> locations)
