@@ -65,33 +65,6 @@ namespace Projekt_HjemIS.Views
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-
-        // Method redundant, moved to Button_Click
-        private void UpdateCustomer(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string query = "UPDATE Customers " +
-                    "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
-                    "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode, StreetCode = @streetCode";
-                SqlParameter[] sp = new SqlParameter[]
-                {
-                    CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
-                    CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                    CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
-                    CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
-                    CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
-                };
-                dh.AddData(query, sp);
-                UpdateGrid();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-
-        }
-
         private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
         {
             SqlParameter param = new SqlParameter
@@ -123,7 +96,7 @@ namespace Projekt_HjemIS.Views
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -140,7 +113,7 @@ namespace Projekt_HjemIS.Views
                     {
                         case MessageBoxResult.Yes:
                             string insertQuery = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
-                                "VALUES ('@firstName', '@lastName', '@phoneNum', '@streetCode', '@countyCode');";
+                                "VALUES (@firstName, @lastName, @phoneNum, @streetCode, @countyCode);";
                             SqlParameter[] insertSp = new SqlParameter[]
                             {
                             CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),

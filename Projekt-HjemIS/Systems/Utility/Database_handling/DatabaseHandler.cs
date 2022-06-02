@@ -59,7 +59,12 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally { connection.Close(); }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public int AddData(string query, SqlParameter[] parameters)
         {
             try
