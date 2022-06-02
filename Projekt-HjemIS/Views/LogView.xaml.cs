@@ -21,6 +21,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Jonas
     /// Interaction logic for LogView.xaml
     /// </summary>
     public partial class LogView : UserControl, INotifyPropertyChanged

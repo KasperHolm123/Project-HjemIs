@@ -14,6 +14,9 @@ using System.Windows;
 
 namespace Projekt_HjemIS.Systems.Utility.Database_handling
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public class DatabaseHandler : IDatabase
     {
         private static SqlConnection connection = new SqlConnection

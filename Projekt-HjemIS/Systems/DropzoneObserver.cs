@@ -9,6 +9,9 @@ using System.Windows;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public class DropzoneObserver
     {
 

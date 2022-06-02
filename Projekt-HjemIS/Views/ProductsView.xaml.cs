@@ -23,6 +23,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Kasper 
     /// Interaction logic for ProductsView.xaml
     /// </summary>
     public partial class ProductsView : UserControl

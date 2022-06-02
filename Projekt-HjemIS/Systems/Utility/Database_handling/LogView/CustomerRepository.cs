@@ -10,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
-    public  class CustomerRepository
+    /// <summary>
+    /// Hovedforfatter: Jonas
+    /// </summary>
+    public class CustomerRepository
     {
         private static SqlConnection connection = new SqlConnection
 (ConfigurationManager.ConnectionStrings["post"].ConnectionString);

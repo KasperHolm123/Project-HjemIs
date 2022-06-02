@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS
 {
     /// <summary>
+    /// Hovedforfatter: Christian
     /// Interaction logic for ForgotPass.xaml
     /// </summary>
     public partial class ForgotPass : Window

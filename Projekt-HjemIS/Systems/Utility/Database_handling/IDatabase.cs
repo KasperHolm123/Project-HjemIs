@@ -13,11 +13,13 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
     public interface IDatabase
     {
         /// <summary>
+        /// Hovedforfatter: Kasper
         /// Send a small amount of data to a database.
         /// </summary>
         int AddData(string query, SqlParameter[] parameters);
 
         /// <summary>
+        /// Hovedforfatter: Kasper
         /// Gets a table from a database and returns it.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -25,6 +27,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         List<T> GetTable<T>(string query);
 
         /// <summary>
+        /// Hovedforfatter: Kasper
         /// Clears a table in a database.
         /// </summary>
         /// <param name="tableName"></param>

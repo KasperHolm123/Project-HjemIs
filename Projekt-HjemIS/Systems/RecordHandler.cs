@@ -12,6 +12,7 @@ using Projekt_HjemIS.Systems.Utility.Database_handling;
 namespace Projekt_HjemIS.Systems
 {
     /// <summary>
+    /// Hovedforfatter: Kasper
     /// Handles record segmentation
     /// </summary>
     public static class RecordHandler

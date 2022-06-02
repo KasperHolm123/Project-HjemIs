@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Jonas
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RecordDataReader<T>:IMyDataReader<T>
     {
         public List<T> Records { get; set; }

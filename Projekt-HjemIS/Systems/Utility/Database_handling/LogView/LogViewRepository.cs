@@ -21,6 +21,7 @@ namespace Projekt_HjemIS.Systems
 
         }
         /// <summary>
+        /// Hovedforfatter: Jonas
         /// Gets all streets based on city/postalcode/street input from user
         /// </summary>
         /// <param name="loc"></param>
@@ -60,6 +61,7 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
         /// <summary>
+        /// Hovedforfatter: Jonas
         /// Gets all customers related to a specific city, postalcode and street
         /// </summary>
         /// <param name="customer"></param>
@@ -99,6 +101,7 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
         /// <summary>
+        /// Hovedforfatter: Jonas
         /// Gets every unique pair of city and associated postalcode. This is what makes the combobox searchable
         /// </summary>
         /// <returns></returns>
@@ -139,6 +142,7 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
         /// <summary>
+        /// Hovedforfatter: Jonas
         /// Finds all messages and related customers in a specific geographical location, city/postalcode/street.
         /// </summary>
         /// <param name="location"></param>
@@ -190,6 +194,7 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
         /// <summary>
+        /// Hovedforfatter: Jonas
         /// Finds all messages related to a specific customer
         /// </summary>
         /// <param name="customer"></param>
@@ -240,6 +245,7 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
         /// <summary>
+        /// Hovedforfatter: Jonas
         /// Enables Arithabort on a query, allegedly increases performance specifically for stored procedures
         /// </summary>
         /// <param name="MyConnection"></param>

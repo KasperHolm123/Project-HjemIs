@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Models
 {
+    /// <summary>
+    /// Hovedforfatter: Jonas 
+    /// </summary>
     public class Location
     {
         public string StreetCode { get; set; }

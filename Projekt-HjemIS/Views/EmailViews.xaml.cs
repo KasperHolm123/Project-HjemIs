@@ -24,6 +24,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Christian 
     /// Interaction logic for EmailViews.xaml
     /// </summary>
     public partial class EmailViews : UserControl

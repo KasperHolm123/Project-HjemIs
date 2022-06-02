@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Models
 {
+    /// <summary>
+    /// Hovedforfatter: Christian 
+    /// </summary>
     public class User
     {
         public User(string username)

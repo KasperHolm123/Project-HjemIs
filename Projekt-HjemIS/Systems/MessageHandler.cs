@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public static class MessageHandler
     {
         public static List<Message> Messages { get; set; }

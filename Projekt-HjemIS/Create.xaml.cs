@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS
 {
     /// <summary>
+    /// Hovedforfatter: Christian 
     /// Interaction logic for Create.xaml
     /// </summary>
     public partial class Create : Window

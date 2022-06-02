@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Models
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public class Message_Mail : Message
     {
         public string Subject { get; set; }

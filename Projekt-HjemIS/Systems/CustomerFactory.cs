@@ -10,6 +10,9 @@ using System.Diagnostics;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Daniel
+    /// </summary>
     public static class CustomerFactory
     {
         // Contains the customers with values assigned to them
