@@ -40,8 +40,9 @@ namespace Projekt_HjemIS.Systems
 
             Location currentLocation = new Location();
             Location prevLocation = new Location();
-            //new StreamReader(GetCurrentDirectory() + @"\dropzone\tempRecords.txt", Encoding.Default, true)
+
             using (StreamReader sr = new StreamReader(GetCurrentDirectory() + $@"\dropzone\{fileName}", Encoding.Default, true))
+
             {
                 string currentLine = string.Empty;
                 // Read each line from current file.
