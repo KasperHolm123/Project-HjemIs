@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projekt_HjemIS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace Projekt_HjemIS.Views
         public HomeViews()
         {
             InitializeComponent();
+            lablUsername.Content = User.Username.ToString();
         }
     }
 }

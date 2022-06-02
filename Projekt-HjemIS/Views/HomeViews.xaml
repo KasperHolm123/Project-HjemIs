@@ -6,13 +6,8 @@
              xmlns:local="clr-namespace:Projekt_HjemIS.Views"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1090">
-    <Grid>
-        <StackPanel Orientation="Vertical"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <TextBlock FontSize="40" FontWeight="Bold" 
-                       VerticalAlignment="Center" HorizontalAlignment="Center"
-                       Text="Home"/>
-        </StackPanel>
+    <Grid Background="White">
+        <Label Content="Welcome" FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-300,-400,0,0"/>
+        <Label x:Name="lablUsername" FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="300,-400,0,0"/>
     </Grid>
 </UserControl>
