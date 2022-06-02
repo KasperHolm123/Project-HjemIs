@@ -117,7 +117,12 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally { connection.Close(); }
         }
-
+        /// <summary>
+        /// Hovedforfatter: Jonas H
+        /// Checks if any rows are present in the specified table
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public async Task<object> CheckTable(string table)
         {
             string query = $"SELECT COUNT(*) FROM {table}";
