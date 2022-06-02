@@ -19,7 +19,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
     /// </summary>
     public class DatabaseHandler : IDatabase
     {
-        private static SqlConnection connection = new SqlConnection
+        private SqlConnection connection = new SqlConnection
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
         #region IDatabase Implementation
@@ -63,7 +63,12 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally { connection.Close(); }
             return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public int AddData(string query, SqlParameter[] parameters)
         {
             try
@@ -145,7 +150,9 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         }
         public int UpdateBulkData(DataTable dt)
         {
+            ClearTable($"Locations");
             int affected = -1;
+
             string selectQuery = "SELECT * FROM Locations";
             try
             {
