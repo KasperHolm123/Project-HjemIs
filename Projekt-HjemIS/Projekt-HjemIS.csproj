@@ -91,9 +91,9 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Systems\CustomerFactory.cs" />
     <Compile Include="Systems\DropzoneObserver.cs" />
-    <Compile Include="Systems\CustomerRepository.cs" />
+    <Compile Include="Systems\Utility\Database_handling\LogView\CustomerRepository.cs" />
     <Compile Include="Systems\Emulator.cs" />
-    <Compile Include="Systems\LocationRepository.cs" />
+    <Compile Include="Systems\Utility\Database_handling\LogView\LogViewRepository.cs" />
     <Compile Include="Systems\MessageHandler.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
@@ -243,5 +243,14 @@
   <ItemGroup>
     <Resource Include="Pictures\ice-cream.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\log.png" />
+  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Pictures\filesd.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Pictures\files.png" />
+	</ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

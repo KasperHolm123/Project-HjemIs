@@ -23,6 +23,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Kasper 
     /// Interaction logic for ProductsView.xaml
     /// </summary>
     public partial class ProductsView : UserControl
@@ -148,7 +149,7 @@ namespace Projekt_HjemIS.Views
                     discountTxt.Text = selectedProduct.Discount.ToString();
 
                     decimal discountedPrice = decimal.Parse(discountTxt.Text);
-                    discountedPriceTxt.Text = (selectedProduct.Price * (discountedPrice / 100)).ToString();
+                    discountedPriceTxt.Text = (selectedProduct.Price * (1- (discountedPrice / 100))).ToString();
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

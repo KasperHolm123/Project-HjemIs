@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Christian 
     /// Interaction logic for EmulatorView.xaml
     /// </summary>
     public partial class EmulatorView : UserControl

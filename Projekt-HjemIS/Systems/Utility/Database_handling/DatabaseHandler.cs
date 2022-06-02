@@ -10,9 +10,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Projekt_HjemIS.Systems.Utility.Database_handling
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public class DatabaseHandler : IDatabase
     {
         private SqlConnection connection = new SqlConnection
@@ -135,7 +139,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 }
                 foreach (PropertyInfo property in properties)
                     bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
-                try { bulkCopy.WriteToServer(dt); return "Saving successful"; }
+                try 
+                { 
+                    bulkCopy.WriteToServer(dt);
+                    return "Saving successful"; 
+                }
                 catch (Exception ex) { return ex.Message; }
                 finally { connection.Close(); }
             }
@@ -144,36 +152,104 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             ClearTable($"Locations");
             int affected = -1;
-            //dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };
+
             string selectQuery = "SELECT * FROM Locations";
             try
             {
-                connection.Open();
-                DataSet dbdataSet = new DataSet("Locations");
-                DataTable table = new DataTable("Locations");
-                SqlDataAdapter adapter = new SqlDataAdapter(selectQuery, connection);
-                SqlCommandBuilder cb = new SqlCommandBuilder(adapter);
-                adapter.FillSchema(table, SchemaType.Source);
-                adapter.Fill(table);
-                adapter.SelectCommand = new SqlCommand(selectQuery, connection);
-                adapter.DeleteCommand = cb.GetDeleteCommand(true);
-                adapter.UpdateCommand = cb.GetUpdateCommand(true);
-                adapter.InsertCommand = cb.GetInsertCommand(true);
-                table.Merge(dt, false, MissingSchemaAction.Error);
-                Debug.WriteLine($"Merged");
-                adapter.AcceptChangesDuringUpdate = true;
-                affected = adapter.Update(table);
-                Debug.WriteLine($"Update completed with {affected} rows");
+                using(SqlConnection connection = new SqlConnection
+            (ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+                {
+                    connection.Open();
+                    DataTable table = new DataTable("Locations");
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(selectQuery, connection))
+                    {
+                        SqlCommandBuilder cb = new SqlCommandBuilder(adapter);
+                        adapter.FillSchema(table, SchemaType.Source);
+                        adapter.Fill(table);
+                        adapter.SelectCommand = new SqlCommand(selectQuery, connection);
+                        adapter.DeleteCommand = cb.GetDeleteCommand(true);
+                        adapter.UpdateCommand = cb.GetUpdateCommand(true);
+                        adapter.InsertCommand = cb.GetInsertCommand(true);
+                        table.Merge(dt, false, MissingSchemaAction.Error);
+                        Debug.WriteLine($"Merged");
+                        adapter.AcceptChangesDuringUpdate = true;
+                        affected = adapter.Update(table);
+                        Debug.WriteLine($"Update completed with {affected} rows");
+                    }
+                }
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 Debug.WriteLine(ex.Message);
             }
             finally
             {
+                MessageBox.Show("Done");
                 connection.Close();
             }
             return affected;
+        }
+        public void UpdateBulkData<T>(DataTable dt, string tableName)
+        {
+            const string table = "TempLocations";
+            string checkQuery = "IF (EXISTS (SELECT * " +
+                 "FROM INFORMATION_SCHEMA.TABLES " +
+                 "WHERE TABLE_SCHEMA = 'dbo' " +
+                 $"AND TABLE_NAME = '{table}')) " +
+                $"BEGIN DROP Table {table} END";
+            string query = $"SELECT * INTO {table} FROM {tableName} WHERE 1 = 2";
+            try
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(checkQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                    command.CommandText = query;
+                    command.ExecuteNonQuery();
+                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+                    {
+                        bulkCopy.DestinationTableName = $"{table}";
+                        PropertyInfo[] allProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                        List<PropertyInfo> properties = new List<PropertyInfo>();
+                        foreach (PropertyInfo item in allProperties)
+                        {
+                            if (item.PropertyType == typeof(string) || item.PropertyType == typeof(int))
+                                properties.Add(item);
+                        }
+                        foreach (PropertyInfo property in properties)
+                            bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
+                        dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };
+                        bulkCopy.WriteToServer(dt);
+                    }
+                    command.CommandTimeout = 300;
+                    command.CommandText = "    MERGE Locations AS Target " +
+    "USING TempLocations AS Source " +
+    "ON Source.StreetCode = Target.StreetCode AND Source.CountyCode = Target.CountyCode " + 
+
+    "WHEN NOT MATCHED BY Target THEN " +
+        "INSERT(StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict) " +
+        "VALUES(Source.StreetCode, Source.CountyCode, Source.Street, Source.PostalCode, Source.City, Source.PostalDistrict) " +
+
+    "WHEN MATCHED THEN UPDATE SET " + 
+        "Target.Street = Source.Street, " + 
+        "Target.PostalCode = Source.PostalCode, " + 
+		"Target.City = Source.City, " +
+		"Target.PostalDistrict = Source.PostalDistrict; " + $"DROP TABLE {table};";
+                    command.ExecuteNonQuery();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                MessageBox.Show("Done");
+                connection.Close();
+            }
         }
         private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
         {

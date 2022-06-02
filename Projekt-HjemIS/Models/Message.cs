@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Models
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public class Message : INotifyPropertyChanged
     {
         private DateTime _date;
@@ -32,7 +35,9 @@ namespace Projekt_HjemIS.Models
         }
         public Message(string body, List<Location> recipients, string type, List<Product> offers = null)
         {
+            Body = body;
             Recipients = new List<Customer>();
+            Type = type;
         }
 
 

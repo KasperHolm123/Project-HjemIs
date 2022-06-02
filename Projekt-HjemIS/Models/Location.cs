@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Models
 {
+    /// <summary>
+    /// Hovedforfatter: Jonas 
+    /// </summary>
     public class Location
     {
         public string StreetCode { get; set; }
@@ -29,6 +32,16 @@ namespace Projekt_HjemIS.Models
 
         }
 
+        public Location(object[] values)
+        {
+            StreetCode = values[0].ToString();
+            CountyCode = values[1].ToString();
+            Street = values[2].ToString();
+            PostalCode = values[3].ToString();
+            City = values[4].ToString();
+            PostalDistrict = values[5].ToString();
+        }
+
         public Location(string streetCode, string countyCode, string street, string postalCode, string city, string postalDistrict)
         {
             StreetCode = streetCode;
@@ -39,20 +52,13 @@ namespace Projekt_HjemIS.Models
             PostalDistrict = postalDistrict;
         }
 
-        public Location(object[] values)
-        {
-            StreetCode = values[0].ToString();
-            CountyCode = values[1].ToString();
-            Street = values[2].ToString();
-            PostalCode = values[3].ToString();
-            City = values[4].ToString();
-            PostalDistrict = values[5].ToString();
-        }
+
         public override string ToString()
         {
             if (Street != null) return Street;
             return City + "-" + PostalCode;
         }
+        
         static string CleanInput(string strIn)
         {
             // Replace invalid characters with empty strings.

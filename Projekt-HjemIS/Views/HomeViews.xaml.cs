@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Christian 
     /// Interaction logic for HomeViews.xaml
     /// </summary>
     public partial class HomeViews : UserControl

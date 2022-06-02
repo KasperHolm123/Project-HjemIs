@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public class Emulator
     {
         public ObservableCollection<string> InternalMessages { get; set; }
@@ -25,6 +28,7 @@ namespace Projekt_HjemIS.Systems
         }
 
         /// <summary>
+        /// Hovedforfatter: Kasper
         /// Shows all sent messages within the program's lifetime.
         /// </summary>
         public void EmulateReceiver()
@@ -45,6 +49,7 @@ namespace Projekt_HjemIS.Systems
         }
 
         /// <summary>
+        /// Hovedforfatter: Christian 
         /// Gets all receivers of sent messages within the program's lifetime.
         /// </summary>
         public void GetReceivers()
@@ -55,6 +60,7 @@ namespace Projekt_HjemIS.Systems
         }
 
         /// <summary>
+        /// Hovedforfatter: Daniel
         /// Returns current directory.
         /// </summary>
         /// <returns></returns>

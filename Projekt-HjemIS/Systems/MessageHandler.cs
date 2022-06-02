@@ -12,13 +12,16 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Kasper
+    /// </summary>
     public static class MessageHandler
     {
         public static List<Message> Messages { get; set; }
         public static List<Customer> Customers { get; set; }
 
         private static string _rootPath = $@"\tempMessages\InternalMessages.txt";
-
+        const char newLine = (char)10;
         public static void GetCustomers()
         {
             DatabaseHandler dh = new DatabaseHandler();
@@ -68,7 +71,6 @@ namespace Projekt_HjemIS.Systems
                 }
                 return -1;
             }
-            //return DatabaseHandler.SaveMessage(message);
         }
 
         private static string FormatSms(Message_SMS sms)

@@ -24,6 +24,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS.Views
 {
     /// <summary>
+    /// Hovedforfatter: Christian 
     /// Interaction logic for EmailViews.xaml
     /// </summary>
     public partial class EmailViews : UserControl
@@ -35,8 +36,6 @@ namespace Projekt_HjemIS.Views
         // Contains all filtered locations.
         public ObservableCollection<Location> SearchedLocations { get; set; }
 
-        // Contains all available products
-        public ObservableCollection<Product> InternalProducts { get; set; } //= DatabaseHandler.GetProducts(); // mangler metode
 
         private DatabaseHandler dh = new DatabaseHandler();
 
@@ -45,38 +44,43 @@ namespace Projekt_HjemIS.Views
 
         public List<Customer> messageRecipients { get; set; }
 
-        public EmailViews()
+        public EmailViews(List<Location> locations)
         {
             InitializeComponent();
 
             // Setup collections
-            InternalLocations = new ObservableCollection<Location>(RecordHandler.GetRecords());
             SearchedLocations = new ObservableCollection<Location>();
             RecipientsLocations = new List<Location>();
 
+            // Fill locations
+
+            InternalLocations = new ObservableCollection<Location>(dh.GetTable<Location>("SELECT * FROM Locations"));
+
             // Bind comboboxes
             recipientsDataGrid.ItemsSource = InternalLocations;
-
-            ComboOffers.ItemsSource = InternalProducts;
         }
 
 
 
         private void ConnectMessage<T>(T type) where T : Message
         {
-            string query = "INSERT INTO [Customers-Messages] (ID, PhoneNumber, [Date]) " +
-                    "SELECT @messageID, PhoneNumber, GETDATE() FROM Customers WHERE " +
-                    "CountyCode = @countyCode AND StreetCode = @streetCode;";
-            foreach (Location location in RecipientsLocations) // IsRecipient virker stadig ikke.
+            try
             {
-                SqlParameter[] parameters = new SqlParameter[]
+                string query = "INSERT INTO [Customers-Messages] (ID, PhoneNumber, [Date]) " +
+                        "SELECT @messageID, PhoneNumber, GETDATE() FROM Customers WHERE " +
+                        "CountyCode = @countyCode AND StreetCode = @streetCode";
+                foreach (Location location in RecipientsLocations)
                 {
-                    CreateParameter("@messageID", MessageHandler.SendMessages(type), SqlDbType.Int),
-                    CreateParameter("@countyCode", location.CountyCode, SqlDbType.NVarChar),
-                    CreateParameter("@streetCode", location.StreetCode, SqlDbType.NVarChar)
-                };
-                dh.AddData(query, parameters);
+                    SqlParameter[] parameters = new SqlParameter[]
+                    {
+                        CreateParameter("@messageID", MessageHandler.SendMessages(type), SqlDbType.Int),
+                        CreateParameter("@countyCode", location.CountyCode, SqlDbType.NVarChar),
+                        CreateParameter("@streetCode", location.StreetCode, SqlDbType.NVarChar)
+                    };
+                    dh.AddData(query, parameters);
+                }
             }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -85,7 +89,14 @@ namespace Projekt_HjemIS.Views
             {
                 if (RecipientsLocations.Count != 0)
                 {
-                    if ((bool)isSMS.IsChecked) // SMS
+                    if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
+                    {
+                        Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
+                        ConnectMessage(mail);
+                        Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
+                        ConnectMessage(sms);
+                    }
+                    else if ((bool)isSMS.IsChecked) // SMS
                     {
                         Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
                         ConnectMessage(sms);
@@ -94,13 +105,6 @@ namespace Projekt_HjemIS.Views
                     {
                         Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
                         ConnectMessage(mail);
-                    }
-                    else if ((bool)isSMS.IsChecked && (bool)isMAIL.IsChecked) // Both
-                    {
-                        Message_Mail mail = new Message_Mail(subjectTxt.Text, messageBodytxt.Text, RecipientsLocations, "Mail");
-                        ConnectMessage(mail);
-                        Message_SMS sms = new Message_SMS(messageBodytxt.Text, RecipientsLocations, "SMS");
-                        ConnectMessage(sms);
                     }
                     else
                     {

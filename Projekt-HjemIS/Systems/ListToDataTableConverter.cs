@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Jonas
+    /// </summary>
     public static class ListToDataTableConverter
     {
         public static DataTable ToDataTable<T>(List<T> items)

@@ -10,6 +10,9 @@ using System.Diagnostics;
 
 namespace Projekt_HjemIS.Systems
 {
+    /// <summary>
+    /// Hovedforfatter: Daniel
+    /// </summary>
     public static class CustomerFactory
     {
         // Contains the customers with values assigned to them
@@ -20,7 +23,7 @@ namespace Projekt_HjemIS.Systems
 
         public static List<Location> locations = new List<Location>();
 
-        private static List<Location> _innateLocations = new List<Location>(RecordHandler.GetRecords());
+        private static List<Location> _innateLocations; //= new List<Location>(RecordHandler.GetRecords());
 
         public static Random rand = new Random();
 

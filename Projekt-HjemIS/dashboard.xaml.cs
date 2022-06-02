@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ using System.Windows.Shapes;
 namespace Projekt_HjemIS
 {
     /// <summary>
+    /// Hovedforfatter: Christian 
     /// Interaction logic for dashboard.xaml
     /// </summary>
     public partial class dashboard : Window, INotifyPropertyChanged
@@ -29,26 +31,45 @@ namespace Projekt_HjemIS
         DatabaseHandler dh = new DatabaseHandler();
 
         UserControl userControl = null;
-        LocationRepository repository;
+        LogViewRepository repository;
         private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
+
+        private List<Location> _locationsList;
+
         public event PropertyChangedEventHandler PropertyChanged;
+        #region Properties
         public ObservableCollection<Location> Locations
         {
             get { return _locations; }
             set
             {
                 _locations = value;
-                if(userControl is LogView)
+                if (userControl is LogView)
                 {
                     LogView view = (LogView)userControl;
-                    view.OnPropertyChanged("SearchCanExecute");                }
+                    view.OnPropertyChanged("SearchCanExecute");
+                }
             }
         }
+        private bool _loaded = false;
+
+        public bool LoadCompleted
+        {
+            get { return _loaded; }
+            set
+            {
+                _loaded = value;
+                OnPropertyChanged("LoadCompleted");
+            }
+        }
+
+        #endregion
         public dashboard()
         {
+            DataContext = this;
             InitializeComponent();
             userControl = new HomeViews();
-            repository = new LocationRepository();
+            repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
             lablUsername.Content = "Welcome " + User.Username.ToString();
             Loaded += Dashboard_Loaded;
@@ -62,11 +83,24 @@ namespace Projekt_HjemIS
                 _Users.Visibility = Visibility.Collapsed;
             }
 
-            Task.Factory.StartNew(() => dzObserver.ObserveDropzone());
+            ClearInternalMessages();
+
+            Task.Factory.StartNew(() => _locationsList = new List<Location>(dzObserver.ObserveDropzone()));
             // Setup customers
             //dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
             //    CustomerFactory.CreateNewCustomer()), "Customers");
         }
+
+        private void ClearInternalMessages()
+        {
+            File.WriteAllText($@"{GetCurrentDirectory()}\tempMessages\InternalMessages.txt", string.Empty);
+        }
+
+        /// <summary>
+        /// Loads all cities and postalcodes into memory, long runnning operation 2-3> minutes 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void Dashboard_Loaded(object sender, RoutedEventArgs e)
         {
             List<Location> locations = await Task.Run(() => repository.GetCities());
@@ -75,6 +109,7 @@ namespace Projekt_HjemIS
             {
                 _locations.Add(location);
             }
+            LoadCompleted = true;
         }
         #region View Control
         private void _Offers_Click(object sender, RoutedEventArgs e)
@@ -86,8 +121,7 @@ namespace Projekt_HjemIS
 
         private void _Email_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new LogView(ref _locations);
-            //userControl = new EmailViews();
+            userControl = new EmailViews(_locationsList);
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
@@ -101,12 +135,10 @@ namespace Projekt_HjemIS
 
         private void _SignOut_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
             MessageBoxResult result = MessageBox.Show("Are You Sure You Want To Log Out?", "Log Out", MessageBoxButton.YesNo);
-            switch(result)
+            switch (result)
             {
                 case MessageBoxResult.Yes:
-                    mainWindow.Show();
                     this.Close();
                     break;
                 case MessageBoxResult.No:
@@ -138,7 +170,22 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
+
+        private void _Logs_Click(object sender, RoutedEventArgs e)
+        {
+            userControl = new LogView(ref _locations);
+            GridContent.Children.Clear();
+            GridContent.Children.Add(userControl);
+        }
         #endregion
 
+        private static string GetCurrentDirectory()
+        {
+            var rootPathChild = Directory.GetCurrentDirectory();
+            var rootPathParent = Directory.GetParent($"{rootPathChild}");
+            var rootPathFolder = Directory.GetParent($"{rootPathParent}");
+            var rootPath = rootPathFolder.ToString();
+            return rootPath;
+        }
     }
 }
