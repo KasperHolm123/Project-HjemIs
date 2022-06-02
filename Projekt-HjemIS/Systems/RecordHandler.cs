@@ -80,21 +80,22 @@ namespace Projekt_HjemIS.Systems
         /// Save a list of locations to a database.
         /// </summary>
         /// <param name="locations"></param>
-        public static Task<string> SaveRecords(List<Location> locations)
+        public async static Task<string> SaveRecords(List<Location> locations)
         {
             Dictionary<string, Location> loc = new Dictionary<string, Location>();
 
-
+            
             DatabaseHandler dh = new DatabaseHandler();
+            object records = await Task.Run(() => dh.CheckTable("Locations"));
+            int numberOfRecords = (int)records;
             string result = string.Empty;
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
-            int a = dh.UpdateBulkData(dt);
-            //result = dh.AddBulkData<Location>(dt, "Locations");
-            Debug.WriteLine(sw.Elapsed);
-            sw.Stop();
-            return Task.FromResult(result);
+            if (numberOfRecords > 0)
+            {
+                int a = dh.UpdateBulkData(dt);
+            }
+            else { dh.AddBulkData<Location>(dt, "Locations"); }
+            return "Indlæsning færdig";
         }
 
         /// <summary>

@@ -251,7 +251,11 @@ namespace Projekt_HjemIS.Views
                 Location loc = new Location() { City = input[0], PostalCode = input[1], Street = StreetSearchText };
                 IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
                 if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
-                else Messages.Clear();
+                else
+                {
+                    Messages.Clear();
+                    MessageBox.Show("Ingen beskeder fundet");
+                }
             }
             State = Views.QueryState.Finished;
         }

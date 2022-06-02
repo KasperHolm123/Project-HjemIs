@@ -161,7 +161,7 @@ namespace Projekt_HjemIS.Systems
                                     FROM Locations
                                     CROSS APPLY(SELECT CountyCode, StreetCode, FirstName, LastName, PhoneNumber FROM Customers 
                                     WHERE City LIKE '%{location.City}%' AND PostalCode LIKE '%{location.PostalCode}%' AND STREET LIKE '%{location.Street}%' AND Locations.CountyCode = Customers.CountyCode AND Locations.StreetCode = Customers.StreetCode)A)) AS DT
-                                RIGHT JOIN [Messages] ON DT.ID = [Messages].ID
+                                LEFT JOIN [Messages] ON DT.ID = [Messages].ID
                                 LEFT JOIN Customers ON DT.PhoneNumber = Customers.PhoneNumber";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.CommandTimeout = 0;
@@ -174,8 +174,8 @@ namespace Projekt_HjemIS.Systems
                         string type = reader[$"{nameof(Message.Type)}"].ToString().Trim();
                         string fName = reader[$"FirstName"].ToString().Trim();
                         string lName = reader[$"LastName"].ToString().Trim();
-                        int phoneNumber = (int)reader[$"PhoneNumber"];
-                        DateTime date = (DateTime)reader[$"{nameof(Message.Date)}"];
+                        int phoneNumber = DbValueExtensions.As<int>(reader[$"PhoneNumber"]);
+                        DateTime date = DbValueExtensions.As<DateTime>(reader[$"{nameof(Message.Date)}"]);
                         Customer customer = new Customer(){ FirstName = fName, LastName = lName, PhoneNumber=phoneNumber};
                         if (!msgs.ContainsKey(id)) msgs.Add(id, new Message(){ ID = id, Body = body, Type = type, Date = date });
                         msgs[id].Recipients.Add(customer);

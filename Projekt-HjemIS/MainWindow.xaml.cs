@@ -42,7 +42,6 @@ namespace Projekt_HjemIS
                 if (connString.State == ConnectionState.Closed)
                 {
                     connString.Open();
-
                     string query = "SELECT COUNT(1) FROM Users WHERE username=@username AND [password]=@password";
                     SqlCommand sqlCommand = new SqlCommand(query, connString);
                     sqlCommand.CommandType = CommandType.Text;

@@ -118,6 +118,32 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally { connection.Close(); }
         }
 
+        public async Task<object> CheckTable(string table)
+        {
+            string query = $"SELECT COUNT(*) FROM {table}";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection
+            (ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+                {
+                    await connection.OpenAsync();
+                    using(SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        return await cmd.ExecuteScalarAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
         /// <summary>
         /// Adds a large amount of data to a database.
         /// </summary>
