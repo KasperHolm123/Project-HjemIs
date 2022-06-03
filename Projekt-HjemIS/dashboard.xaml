@@ -22,7 +22,7 @@
                 <Menu Background="{x:Null}">
 
                     <!--Home-->
-                    <MenuItem  Name="_Home" FontSize="16" Foreground="White" Click="_Home_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem  Name="_Home" ToolTip="Home" FontSize="16" Foreground="White" Click="_Home_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -32,7 +32,7 @@
                     </MenuItem>
 
                     <!--Mail-->
-                    <MenuItem Name="_Email" FontSize="16" Foreground="White" Click="_Email_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Email" ToolTip="New message" FontSize="16" Foreground="White" Click="_Email_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -45,7 +45,7 @@
 
 
                     <!--Offers-->
-                    <MenuItem Name="_Offers" FontSize="16" Foreground="White" Click="_Offers_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Offers" ToolTip="Customers" FontSize="16" Foreground="White" Click="_Offers_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -55,7 +55,7 @@
                     </MenuItem>
 
                     <!--Users-->
-                    <MenuItem Name="_Users" FontSize="16" Foreground="White" Click="_Users_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Users" ToolTip="Users" FontSize="16" Foreground="White" Click="_Users_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -65,7 +65,7 @@
                     </MenuItem>
 
                     <!--Emulator-->
-                    <MenuItem Name="_Emulator" FontSize="16" Foreground="White" Click="_Emulator_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Emulator" ToolTip="Sent message" FontSize="16" Foreground="White" Click="_Emulator_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -75,7 +75,7 @@
                     </MenuItem>
                     
                     <!--Products-->
-                    <MenuItem Name="_Products" FontSize="16" Foreground="White" Click="_Products_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Products" ToolTip="Products" FontSize="16" Foreground="White" Click="_Products_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -83,7 +83,7 @@
                             <Image Source="/Pictures/ice-cream.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Name="_Logs" FontSize="16" Foreground="White" IsEnabled="{Binding Path=LoadCompleted, Mode=TwoWay}" Click="_Logs_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Logs" ToolTip="Message log" FontSize="16" Foreground="White" IsEnabled="{Binding Path=LoadCompleted, Mode=TwoWay}" Click="_Logs_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -108,7 +108,7 @@
             <!--Log ud stackpanel-->
             <StackPanel VerticalAlignment="Bottom">
                 <Menu Background="{x:Null}">
-                    <MenuItem x:Name="_SignOut" FontSize="16" Foreground="White" Click="_SignOut_Click" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem x:Name="_SignOut" ToolTip="Logout" FontSize="16" Foreground="White" Click="_SignOut_Click" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
