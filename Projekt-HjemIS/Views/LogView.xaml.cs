@@ -33,6 +33,7 @@ namespace Projekt_HjemIS.Views
         private ObservableCollection<Message> _messages;
         private ObservableCollection<Customer> _customers;
         private bool SortOrder;
+        private int _messagesFound;
         public CollectionViewSource FilteredView { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -151,7 +152,10 @@ namespace Projekt_HjemIS.Views
                 OnPropertyChanged("EndDate");
             }
         }
-
+        public string MsgsFound
+        {
+            get { return $"Customers found: " + _messagesFound; }
+        }
         #endregion
         public LogView(ref ObservableCollection<Location> locations)
         {
@@ -251,11 +255,9 @@ namespace Projekt_HjemIS.Views
                 Location loc = new Location() { City = input[0], PostalCode = input[1], Street = StreetSearchText };
                 IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
                 if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
-                else
-                {
-                    Messages.Clear();
-                    MessageBox.Show("Ingen beskeder fundet");
-                }
+                else Messages.Clear();
+                _messagesFound = Messages.Count;
+                OnPropertyChanged("MsgsFound");
             }
             State = Views.QueryState.Finished;
         }

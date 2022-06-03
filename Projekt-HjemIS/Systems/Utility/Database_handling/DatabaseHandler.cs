@@ -179,9 +179,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 finally { connection.Close(); }
             }
         }
+        /// <summary>
+        /// Hovedforfatter: Jonas H
+        /// Updates locations table by a merge
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
         public int UpdateBulkData(DataTable dt)
         {
-            ClearTable($"Locations");
             int affected = -1;
 
             string selectQuery = "SELECT * FROM Locations";
@@ -221,67 +226,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             return affected;
         }
-        public void UpdateBulkData<T>(DataTable dt, string tableName)
-        {
-            const string table = "TempLocations";
-            string checkQuery = "IF (EXISTS (SELECT * " +
-                 "FROM INFORMATION_SCHEMA.TABLES " +
-                 "WHERE TABLE_SCHEMA = 'dbo' " +
-                 $"AND TABLE_NAME = '{table}')) " +
-                $"BEGIN DROP Table {table} END";
-            string query = $"SELECT * INTO {table} FROM {tableName} WHERE 1 = 2";
-            try
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(checkQuery, connection))
-                {
-                    command.ExecuteNonQuery();
-                    command.CommandText = query;
-                    command.ExecuteNonQuery();
-                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
-                    {
-                        bulkCopy.DestinationTableName = $"{table}";
-                        PropertyInfo[] allProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                        List<PropertyInfo> properties = new List<PropertyInfo>();
-                        foreach (PropertyInfo item in allProperties)
-                        {
-                            if (item.PropertyType == typeof(string) || item.PropertyType == typeof(int))
-                                properties.Add(item);
-                        }
-                        foreach (PropertyInfo property in properties)
-                            bulkCopy.ColumnMappings.Add($"{property.Name}", $"{property.Name}");
-                        dt.PrimaryKey = new DataColumn[] { dt.Columns["StreetCode"], dt.Columns["CountyCode"] };
-                        bulkCopy.WriteToServer(dt);
-                    }
-                    command.CommandTimeout = 300;
-                    command.CommandText = "    MERGE Locations AS Target " +
-    "USING TempLocations AS Source " +
-    "ON Source.StreetCode = Target.StreetCode AND Source.CountyCode = Target.CountyCode " + 
 
-    "WHEN NOT MATCHED BY Target THEN " +
-        "INSERT(StreetCode, CountyCode, Street, PostalCode, City, PostalDistrict) " +
-        "VALUES(Source.StreetCode, Source.CountyCode, Source.Street, Source.PostalCode, Source.City, Source.PostalDistrict) " +
-
-    "WHEN MATCHED THEN UPDATE SET " + 
-        "Target.Street = Source.Street, " + 
-        "Target.PostalCode = Source.PostalCode, " + 
-		"Target.City = Source.City, " +
-		"Target.PostalDistrict = Source.PostalDistrict; " + $"DROP TABLE {table};";
-                    command.ExecuteNonQuery();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                MessageBox.Show("Done");
-                connection.Close();
-            }
-        }
         private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
         {
             SqlParameter param = new SqlParameter

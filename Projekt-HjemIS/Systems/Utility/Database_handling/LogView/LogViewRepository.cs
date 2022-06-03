@@ -36,7 +36,8 @@ namespace Projekt_HjemIS.Systems
                                 FROM Locations 
                                 WHERE City LIKE '%{loc.City}%' AND PostalCode LIKE '%{loc.PostalCode}%' AND Street LIKE '%{loc.Street}%'";
                 SqlCommand command = new SqlCommand(query, connection);
-                using(SqlDataReader reader = await command.ExecuteReaderAsync())
+                command.CommandTimeout = 0;
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
@@ -61,7 +62,7 @@ namespace Projekt_HjemIS.Systems
             return null;
         }
         /// <summary>
-        /// Hovedforfatter: Jonas
+        /// Hovedforfatter: Jonas 
         /// Gets all customers related to a specific city, postalcode and street
         /// </summary>
         /// <param name="customer"></param>
