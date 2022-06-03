@@ -154,7 +154,7 @@ namespace Projekt_HjemIS.Views
         }
         public string MsgsFound
         {
-            get { return $"Customers found: " + _messagesFound; }
+            get { return $"Messages found: " + _messagesFound; }
         }
         #endregion
         public LogView(ref ObservableCollection<Location> locations)
