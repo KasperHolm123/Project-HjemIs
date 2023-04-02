@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Projekt_HjemIS.Systems
 {
@@ -73,33 +74,50 @@ namespace Projekt_HjemIS.Systems
             try
             {
                 await connection.OpenAsync();
+
                 string query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode FROM Customers
-                                INNER JOIN (SELECT CountyCode, StreetCode FROM Locations WHERE City LIKE '%{customer.Address.City}%' AND PostalCode LIKE '%{customer.Address.PostalCode}%' AND Street LIKE '%{customer.Address.Street}%') AS DT
+                                INNER JOIN (SELECT CountyCode, StreetCode FROM Locations WHERE City LIKE @City AND PostalCode LIKE @PostalCode AND Street LIKE @Street) AS DT
                                 ON DT.CountyCode = Customers.CountyCode AND DT.StreetCode = Customers.StreetCode";
-                SqlCommand command = new SqlCommand(query, connection);
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+
+                var parameters = new List<SqlParameter>
                 {
-                    while (await reader.ReadAsync())
+                    new SqlParameter("@City", "%{customer.Address.City}%"),
+                    new SqlParameter("@PostalCode", "%{customer.Address.PostalCode}%"),
+                    new SqlParameter("@Street", "%{customer.Address.Street}%")
+                };
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    command.CommandTimeout = 0;
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        customers.Add(new Customer()
+                        while (await reader.ReadAsync())
                         {
-                            FirstName = reader[$"{nameof(Customer.FirstName)}"].ToString().Trim(),
-                            LastName = reader[$"{nameof(Customer.LastName)}"].ToString().Trim(),
-                            PhoneNumber = (int)reader[$"{nameof(Customer.PhoneNumber)}"]
-                        });
+                            var firstName = reader.GetString(reader.GetOrdinal("FirstName")).Trim();
+                            var lastName = reader.GetString(reader.GetOrdinal("LastName")).Trim();
+                            var phoneNumber = reader.GetInt32(reader.GetOrdinal("PhoneNumber"));
+
+                            customers.Add(new Customer()
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                                PhoneNumber = phoneNumber
+                            });
+                        }
                     }
+                    return customers;
                 }
-                return customers;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                return null;
             }
             finally
             {
                 connection.Close();
             }
-            return null;
         }
         /// <summary>
         /// Hovedforfatter: Jonas
@@ -114,19 +132,26 @@ namespace Projekt_HjemIS.Systems
                 using(SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString))
                 {
                     await connection.OpenAsync();
-                    string query = $@"SELECT DISTINCT PostalCode, City FROM Locations WHERE PostalCode LIKE '%%' AND City LIKE '%%'";
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.CommandTimeout = 0;
 
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    string query = $@"SELECT DISTINCT PostalCode, City FROM Locations WHERE PostalCode LIKE '%%' AND City LIKE '%%'";
+
+                    using (var command = new SqlCommand(query, connection))
                     {
-                        while (await reader.ReadAsync())
+                        command.CommandTimeout = 0;
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
                         {
-                            locs.Add(new Location()
+                            while (await reader.ReadAsync())
                             {
-                                City = (string)reader[$"{nameof(Location.City)}"].ToString().Trim(),
-                                PostalCode = (string)reader[$"{nameof(Location.PostalCode)}"]
-                            });
+                                var city = reader.GetString(reader.GetOrdinal("City")).Trim();
+                                var postalCode = reader.GetString(reader.GetOrdinal("PostalCode")).Trim();
+
+                                locs.Add(new Location()
+                                {
+                                    City = city,
+                                    PostalCode = postalCode
+                                });
+                            }
                         }
                     }
                 }
@@ -134,13 +159,9 @@ namespace Projekt_HjemIS.Systems
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message);
+                return null;
             }
-            finally
-            {
-                connection.Close();
-            }
-            return null;
         }
         /// <summary>
         /// Hovedforfatter: Jonas
@@ -245,44 +266,68 @@ namespace Projekt_HjemIS.Systems
             try
             {
                 await OpenAndSetArithAbort(connection);
+
                 string query = $@"SELECT [Messages].Body,[Messages].[Type], [Customers-Messages].Date, Customers.FirstName, Customers.LastName, Customers.PhoneNumber
                                 FROM Customers 
                                 INNER JOIN [Customers-Messages] ON Customers.PhoneNumber = [Customers-Messages].PhoneNumber
                                 INNER JOIN [Messages] ON [Customers-Messages].ID = [Messages].ID 
-                                WHERE Customers.PhoneNumber = {customer.PhoneNumber}";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.CommandTimeout = 0;
-                int number = 0;
-                //command.Parameters.Add(CreateParameter("@postalcode", loc.PostalCode, SqlDbType.NVarChar));
-                //command.Parameters.Add(CreateParameter("@city", loc.City, SqlDbType.NVarChar));
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                                WHERE Customers.PhoneNumber = @PhoneNumber";
+
+                var parameters = new List<SqlParameter>
                 {
-                    while (await reader.ReadAsync())
+                    new SqlParameter("@PhoneNumber", $"%{customer.PhoneNumber}%")
+                };
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.CommandTimeout = 0;
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        string body = reader[$"{nameof(Message.Body)}"].ToString().Trim();
-                        string type = reader[$"{nameof(Message.Type)}"].ToString().Trim();
-                        string fName = reader[$"FirstName"].ToString().Trim();
-                        string lName = reader[$"LastName"].ToString().Trim();
-                        var date = reader[$"Date"];
-                        number = (int)reader[$"PhoneNumber"];
-                        Message msg = new Message() { Body = body, Type = type, Date = (DateTime)date };
-                        Customer cust = new Customer() { FirstName = fName, LastName = lName, PhoneNumber = number };
-                        if (!customers.ContainsKey(number)) customers.Add(number, new Customer() { PhoneNumber = number, FirstName = fName, LastName = lName});
-                        customers[number].MsgReceived.Add(msg);
-                        msg.Recipients.Add(customers[number]);
+                        int phoneNumber = 0;
+                        while (await reader.ReadAsync())
+                        {
+                            var body = reader.GetString(reader.GetOrdinal("body")).Trim();
+                            var type = reader.GetString(reader.GetOrdinal("Type")).Trim();
+                            var firstName = reader.GetString(reader.GetOrdinal("FirstName")).Trim();
+                            var lastName = reader.GetString(reader.GetOrdinal("LastName")).Trim();
+                            var date = reader.GetDateTime(reader.GetOrdinal("Date"));
+                            phoneNumber = reader.GetInt32(reader.GetOrdinal("PhoneNumber"));
+
+                            Message msg = new Message()
+                            { 
+                                Body = body,
+                                Type = type,
+                                Date = date 
+                            };
+
+                            if (!customers.ContainsKey(phoneNumber))
+                            {
+                                customers.Add(phoneNumber, new Customer()
+                                {
+                                    PhoneNumber = phoneNumber,
+                                    FirstName = firstName,
+                                    LastName = lastName
+                                });
+                            }
+
+                            customers[phoneNumber].MsgReceived.Add(msg);
+
+                            msg.Recipients.Add(customers[phoneNumber]);
+                        }
+                        
+                        return customers[phoneNumber];
                     }
                 }
-                return customers[number];
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                return null;
             }
             finally
             {
                 connection.Close();
             }
-            return null;
         }
         /// <summary>
         /// Hovedforfatter: Jonas
@@ -301,7 +346,6 @@ namespace Projekt_HjemIS.Systems
 
                 await _Command.ExecuteNonQueryAsync();
             }
-            return;
         }
     }
 }

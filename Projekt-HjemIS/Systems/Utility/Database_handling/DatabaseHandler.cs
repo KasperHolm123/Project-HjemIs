@@ -77,7 +77,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message);
                 return null;
             }
             finally

@@ -11,6 +11,12 @@ namespace Projekt_HjemIS.Models
     /// </summary>
     public class User
     {
+
+        public User()
+        {
+
+        }
+
         public User(string username)
         {
             userUsername = username;
