@@ -65,7 +65,6 @@ namespace Projekt_HjemIS
                                 {
                                     string result = reader[0].ToString();
                                     User.Admin = bool.Parse(result);
-                                    MessageBox.Show("User is a Admin = " + User.Admin.ToString()); // skal slettes på et tidspunkt
                                 }
                                 reader.Close();
                             }

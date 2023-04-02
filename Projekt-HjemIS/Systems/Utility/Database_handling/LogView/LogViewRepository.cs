@@ -153,8 +153,8 @@ namespace Projekt_HjemIS.Systems
             Dictionary<int, Message> msgs = new Dictionary<int, Message>();
             try
             {
-                await OpenAndSetArithAbort(connection);
-                string query = $@"SELECT Customers.PhoneNumber, [Messages].ID, [Messages].Body, [Messages].[Type], Customers.FirstName, Customers.LastName, DT.[Date] FROM 
+                /*
+                 string query2 = $@"SELECT Customers.PhoneNumber, [Messages].ID, [Messages].Body, [Messages].[Type], Customers.FirstName, Customers.LastName, DT.[Date] FROM 
                                 (SELECT DISTINCT [Customers-Messages].ID, PhoneNumber, [Customers-Messages].[Date]
                                     FROM [Customers-Messages]
                                     WHERE PhoneNumber IN
@@ -164,25 +164,64 @@ namespace Projekt_HjemIS.Systems
                                     WHERE City LIKE '%{location.City}%' AND PostalCode LIKE '%{location.PostalCode}%' AND STREET LIKE '%{location.Street}%' AND Locations.CountyCode = Customers.CountyCode AND Locations.StreetCode = Customers.StreetCode)A)) AS DT
                                 LEFT JOIN [Messages] ON DT.ID = [Messages].ID
                                 LEFT JOIN Customers ON DT.PhoneNumber = Customers.PhoneNumber";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.CommandTimeout = 0;
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+
+                 */
+
+                await OpenAndSetArithAbort(connection);
+
+                var query = @"
+                    SELECT Customers.PhoneNumber, Messages.ID, Messages.Body, Messages.Type, Customers.FirstName, Customers.LastName, [Customers-Messages].Date
+                    FROM Customers
+                    INNER JOIN Locations ON Locations.CountyCode = Customers.CountyCode AND Locations.StreetCode = Customers.StreetCode
+                    INNER JOIN [Customers-Messages] ON Customers.PhoneNumber = [Customers-Messages].PhoneNumber
+                    LEFT JOIN Messages ON [Customers-Messages].ID = Messages.ID
+                    WHERE Locations.City LIKE @City AND Locations.PostalCode LIKE @PostalCode AND Locations.Street LIKE @Street
+                ";
+
+                var parameters = new List<SqlParameter>
                 {
-                    while (await reader.ReadAsync())
+                    new SqlParameter("@City", $"%{location.City}%"),
+                    new SqlParameter("@PostalCode", $"%{location.PostalCode}%"),
+                    new SqlParameter("@Street", $"%{location.Street}%")
+                };
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    command.CommandTimeout = 0;
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        int id = (int)reader[$"{nameof(Message.ID)}"];
-                        string body = reader[$"{nameof(Message.Body)}"].ToString().Trim();
-                        string type = reader[$"{nameof(Message.Type)}"].ToString().Trim();
-                        string fName = reader[$"FirstName"].ToString().Trim();
-                        string lName = reader[$"LastName"].ToString().Trim();
-                        int phoneNumber = DbValueExtensions.As<int>(reader[$"PhoneNumber"]);
-                        DateTime date = DbValueExtensions.As<DateTime>(reader[$"{nameof(Message.Date)}"]);
-                        Customer customer = new Customer(){ FirstName = fName, LastName = lName, PhoneNumber=phoneNumber};
-                        if (!msgs.ContainsKey(id)) msgs.Add(id, new Message(){ ID = id, Body = body, Type = type, Date = date });
-                        msgs[id].Recipients.Add(customer);
+                        var messages = new Dictionary<int, Message>();
+
+                        while (await reader.ReadAsync())
+                        {
+                            var id = reader.GetInt32(reader.GetOrdinal("ID"));
+                            var body = reader.GetString(reader.GetOrdinal("Body")).Trim();
+                            var type = reader.GetString(reader.GetOrdinal("Type")).Trim();
+                            var firstName = reader.GetString(reader.GetOrdinal("FirstName")).Trim();
+                            var lastName = reader.GetString(reader.GetOrdinal("LastName")).Trim();
+                            var phoneNumber = reader.GetInt32(reader.GetOrdinal("PhoneNumber"));
+                            var date = reader.GetDateTime(reader.GetOrdinal("Date"));
+
+                            var customer = new Customer
+                            {
+                                FirstName = firstName,
+                                LastName = lastName,
+                                PhoneNumber = phoneNumber,
+                            };
+
+                            if (!messages.ContainsKey(id))
+                            {
+                                messages.Add(id, new Message() { ID = id, Body = body, Type = type, Date = date });
+                            }
+
+                            messages[id].Recipients.Add(customer);
+                        }
                     }
+                    
+                    return msgs.Values;
                 }
-                return msgs.Values;
             }
             catch (Exception ex)
             {

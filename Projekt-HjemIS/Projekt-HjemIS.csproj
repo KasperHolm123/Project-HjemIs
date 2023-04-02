@@ -132,7 +132,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Models\Location.cs" />
-    <Compile Include="Systems\DatabaseHandler_Old.cs" />
     <Compile Include="Systems\ListToDataTableConverter.cs" />
     <Compile Include="Systems\RecordDataReader.cs" />
     <Compile Include="Systems\RecordHandler.cs" />
@@ -246,11 +245,11 @@
   <ItemGroup>
     <Resource Include="Pictures\log.png" />
   </ItemGroup>
-	<ItemGroup>
-		<Resource Include="Pictures\filesd.png" />
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Pictures\files.png" />
-	</ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\filesd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\files.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

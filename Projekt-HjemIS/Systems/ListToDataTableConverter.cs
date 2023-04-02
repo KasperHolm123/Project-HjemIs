@@ -19,31 +19,24 @@ namespace Projekt_HjemIS.Systems
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
 
-            // typeof(T) works by checking the type of the passed-in List<T>
-            PropertyInfo[] AllProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance); // Get all the properties
-            List<PropertyInfo> Props = new List<PropertyInfo>();
-            foreach (PropertyInfo prop in AllProps)
-            {
-                if (prop.PropertyType == typeof(String))
-                    Props.Add(prop);
-            }
+            var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => p.PropertyType == typeof(string));
 
-            foreach (PropertyInfo prop in Props)
+            foreach ( var property in properties )
             {
-                // Setting column names as Property names
-                dataTable.Columns.Add(prop.Name);
+                dataTable.Columns.Add(property.Name);
             }
 
             foreach (T item in items)
             {
-                // Values is an object array because it resembles each row in the DataTable/item
-                var values = new object[Props.Count];
-                for (int i = 0; i < Props.Count; i++)
+                var row = dataTable.NewRow();
+                
+                foreach ( var property in properties )
                 {
-                    // Inserting property values to datatable rows
-                    values[i] = Props[i].GetValue(item);
+                    row[property.Name] = property.GetValue(item);
                 }
-                dataTable.Rows.Add(values);
+
+                dataTable.Rows.Add(row);
             }
             return dataTable;
         }

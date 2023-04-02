@@ -42,23 +42,22 @@ namespace Projekt_HjemIS.Systems
         private async void Watcher_Created(object sender, FileSystemEventArgs e)
         {
             string result = await PromptRecordHandling(e.Name);
-            MessageBox.Show($"{result}");
+
+            MessageBox.Show(result);
         }
 
         private async Task<string> PromptRecordHandling(string fileName)
         {
-            string result = string.Empty;
             MessageBoxResult msgPrompt = MessageBox.Show("Nyt dataudtræk opdaget. Start behandling?", "Record handling", MessageBoxButton.YesNo);
+            
             switch (msgPrompt)
             {
                 case MessageBoxResult.Yes:
                     _internalLocations = RecordHandler.GetRecords(fileName);
-                    result = await RecordHandler.SaveRecords(_internalLocations);
-                    break;
+                    return await RecordHandler.SaveRecords(_internalLocations);
                 default:
-                    break;
+                    return null;
             }
-            return result;
         }
 
         /// <summary>
