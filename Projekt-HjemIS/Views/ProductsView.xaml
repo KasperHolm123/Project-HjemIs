@@ -19,7 +19,7 @@
         <Label Content="Name:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,235,273"/>
         <TextBox x:Name="nameTxt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" Height="20" Margin="0,0,150,270"/>
         <Label Content="ID:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,235,203"/>
-        <TextBox x:Name="idTxt" PreviewTextInput="Validation_Numbers_Only" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,180,200" />
+        <TextBox x:Name="idTxt" PreviewTextInput="Validation_Numbers_Only" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,180,200" IsReadOnly="True" Text="0" />
         <Label Content="Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,235,133"/>
         <TextBox x:Name="priceTxt" PreviewTextInput="Validation_Numbers_Only" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,180,130"/>
         <Label Content="Discount:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="25" Margin="0,0,235,63"/>
@@ -28,6 +28,7 @@
         <Label Content="New Price:" HorizontalAlignment="Right" VerticalAlignment="Center" Width="70" Height="25" Margin="0,0,225,3"/>
         <TextBox x:Name="discountedPriceTxt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,180,0" IsReadOnly="True"/>
 
+        <Button Content="CLEAR" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,110,20" Click="CreateProduct"/>
         <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="UpdateProduct"/>
         <Button Content="DELETE" Background="Red" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,20" Click="DeleteProduct"/>
     </Grid>

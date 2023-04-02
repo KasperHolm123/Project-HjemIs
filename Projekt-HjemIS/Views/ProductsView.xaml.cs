@@ -45,9 +45,13 @@ namespace Projekt_HjemIS.Views
             try
             {
                 InternalProducts = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
-                mainGrid.ItemsSource= InternalProducts;
+
+                mainGrid.ItemsSource = InternalProducts;
             }
-            catch (Exception ex) { MessageBox.Show("No products found"); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No products found");
+            }
         }
 
         private void UpdateProduct(object sender, RoutedEventArgs e)
@@ -57,6 +61,7 @@ namespace Projekt_HjemIS.Views
                 string query = "UPDATE Products " +
                     "SET Price = @price, Discount = @discount " +
                     "WHERE [Name] = @name AND ID = @ID";
+
                 SqlParameter[] sp = new SqlParameter[]
                 {
                     CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
@@ -64,7 +69,11 @@ namespace Projekt_HjemIS.Views
                     CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
                     CreateParameter("@ID", int.Parse(idTxt.Text), SqlDbType.NVarChar),
                 };
-                PromptProductHandling(dh.AddData(query, sp));
+
+                var affectedRows = dh.AddData(query, sp);
+
+                PromptProductHandling(affectedRows);
+
                 UpdateGrid();
             }
             catch (Exception ex)
@@ -76,36 +85,47 @@ namespace Projekt_HjemIS.Views
         private void DeleteProduct(object sender, RoutedEventArgs e)
         {
             Product selectedProduct = mainGrid.SelectedItem as Product;
+            
             try
             {
                 string query = "DELETE FROM Products WHERE ID = @ID;";
+                
                 SqlParameter[] sp = new SqlParameter[]
                 {
                     CreateParameter("@ID", selectedProduct.ID, SqlDbType.Int)
                 };
+                
                 dh.AddData(query, sp);
+                
                 UpdateGrid();
+                
                 MessageBox.Show("Produkt slettet.");
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
-            private void PromptProductHandling(int notFound)
+        private void PromptProductHandling(int affectedRows)
         {
-            if (notFound == 0)
+            if (affectedRows == 0)
             {
                 MessageBoxResult msgResult = MessageBox.Show("Produkt ikke fundet. Ønsker du at oprette et nyt?", "Error", MessageBoxButton.YesNo);
+
                 switch (msgResult)
                 {
                     case MessageBoxResult.Yes:
                         string insertQuery = "INSERT INTO Products ([Name], Price, Discount) " +
                             "VALUES(@name, @price, @discount);";
+
                         SqlParameter[] insertSp = new SqlParameter[]
                         {
                             CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
                             CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
                             CreateParameter("@discount", int.Parse(discountTxt.Text), SqlDbType.Int),
                         };
+
                         dh.AddData(insertQuery, insertSp);
                         break;
                     default:
@@ -133,6 +153,7 @@ namespace Projekt_HjemIS.Views
                 Value = value,
                 SqlDbType = type
             };
+
             return param;
         }
 
@@ -149,10 +170,13 @@ namespace Projekt_HjemIS.Views
                     discountTxt.Text = selectedProduct.Discount.ToString();
 
                     decimal discountedPrice = decimal.Parse(discountTxt.Text);
-                    discountedPriceTxt.Text = (selectedProduct.Price * (1- (discountedPrice / 100))).ToString();
+                    discountedPriceTxt.Text = (selectedProduct.Price * (1 - (discountedPrice / 100))).ToString();
                 }
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #region Validaton
@@ -163,5 +187,14 @@ namespace Projekt_HjemIS.Views
             e.Handled = regex.IsMatch(e.Text);
         }
         #endregion
+
+        private void CreateProduct(object sender, RoutedEventArgs e)
+        {
+            nameTxt.Clear();
+            idTxt.Text = "0";
+            priceTxt.Clear();
+            discountTxt.Clear();
+            discountedPriceTxt.Clear();
+        }
     }
 }

@@ -86,11 +86,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
         }
         /// <summary>
-        /// 
+        /// Adds data to connected database
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <returns>The amount of rows affected</returns>
         public int AddData(string query, SqlParameter[] parameters)
         {
             try
