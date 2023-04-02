@@ -89,6 +89,7 @@
     <Compile Include="Models\Message_Mail.cs" />
     <Compile Include="Models\Message_SMS.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\UserNew.cs" />
     <Compile Include="Systems\CustomerFactory.cs" />
     <Compile Include="Systems\DropzoneObserver.cs" />
     <Compile Include="Systems\Utility\Database_handling\LogView\CustomerRepository.cs" />

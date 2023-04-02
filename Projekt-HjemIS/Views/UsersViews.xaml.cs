@@ -30,21 +30,18 @@ namespace Projekt_HjemIS.Views
     public partial class UsersViews : UserControl
     {
         //// Contains all available users.
-        public ObservableCollection<User> InternalUsers { get; set; }
+        public ObservableCollection<UserNew> InternalUsers { get; set; }
 
         private DatabaseHandler dh = new DatabaseHandler();
 
         public UsersViews()
         {
             InitializeComponent();
-            InternalUsers = new ObservableCollection<User>(dh.GetTable<User>("SELECT [username] FROM Users"));
+            InternalUsers = new ObservableCollection<UserNew>(dh.GetTable<UserNew>("SELECT * FROM Users"));
             //bind combobox
             comboUsers.ItemsSource = InternalUsers;
             comboUsers.DisplayMemberPath = $"{nameof(User.userUsername)}";
             FillDataGrid();
-            //string test = "daniel";
-            //MakeAdmin(test);
-
         }
         private void FillDataGrid()
         {
