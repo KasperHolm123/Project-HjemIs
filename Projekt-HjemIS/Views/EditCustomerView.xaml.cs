@@ -44,7 +44,10 @@ namespace Projekt_HjemIS.Views
                 _customers = new ObservableCollection<Customer>(dh.GetTable<Customer>("SELECT * FROM Customers"));
                 customerInfoGrid.ItemsSource = _customers;
             }
-            catch (Exception ex) { MessageBox.Show($"Oops, something went wrong. Error code: {ex}"); }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Oops, something went wrong. Error code: {ex}");
+            }
         }
 
         private void customerInfoGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -62,7 +65,10 @@ namespace Projekt_HjemIS.Views
 
                 }
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
@@ -73,6 +79,7 @@ namespace Projekt_HjemIS.Views
                 Value = value,
                 SqlDbType = type
             };
+
             return param;
         }
 
@@ -83,6 +90,7 @@ namespace Projekt_HjemIS.Views
                 string query = "UPDATE Customers " +
                     "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
                     "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
+                
                 SqlParameter[] sp = new SqlParameter[]
                 {
                     CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
@@ -91,7 +99,11 @@ namespace Projekt_HjemIS.Views
                     CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
                     CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
                 };
-                PromptProductHandling(dh.AddData(query, sp));
+
+                var affectedRow = dh.AddData(query, sp);
+
+                PromptProductHandling(affectedRow);
+
                 UpdateGrid();
             }
             catch (Exception ex)
@@ -100,13 +112,11 @@ namespace Projekt_HjemIS.Views
             }
         }
 
-        private void PromptProductHandling(int notFound)
+        private void PromptProductHandling(int affectedRows)
         {
             try
             {
-
-
-                if (notFound == 0)
+                if (affectedRows == 0)
                 {
                     MessageBoxResult msgResult = MessageBox.Show("Kunden er ikke fundet. Ønsker du at oprette en ny?", "Error", MessageBoxButton.YesNo);
                     switch (msgResult)
@@ -114,14 +124,17 @@ namespace Projekt_HjemIS.Views
                         case MessageBoxResult.Yes:
                             string insertQuery = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
                                 "VALUES (@firstName, @lastName, @phoneNum, @streetCode, @countyCode);";
+                            //TODO: fix SQL conflicts with this statement
+
                             SqlParameter[] insertSp = new SqlParameter[]
                             {
-                            CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
-                            CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                            CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
-                            CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
-                            CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
+                                CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
+                                CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
+                                CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
+                                CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
+                                CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
                             };
+
                             dh.AddData(insertQuery, insertSp);
                             break;
                         default:
@@ -136,7 +149,6 @@ namespace Projekt_HjemIS.Views
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                throw;
             }
         }
     }
