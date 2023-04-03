@@ -30,18 +30,19 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             string query = $"DELETE FROM {tableName};";
             try
             {
-                using (connection)
-                {
-                    connection.Open();
+                connection.Open();
 
-                    SqlCommand command = new SqlCommand(@query, connection);
+                SqlCommand command = new SqlCommand(@query, connection);
                     
-                    command.ExecuteNonQuery();
-                }
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
 
@@ -49,47 +50,48 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             try
             {
-                using (connection)
-                {
-                    connection.Open();
+                connection.Open();
 
-                    /* This line of code gets all relevant properties and selects them based on name.
-                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
-                     */
-                    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                        .Where(p => p.PropertyType == typeof(String) || p.PropertyType == typeof(int))
-                        .Select(p => p.Name);
+                /* This line of code gets all relevant properties and selects them based on name.
+                    * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
+                    */
+                var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.PropertyType == typeof(String) || p.PropertyType == typeof(int))
+                    .Select(p => p.Name);
 
-                    SqlCommand cmd = new SqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, connection);
                 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    var internalTable = new List<T>();
+
+                    while (reader.Read())
                     {
-                        var internalTable = new List<T>();
+                        T obj = Activator.CreateInstance<T>();
 
-                        while (reader.Read())
+                        foreach (var propertyName in properties)
                         {
-                            T obj = Activator.CreateInstance<T>();
-
-                            foreach (var propertyName in properties)
-                            {
-                                int ordinal = reader.GetOrdinal(propertyName);
+                            int ordinal = reader.GetOrdinal(propertyName);
                             
-                                object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+                            object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
 
-                                typeof(T).GetProperty(propertyName).SetValue(obj, value);
-                            }
-
-                            internalTable.Add(obj);
+                            typeof(T).GetProperty(propertyName).SetValue(obj, value);
                         }
 
-                        return internalTable;
+                        internalTable.Add(obj);
                     }
+
+                    return internalTable;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return null;
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
         /// <summary>
@@ -102,21 +104,22 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             try
             {
-                using (connection)
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-                    connection.Open();
+                    cmd.Parameters.AddRange(parameters);
 
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
-                    {
-                        cmd.Parameters.AddRange(parameters);
-
-                        return cmd.ExecuteNonQuery();
-                    }
+                    return cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {   
                 return -1;
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
         #endregion
@@ -132,16 +135,13 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             try
             {
-                using (connection)
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-                    connection.Open();
+                    cmd.Parameters.AddRange(parameters);
 
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
-                    {
-                        cmd.Parameters.AddRange(parameters);
-
-                        return (int)cmd.ExecuteScalar();
-                    }
+                    return (int)cmd.ExecuteScalar();
                 }
             }
             catch (Exception e)
@@ -149,6 +149,10 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 Debug.WriteLine(e.Message);
 
                 return -1;
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
         /// <summary>
@@ -162,14 +166,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             string query = $"SELECT COUNT(*) FROM {table}";
             try
             {
-                using (connection)
-                {
-                    connection.Open();
+                connection.Open();
 
-                    using (SqlCommand cmd = new SqlCommand(query, connection))
-                    {
-                        return await cmd.ExecuteScalarAsync();
-                    }
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    return await cmd.ExecuteScalarAsync();
                 }
             }
             catch (Exception ex)
@@ -177,6 +178,10 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 MessageBox.Show(ex.Message);
 
                 return null;
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
         /// <summary>
@@ -186,7 +191,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <returns></returns>
         public string AddBulkData<T>(DataTable dt, string tableName)
         {
-            using (connection)
+            try
             {
                 connection.Open();
 
@@ -204,17 +209,18 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                         bulkCopy.ColumnMappings.Add(property.Name, property.Name);
                     }
 
-                    try 
-                    { 
-                        bulkCopy.WriteToServer(dt);
+                    bulkCopy.WriteToServer(dt);
 
-                        return "Saving successful"; 
-                    }
-                    catch (Exception ex)
-                    {
-                        return ex.Message;
-                    }
+                    return "Saving successful"; 
                 }
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
         /// <summary>
@@ -231,30 +237,27 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
             try
             {
-                using(connection)
-                {
-                    connection.Open();
+                connection.Open();
 
-                    DataTable table = new DataTable("Locations");
+                DataTable table = new DataTable("Locations");
                     
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(selectQuery, connection))
-                    {
-                        SqlCommandBuilder cb = new SqlCommandBuilder(adapter);
+                using (SqlDataAdapter adapter = new SqlDataAdapter(selectQuery, connection))
+                {
+                    SqlCommandBuilder cb = new SqlCommandBuilder(adapter);
 
-                        adapter.FillSchema(table, SchemaType.Source);
-                        adapter.Fill(table);
+                    adapter.FillSchema(table, SchemaType.Source);
+                    adapter.Fill(table);
                         
-                        adapter.SelectCommand = new SqlCommand(selectQuery, connection);
-                        adapter.DeleteCommand = cb.GetDeleteCommand(true);
-                        adapter.UpdateCommand = cb.GetUpdateCommand(true);
-                        adapter.InsertCommand = cb.GetInsertCommand(true);
+                    adapter.SelectCommand = new SqlCommand(selectQuery, connection);
+                    adapter.DeleteCommand = cb.GetDeleteCommand(true);
+                    adapter.UpdateCommand = cb.GetUpdateCommand(true);
+                    adapter.InsertCommand = cb.GetInsertCommand(true);
                         
-                        table.Merge(dt, false, MissingSchemaAction.Error);
+                    table.Merge(dt, false, MissingSchemaAction.Error);
                         
-                        adapter.AcceptChangesDuringUpdate = true;
-                        affected = adapter.Update(table);
+                    adapter.AcceptChangesDuringUpdate = true;
+                    affected = adapter.Update(table);
                         
-                    }
                 }
 
                 return affected;
@@ -268,12 +271,13 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally
             {
                 MessageBox.Show("Done");
+                connection.Dispose();
             }
         }
 
         public async Task<bool> ExistsAsync(string query, List<SqlParameter> parameters)
         {
-            using (connection)
+            try
             {
                 await connection.OpenAsync();
 
@@ -286,11 +290,19 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                     return (bool)(result ?? false);
                 }
             }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
         }
 
         public async Task<bool> ExistsAsync(string query)
         {
-            using (connection)
+            try
             {
                 await connection.OpenAsync();
 
@@ -300,6 +312,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                     return (bool)(result ?? false);
                 }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
             }
         }
     }
