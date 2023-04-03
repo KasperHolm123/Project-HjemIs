@@ -30,12 +30,8 @@ namespace Projekt_HjemIS
     {
         DatabaseHandler dbHandler = new DatabaseHandler();
 
-        MainViewModel model = new MainViewModel();
-
         public MainWindow()
         {
-            //DataContext = model;
-
             InitializeComponent();
         }
         

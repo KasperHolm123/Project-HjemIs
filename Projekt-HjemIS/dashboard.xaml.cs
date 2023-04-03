@@ -1,6 +1,7 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
 using Projekt_HjemIS.Systems.Utility.Database_handling;
+using Projekt_HjemIS.ViewModels;
 using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
@@ -64,10 +65,16 @@ namespace Projekt_HjemIS
         }
 
         #endregion
+
+        private MainViewModel _model = new MainViewModel();
+
         public dashboard()
         {
-            DataContext = this;
+            DataContext = _model;
             InitializeComponent();
+
+
+
             userControl = new HomeViews();
             repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
@@ -86,9 +93,6 @@ namespace Projekt_HjemIS
             ClearInternalMessages();
 
             Task.Factory.StartNew(() => _locationsList = new List<Location>(dzObserver.ObserveDropzone()));
-            // Setup customers
-            //dh.AddBulkData<Customer>(ListToDataTableConverter.ToDataTable(
-            //    CustomerFactory.CreateNewCustomer()), "Customers");
         }
 
         private void ClearInternalMessages()

@@ -189,7 +189,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public string AddBulkData<T>(DataTable dt, string tableName)
+        public async Task<string> AddBulkData<T>(DataTable dt, string tableName)
         {
             try
             {
@@ -209,7 +209,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                         bulkCopy.ColumnMappings.Add(property.Name, property.Name);
                     }
 
-                    bulkCopy.WriteToServer(dt);
+                    await bulkCopy.WriteToServerAsync(dt);
 
                     return "Saving successful"; 
                 }

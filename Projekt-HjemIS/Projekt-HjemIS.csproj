@@ -100,6 +100,7 @@
     <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
     <Compile Include="Systems\Utility\Database_handling\DatabaseHandler.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\EditCustomerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\EmailViews.xaml.cs">
       <DependentUpon>EmailViews.xaml</DependentUpon>
