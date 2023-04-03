@@ -34,23 +34,26 @@ namespace Projekt_HjemIS.Views
         {
             InitializeComponent();
 
-            UpdateGrid();
+            RefreshGrid();
         }
 
-        private void UpdateGrid()
+        private void RefreshGrid()
         {
             try
             {
-                _customers = new ObservableCollection<Customer>(dh.GetTable<Customer>("SELECT * FROM Customers"));
+                var query = "SELECT * FROM Customers";
+
+                _customers = new ObservableCollection<Customer>(dh.GetTable<Customer>(query));
+                
                 customerInfoGrid.ItemsSource = _customers;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Oops, something went wrong. Error code: {ex}");
+                MessageBox.Show(ex.Message);
             }
         }
 
-        private void customerInfoGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void SelectCustomer_Click(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -71,19 +74,15 @@ namespace Projekt_HjemIS.Views
             }
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void UpdateCustomer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string query = $"SELECT 1 FROM Customers WHERE PhoneNumber = @KeyValue";
                 var phoneNumber = int.Parse(phoneNum.Text);
 
-                var parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@KeyValue", phoneNumber)
-                };
+                string query = $"SELECT 1 FROM Customers WHERE PhoneNumber = {phoneNumber}";
 
-                var exists = await dh.ExistsAsync(query, parameters);
+                var exists = await dh.ExistsAsync(query);
 
                 if (exists)
                 {
@@ -100,7 +99,7 @@ namespace Projekt_HjemIS.Views
                     }
                 }
 
-                UpdateGrid();
+                RefreshGrid();
             }
             catch (Exception ex) 
             {
@@ -111,19 +110,20 @@ namespace Projekt_HjemIS.Views
         public void UpdateCustomer()
         {
             string query = "UPDATE Customers " +
-                    "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
-                    "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
+                           "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, " +
+                           "StreetCode = @streetCode, CountyCode = @countyCode " +
+                           "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
 
-            SqlParameter[] parameters = new SqlParameter[]
+            var parameters = new List<SqlParameter>
             {
-                CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
-                CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
-                CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
-                CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
+                new SqlParameter("@firstName", firstName.Text),
+                new SqlParameter("@lastName", lastName.Text),
+                new SqlParameter("@phoneNum", int.Parse(phoneNum.Text)),
+                new SqlParameter("@streetCode", streetCode.Text),
+                new SqlParameter("@countyCode", countyCode.Text)
             };
 
-            dh.AddData(query, parameters);
+            dh.AddData(query, parameters.ToArray());
         }
 
         public void CreateCustomer()
@@ -149,16 +149,9 @@ namespace Projekt_HjemIS.Views
             dh.AddData(query, parameters.ToArray());
         }
 
-        private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
+        public void DeleteCustomer()
         {
-            SqlParameter param = new SqlParameter
-            {
-                ParameterName = paramName,
-                Value = value,
-                SqlDbType = type
-            };
 
-            return param;
         }
     }
 }

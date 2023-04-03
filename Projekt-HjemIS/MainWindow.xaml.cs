@@ -34,7 +34,7 @@ namespace Projekt_HjemIS
 
         public MainWindow()
         {
-            DataContext = model;
+            //DataContext = model;
 
             InitializeComponent();
         }
@@ -51,7 +51,7 @@ namespace Projekt_HjemIS
                 var parameters = new List<SqlParameter>
                 {
                     new SqlParameter("@Username", username.Text),
-                    //new SqlParameter("@Password", password.Password)
+                    new SqlParameter("@Password", password.Password)
                 };
 
                 var exists = await dbHandler.ExistsAsync(query, parameters);

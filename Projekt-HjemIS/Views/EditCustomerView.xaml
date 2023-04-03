@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <DataGrid x:Name="customerInfoGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True" MouseDoubleClick="customerInfoGrid_MouseDoubleClick">
+        <DataGrid x:Name="customerInfoGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True" MouseDoubleClick="SelectCustomer_Click">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
@@ -27,7 +27,7 @@
         <TextBox x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <TextBox x:Name="streetCode" HorizontalAlignment="Left" Height="22" Margin="605,239,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <TextBox x:Name="countyCode" HorizontalAlignment="Left" Height="22" Margin="605,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <Button Content="Update customer info" HorizontalAlignment="Left" Height="50" Margin="639,365,0,0" VerticalAlignment="Top" Width="136" Click="Button_Click"/>
+        <Button Content="Update customer info" HorizontalAlignment="Left" Height="50" Margin="639,365,0,0" VerticalAlignment="Top" Width="136" Click="UpdateCustomer_Click"/>
         <Button Content="Delete Customer" Background="Red" HorizontalAlignment="Left" Height="50" Margin="454,365,0,0" VerticalAlignment="Top" Width="136"/>
         <Label Content="First name" HorizontalAlignment="Left" Height="37" Margin="511,118,0,0" VerticalAlignment="Top" Width="104" RenderTransformOrigin="-0.093,0.459"/>
         <Label Content="Last Name" HorizontalAlignment="Left" Height="37" Margin="511,160,0,0" VerticalAlignment="Top" Width="104"/>

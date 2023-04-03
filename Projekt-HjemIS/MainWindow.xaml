@@ -39,13 +39,13 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1" Grid.Column="1">
-                    <TextBox x:Name="username" Text="{Binding Username}" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" VerticalContentAlignment="Center" />
+                    <TextBox x:Name="username" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" VerticalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="1">
-                    <TextBox Text="{Binding Password}" x:Name="password" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" KeyDown="password_KeyDown"/>
+                    <PasswordBox x:Name="password" Width="300" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" KeyDown="password_KeyDown"/>
                 </Grid>
                 <Grid Grid.Row="3" Grid.Column="1">
-                    <Button x:Name="btnLogin" Content="Login" Width="300" Height="30" FontWeight="Bold" Command="{Binding LoginCmd}" FontSize="15">
+                    <Button x:Name="btnLogin" Content="Login" Width="300" Height="30" FontWeight="Bold" Click="btnLogin_Click" FontSize="15">
                         <Button.Background>
                             <SolidColorBrush Color="LimeGreen"/>
                         </Button.Background>
