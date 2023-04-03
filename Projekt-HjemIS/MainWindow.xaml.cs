@@ -54,7 +54,12 @@ namespace Projekt_HjemIS
 
                 if (exists)
                 {
-                    dashboard dashbord = new dashboard();
+                    dashboard dashbord = new dashboard(new UserNew
+                    {
+                        admin = true,
+                        username = username.Text,
+                        password = password.Password
+                    });
                     dashbord.Show();
                     this.Close();
                 }

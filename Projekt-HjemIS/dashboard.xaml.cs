@@ -28,17 +28,21 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class dashboard : Window, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         DropzoneObserver dzObserver = new DropzoneObserver();
+        
         DatabaseHandler dh = new DatabaseHandler();
 
         UserControl userControl = null;
+
         LogViewRepository repository;
+        
         private ObservableCollection<Location> _locations = new ObservableCollection<Location>();
 
         private List<Location> _locationsList;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        #region Properties
+        #region Fields
         public ObservableCollection<Location> Locations
         {
             get { return _locations; }
@@ -66,38 +70,25 @@ namespace Projekt_HjemIS
 
         #endregion
 
-        private MainViewModel _model = new MainViewModel();
-
-        public dashboard()
+        public dashboard(UserNew currentUser)
         {
-            DataContext = _model;
             InitializeComponent();
-
-
-
             userControl = new HomeViews();
             repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
-            //lablUsername.Content = "Welcome " + User.Username.ToString();
-            Loaded += Dashboard_Loaded;
-            if (User.Admin == false)
-            {
-                _Users.IsEnabled = false;
-            }
-            if (User.Admin == false)
+
+            username_label.Content = "Welcome " + currentUser.username.ToString();
+            if (!currentUser.admin)
             {
                 _Users.IsEnabled = false;
                 _Users.Visibility = Visibility.Collapsed;
             }
-
+            
+            Loaded += Dashboard_Loaded;
+            
             ClearInternalMessages();
 
             Task.Factory.StartNew(() => _locationsList = new List<Location>(dzObserver.ObserveDropzone()));
-        }
-
-        private void ClearInternalMessages()
-        {
-            File.WriteAllText($@"{GetCurrentDirectory()}\tempMessages\InternalMessages.txt", string.Empty);
         }
 
         /// <summary>
@@ -115,6 +106,21 @@ namespace Projekt_HjemIS
             }
             LoadCompleted = true;
         }
+
+        private void ClearInternalMessages()
+        {
+            File.WriteAllText($@"{GetCurrentDirectory()}\tempMessages\InternalMessages.txt", string.Empty);
+        }
+
+        private static string GetCurrentDirectory()
+        {
+            var rootPathChild = Directory.GetCurrentDirectory();
+            var rootPathParent = Directory.GetParent($"{rootPathChild}");
+            var rootPathFolder = Directory.GetParent($"{rootPathParent}");
+            var rootPath = rootPathFolder.ToString();
+            return rootPath;
+        }
+
         #region View Control
         private void _Offers_Click(object sender, RoutedEventArgs e)
         {
@@ -156,10 +162,6 @@ namespace Projekt_HjemIS
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
-        private void OnPropertyChanged(string prop)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
 
         private void _Emulator_Click(object sender, RoutedEventArgs e)
         {
@@ -183,13 +185,9 @@ namespace Projekt_HjemIS
         }
         #endregion
 
-        private static string GetCurrentDirectory()
+        private void OnPropertyChanged(string prop)
         {
-            var rootPathChild = Directory.GetCurrentDirectory();
-            var rootPathParent = Directory.GetParent($"{rootPathChild}");
-            var rootPathFolder = Directory.GetParent($"{rootPathParent}");
-            var rootPath = rootPathFolder.ToString();
-            return rootPath;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

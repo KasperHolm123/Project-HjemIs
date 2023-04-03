@@ -54,25 +54,34 @@ namespace Projekt_HjemIS.Views
             }
         }
 
-        private void UpdateProduct(object sender, RoutedEventArgs e)
+        private async void UpdateProduct_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string query = "UPDATE Products " +
-                    "SET Price = @price, Discount = @discount " +
-                    "WHERE [Name] = @name AND ID = @ID";
+                string query = "SELECT 1 FROM Products WHERE [Name] = @Name AND ID = @ID";
 
-                SqlParameter[] sp = new SqlParameter[]
+                var parameters = new List<SqlParameter>
                 {
-                    CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
-                    CreateParameter("@discount", int.Parse(discountTxt.Text), SqlDbType.Int),
-                    CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
-                    CreateParameter("@ID", int.Parse(idTxt.Text), SqlDbType.NVarChar),
+                    new SqlParameter("@Name", nameTxt.Text),
+                    new SqlParameter("@ID", idTxt.Text)
                 };
 
-                var affectedRows = dh.AddData(query, sp);
+                var exists = await dh.ExistsAsync(query, parameters);
 
-                PromptProductHandling(affectedRows);
+                if (exists)
+                {
+                    UpdateProduct();
+                }
+                else
+                {
+                    var result = MessageBox.Show(
+                        "Produkt ikke fundet. Ønsker du at oprette et nyt?", "Error", MessageBoxButton.YesNo);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        CreateProduct();
+                    }
+                }
 
                 UpdateGrid();
             }
@@ -82,20 +91,56 @@ namespace Projekt_HjemIS.Views
             }
         }
 
-        private void DeleteProduct(object sender, RoutedEventArgs e)
+        public void UpdateProduct()
+        {
+            string query = "UPDATE Products " +
+                    "SET Price = @price, Discount = @discount " +
+                    "WHERE [Name] = @name AND ID = @ID";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@price", int.Parse(priceTxt.Text)),
+                new SqlParameter("@discount", int.Parse(discountTxt.Text)),
+                new SqlParameter("@name", nameTxt.Text),
+                new SqlParameter("@ID", int.Parse(idTxt.Text)),
+            };
+
+            dh.AddData(query, parameters.ToArray());
+
+            UpdateGrid();
+        }
+
+        public void CreateProduct()
+        {
+            string query = "INSERT INTO Products ([Name], Price, Discount) " +
+                            "VALUES(@name, @price, @discount);";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@name", nameTxt.Text),
+                new SqlParameter("@price", int.Parse(priceTxt.Text)),
+                new SqlParameter("@discount", int.Parse(discountTxt.Text)),
+            };
+
+            dh.AddData(query, parameters.ToArray());
+
+            UpdateGrid();
+        }
+
+        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
         {
             Product selectedProduct = mainGrid.SelectedItem as Product;
             
             try
             {
                 string query = "DELETE FROM Products WHERE ID = @ID;";
-                
-                SqlParameter[] sp = new SqlParameter[]
+
+                var parameters = new List<SqlParameter>
                 {
-                    CreateParameter("@ID", selectedProduct.ID, SqlDbType.Int)
+                    new SqlParameter("@ID", selectedProduct.ID)
                 };
                 
-                dh.AddData(query, sp);
+                dh.AddData(query, parameters.ToArray());
                 
                 UpdateGrid();
                 
@@ -105,56 +150,6 @@ namespace Projekt_HjemIS.Views
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        private void PromptProductHandling(int affectedRows)
-        {
-            if (affectedRows == 0)
-            {
-                MessageBoxResult msgResult = MessageBox.Show("Produkt ikke fundet. Ønsker du at oprette et nyt?", "Error", MessageBoxButton.YesNo);
-
-                switch (msgResult)
-                {
-                    case MessageBoxResult.Yes:
-                        string insertQuery = "INSERT INTO Products ([Name], Price, Discount) " +
-                            "VALUES(@name, @price, @discount);";
-
-                        SqlParameter[] insertSp = new SqlParameter[]
-                        {
-                            CreateParameter("@name", nameTxt.Text, SqlDbType.NVarChar),
-                            CreateParameter("@price", int.Parse(priceTxt.Text), SqlDbType.Int),
-                            CreateParameter("@discount", int.Parse(discountTxt.Text), SqlDbType.Int),
-                        };
-
-                        dh.AddData(insertQuery, insertSp);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                MessageBoxResult confirmBox = MessageBox.Show("Produkt opdateret.", "Success", MessageBoxButton.OK);
-            }
-        }
-
-        /// <summary>
-        /// Create parameter for SQL command.
-        /// </summary>
-        /// <param name="paramName"></param>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
-        {
-            SqlParameter param = new SqlParameter
-            {
-                ParameterName = paramName,
-                Value = value,
-                SqlDbType = type
-            };
-
-            return param;
         }
 
         private void mainGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -188,7 +183,7 @@ namespace Projekt_HjemIS.Views
         }
         #endregion
 
-        private void CreateProduct(object sender, RoutedEventArgs e)
+        private void ClearSelection_Click(object sender, RoutedEventArgs e)
         {
             nameTxt.Clear();
             idTxt.Text = "0";
