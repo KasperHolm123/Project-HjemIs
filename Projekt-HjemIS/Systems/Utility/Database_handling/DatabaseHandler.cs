@@ -30,8 +30,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             string query = $"DELETE FROM {tableName};";
             try
             {
-                SqlCommand command = new SqlCommand(@query, connection);
-                command.ExecuteNonQuery();
+                using (connection)
+                {
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand(@query, connection);
+                    
+                    command.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
@@ -41,50 +47,49 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
         public List<T> GetTable<T>(string query)
         {
-            /* This line of code gets all relevant properties and selects them based on name.
-             * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
-             */
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.PropertyType == typeof(String) || p.PropertyType == typeof(int))
-                .Select(p => p.Name);
-
             try
             {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand(query, connection);
-                
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (connection)
                 {
-                    var internalTable = new List<T>();
+                    connection.Open();
 
-                    while (reader.Read())
+                    /* This line of code gets all relevant properties and selects them based on name.
+                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
+                     */
+                    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                        .Where(p => p.PropertyType == typeof(String) || p.PropertyType == typeof(int))
+                        .Select(p => p.Name);
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        T obj = Activator.CreateInstance<T>();
+                        var internalTable = new List<T>();
 
-                        foreach (var propertyName in properties)
+                        while (reader.Read())
                         {
-                            int ordinal = reader.GetOrdinal(propertyName);
-                            
-                            object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+                            T obj = Activator.CreateInstance<T>();
 
-                            typeof(T).GetProperty(propertyName).SetValue(obj, value);
+                            foreach (var propertyName in properties)
+                            {
+                                int ordinal = reader.GetOrdinal(propertyName);
+                            
+                                object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+
+                                typeof(T).GetProperty(propertyName).SetValue(obj, value);
+                            }
+
+                            internalTable.Add(obj);
                         }
 
-                        internalTable.Add(obj);
+                        return internalTable;
                     }
-
-                    return internalTable;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return null;
-            }
-            finally
-            {
-                connection.Close();
             }
         }
         /// <summary>
@@ -97,22 +102,21 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             try
             {
-                connection.Open();
-
-                using (SqlCommand cmd = new SqlCommand(query, connection))
+                using (connection)
                 {
-                    cmd.Parameters.AddRange(parameters);
+                    connection.Open();
 
-                    return cmd.ExecuteNonQuery();
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddRange(parameters);
+
+                        return cmd.ExecuteNonQuery();
+                    }
                 }
             }
             catch (Exception ex)
             {   
                 return -1;
-            }
-            finally
-            {
-                connection.Close();
             }
         }
         #endregion
@@ -128,13 +132,16 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             try
             {
-                connection.Open();
-
-                using (SqlCommand cmd = new SqlCommand(query, connection))
+                using (connection)
                 {
-                    cmd.Parameters.AddRange(parameters);
+                    connection.Open();
 
-                    return (int)cmd.ExecuteScalar();
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddRange(parameters);
+
+                        return (int)cmd.ExecuteScalar();
+                    }
                 }
             }
             catch (Exception e)
@@ -142,10 +149,6 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 Debug.WriteLine(e.Message);
 
                 return -1;
-            }
-            finally
-            {
-                connection.Close();
             }
         }
         /// <summary>
@@ -159,12 +162,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             string query = $"SELECT COUNT(*) FROM {table}";
             try
             {
-                using (SqlConnection connection = new SqlConnection(
-                    ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+                using (connection)
                 {
-                    await connection.OpenAsync();
+                    connection.Open();
 
-                    using(SqlCommand cmd = new SqlCommand(query, connection))
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
                         return await cmd.ExecuteScalarAsync();
                     }
@@ -176,10 +178,6 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                 return null;
             }
-            finally
-            {
-                connection.Close();
-            }
         }
         /// <summary>
         /// Adds a large amount of data to a database.
@@ -188,31 +186,34 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <returns></returns>
         public string AddBulkData<T>(DataTable dt, string tableName)
         {
-            connection.Open();
-            
-            ClearTable(tableName);
-            
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+            using (connection)
             {
-                bulkCopy.DestinationTableName = tableName;
+                connection.Open();
+
+                ClearTable(tableName);
+            
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+                {
+                    bulkCopy.DestinationTableName = tableName;
                 
-                var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(string) || p.PropertyType == typeof(int));
+                    var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                        .Where(p => p.PropertyType == typeof(string) || p.PropertyType == typeof(int));
 
-                foreach (var property in properties)
-                {
-                    bulkCopy.ColumnMappings.Add(property.Name, property.Name);
-                }
+                    foreach (var property in properties)
+                    {
+                        bulkCopy.ColumnMappings.Add(property.Name, property.Name);
+                    }
 
-                try 
-                { 
-                    bulkCopy.WriteToServer(dt);
+                    try 
+                    { 
+                        bulkCopy.WriteToServer(dt);
 
-                    return "Saving successful"; 
-                }
-                catch (Exception ex)
-                {
-                    return ex.Message;
+                        return "Saving successful"; 
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
                 }
             }
         }
@@ -230,8 +231,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
             try
             {
-                using(SqlConnection connection = new SqlConnection(
-                    ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+                using(connection)
                 {
                     connection.Open();
 
@@ -268,15 +268,12 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally
             {
                 MessageBox.Show("Done");
-
-                connection.Close();
             }
         }
 
         public async Task<bool> ExistsAsync(string query, List<SqlParameter> parameters)
         {
-            using (SqlConnection connection = new SqlConnection(
-                    ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+            using (connection)
             {
                 await connection.OpenAsync();
 
@@ -293,8 +290,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
         public async Task<bool> ExistsAsync(string query)
         {
-            using (SqlConnection connection = new SqlConnection(
-                    ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+            using (connection)
             {
                 await connection.OpenAsync();
 
