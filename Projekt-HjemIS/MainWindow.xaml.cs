@@ -28,73 +28,48 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class MainWindow : Window
     {
-        DatabaseHandler rm = new DatabaseHandler();
-        
-        public MainViewModel viewModel;
+        DatabaseHandler dbHandler = new DatabaseHandler();
+
+        MainViewModel model = new MainViewModel();
 
         public MainWindow()
         {
-            viewModel = new MainViewModel();
-         
-            DataContext = viewModel;
-            
+            DataContext = model;
+
             InitializeComponent();
         }
-
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        
+        private async void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            SqlConnection connString = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString);
-
             try
             {
-                if (connString.State == ConnectionState.Closed)
+                var query = "SELECT CAST(CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS bit) " +
+                            "FROM Users " +
+                            "WHERE Username = @Username " +
+                            "AND [Password] = @Password";
+
+                var parameters = new List<SqlParameter>
                 {
-                    connString.Open();
-                    string query = "SELECT COUNT(1) FROM Users WHERE username=@username AND [password]=@password";
-                    SqlCommand sqlCommand = new SqlCommand(query, connString);
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.Parameters.AddWithValue("@username", username.Text);
-                    sqlCommand.Parameters.AddWithValue("@password", password.Password);
-                    int count = Convert.ToInt32(sqlCommand.ExecuteScalar());
+                    new SqlParameter("@Username", username.Text),
+                    //new SqlParameter("@Password", password.Password)
+                };
 
-                    //hvis brugernavn og adgangskode stemmer overens med databasen, giver den et output på 1
-                    if (count == 1)
-                    {
-                        User.Username = username.Text.ToString();
+                var exists = await dbHandler.ExistsAsync(query, parameters);
 
-                        //bestemmer om ud fra databasen om den loggede ind bruger er en admin eller ej. 
-                        using (SqlCommand cmd = new SqlCommand($"SELECT [admin] FROM Users WHERE [username] = @username", connString))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@username", username.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    string result = reader[0].ToString();
-                                    User.Admin = bool.Parse(result);
-                                }
-                                reader.Close();
-                            }
-                        }
-
-                        dashboard dashbord = new dashboard();
-                        dashbord.Show();
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Username Or Password Is Incorrect, Please Try Again");
-                    }
+                if (exists)
+                {
+                    dashboard dashbord = new dashboard();
+                    dashbord.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Username Or Password Is Incorrect, Please Try Again");
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                connString.Close();
             }
         }
 
@@ -118,11 +93,6 @@ namespace Projekt_HjemIS
             {
                 btnLogin_Click(sender, e);
             }
-        }
-
-        private void username_GotFocus(object sender, RoutedEventArgs e)
-        {
-            username.Text = "";
         }
     }
 }

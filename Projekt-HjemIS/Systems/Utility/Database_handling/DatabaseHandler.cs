@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -272,7 +273,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
         }
 
-        public async Task<int> ExistsAsync(string query, List<SqlParameter> parameters)
+        public async Task<bool> ExistsAsync(string query, List<SqlParameter> parameters)
         {
             using (SqlConnection connection = new SqlConnection(
                     ConfigurationManager.ConnectionStrings["post"].ConnectionString))
@@ -282,7 +283,26 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
-                    return command.ExecuteNonQuery();
+                    
+                    var result = await command.ExecuteScalarAsync();
+
+                    return (bool)(result ?? false);
+                }
+            }
+        }
+
+        public async Task<bool> ExistsAsync(string query)
+        {
+            using (SqlConnection connection = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    var result = await command.ExecuteScalarAsync();
+
+                    return (bool)(result ?? false);
                 }
             }
         }

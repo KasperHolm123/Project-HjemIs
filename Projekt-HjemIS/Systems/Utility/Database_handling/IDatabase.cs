@@ -36,8 +36,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <summary>
         /// Checks whether or not a specific record exists based on a record's primary key
         /// </summary>
-        /// <returns>True if an element with specified ID exists</returns>
-        Task<int> ExistsAsync(string query, List<SqlParameter> parameters);
+        /// <returns> Greater than 0 if an element with specified ID exists</returns>
+        Task<bool> ExistsAsync(string query, List<SqlParameter> parameters);
+
+        /// <summary>
+        /// Checks whether or not a specific record exists based on a record's primary key
+        /// </summary>
+        /// <returns> Greater than 0 if an element with specified ID exists</returns>
+        Task<bool> ExistsAsync(string query);
 
     }
 }

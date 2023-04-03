@@ -71,7 +71,7 @@ namespace Projekt_HjemIS
             userControl = new HomeViews();
             repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
-            lablUsername.Content = "Welcome " + User.Username.ToString();
+            //lablUsername.Content = "Welcome " + User.Username.ToString();
             Loaded += Dashboard_Loaded;
             if (User.Admin == false)
             {

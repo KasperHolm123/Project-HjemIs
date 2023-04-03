@@ -25,7 +25,7 @@ namespace Projekt_HjemIS.Views
         public HomeViews()
         {
             InitializeComponent();
-            lablUsername.Content = User.Username.ToString();
+            //lablUsername.Content = User.Username.ToString();
         }
     }
 }

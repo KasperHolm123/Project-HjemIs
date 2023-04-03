@@ -26,7 +26,9 @@
                 <DataGrid x:Name="recipientsDataGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False" LostFocus="recipientsDataGrid_LostFocus" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Postal code" Binding="{Binding Path=PostalCode}"/>
+                        <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}"/>
+                        <DataGridTextColumn Header="Street Code" Binding="{Binding Path=StreetCode}"/>
+                        <DataGridTextColumn Header="County Code" Binding="{Binding Path=CountyCode}"/>
                         <DataGridCheckBoxColumn Header="Recipient" Binding="{Binding Path=IsRecipient}"/>
                     </DataGrid.Columns>
                 </DataGrid>

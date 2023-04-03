@@ -73,9 +73,7 @@ namespace Projekt_HjemIS.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Separate try-catch for checking if an element exists
-
-            try // PSEUDO CODE
+            try
             {
                 string query = $"SELECT 1 FROM Customers WHERE PhoneNumber = @KeyValue";
                 var phoneNumber = int.Parse(phoneNum.Text);
@@ -87,7 +85,7 @@ namespace Projekt_HjemIS.Views
 
                 var exists = await dh.ExistsAsync(query, parameters);
 
-                if (exists > 0)
+                if (exists)
                 {
                     UpdateCustomer();
                 }
@@ -130,9 +128,14 @@ namespace Projekt_HjemIS.Views
 
         public void CreateCustomer()
         {
+            /* 
+             * A foreign key constraint conflict will occur when inserting a
+             * Customer with a (StreetCode, CountyCode) combination that doesn't exist
+             * in the Locations table
+             */
             string query = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
                                 "VALUES (@firstName, @lastName, @phoneNum, @streetCode, @countyCode);";
-            //TODO: fix SQL conflicts with this statement
+            //TODO: Add validation on PhoneNumber, StreetCode, and CountyCode
 
             var parameters = new List<SqlParameter>
             {
