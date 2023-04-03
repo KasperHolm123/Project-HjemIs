@@ -1,5 +1,6 @@
 ﻿using Projekt_HjemIS.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
@@ -268,6 +269,21 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 MessageBox.Show("Done");
 
                 connection.Close();
+            }
+        }
+
+        public async Task<int> ExistsAsync(string query, List<SqlParameter> parameters)
+        {
+            using (SqlConnection connection = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["post"].ConnectionString))
+            {
+                await connection.OpenAsync();
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    return command.ExecuteNonQuery();
+                }
             }
         }
     }

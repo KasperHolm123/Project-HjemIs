@@ -71,6 +71,81 @@ namespace Projekt_HjemIS.Views
             }
         }
 
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Separate try-catch for checking if an element exists
+
+            try // PSEUDO CODE
+            {
+                string query = $"SELECT 1 FROM Customers WHERE PhoneNumber = @KeyValue";
+                var phoneNumber = int.Parse(phoneNum.Text);
+
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@KeyValue", phoneNumber)
+                };
+
+                var exists = await dh.ExistsAsync(query, parameters);
+
+                if (exists > 0)
+                {
+                    UpdateCustomer();
+                }
+                else
+                {
+                    MessageBoxResult result = MessageBox.Show(
+                        "Kunden er ikke fundet. Ønsker du at oprette en ny?", "Error", MessageBoxButton.YesNo);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        CreateCustomer();
+                    }
+                }
+
+                UpdateGrid();
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateCustomer()
+        {
+            string query = "UPDATE Customers " +
+                    "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
+                    "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
+                CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
+                CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
+                CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
+                CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
+            };
+
+            dh.AddData(query, parameters);
+        }
+
+        public void CreateCustomer()
+        {
+            string query = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
+                                "VALUES (@firstName, @lastName, @phoneNum, @streetCode, @countyCode);";
+            //TODO: fix SQL conflicts with this statement
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@firstName", firstName.Text),
+                new SqlParameter("@lastName", lastName.Text),
+                new SqlParameter("@phoneNum", int.Parse(phoneNum.Text)),
+                new SqlParameter("@streetCode", streetCode.Text),
+                new SqlParameter("@countyCode", countyCode.Text),
+            };
+
+            dh.AddData(query, parameters.ToArray());
+        }
+
         private static SqlParameter CreateParameter(string paramName, object value, SqlDbType type)
         {
             SqlParameter param = new SqlParameter
@@ -81,75 +156,6 @@ namespace Projekt_HjemIS.Views
             };
 
             return param;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string query = "UPDATE Customers " +
-                    "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, StreetCode = @streetCode, CountyCode = @countyCode " +
-                    "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
-                
-                SqlParameter[] sp = new SqlParameter[]
-                {
-                    CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
-                    CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                    CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
-                    CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
-                    CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
-                };
-
-                var affectedRow = dh.AddData(query, sp);
-
-                PromptProductHandling(affectedRow);
-
-                UpdateGrid();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void PromptProductHandling(int affectedRows)
-        {
-            try
-            {
-                if (affectedRows == 0)
-                {
-                    MessageBoxResult msgResult = MessageBox.Show("Kunden er ikke fundet. Ønsker du at oprette en ny?", "Error", MessageBoxButton.YesNo);
-                    switch (msgResult)
-                    {
-                        case MessageBoxResult.Yes:
-                            string insertQuery = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
-                                "VALUES (@firstName, @lastName, @phoneNum, @streetCode, @countyCode);";
-                            //TODO: fix SQL conflicts with this statement
-
-                            SqlParameter[] insertSp = new SqlParameter[]
-                            {
-                                CreateParameter("@firstName", firstName.Text, SqlDbType.NVarChar),
-                                CreateParameter("@lastName", lastName.Text, SqlDbType.NVarChar),
-                                CreateParameter("@phoneNum", int.Parse(phoneNum.Text), SqlDbType.Int),
-                                CreateParameter("@streetCode", streetCode.Text, SqlDbType.NVarChar),
-                                CreateParameter("@countyCode", countyCode.Text, SqlDbType.NVarChar)
-                            };
-
-                            dh.AddData(insertQuery, insertSp);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else
-                {
-                    MessageBoxResult confirmBox = MessageBox.Show("Kunden er opdateret.", "Success", MessageBoxButton.OK);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
     }
 }

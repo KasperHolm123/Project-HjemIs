@@ -1,6 +1,7 @@
 ﻿using Projekt_HjemIS.Models;
 using Projekt_HjemIS.Systems;
 using Projekt_HjemIS.Systems.Utility.Database_handling;
+using Projekt_HjemIS.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -28,8 +29,15 @@ namespace Projekt_HjemIS
     public partial class MainWindow : Window
     {
         DatabaseHandler rm = new DatabaseHandler();
+        
+        public MainViewModel viewModel;
+
         public MainWindow()
         {
+            viewModel = new MainViewModel();
+         
+            DataContext = viewModel;
+            
             InitializeComponent();
         }
 
