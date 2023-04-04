@@ -24,9 +24,9 @@ namespace Projekt_HjemIS
 {
     /// <summary>
     /// Hovedforfatter: Christian 
-    /// Interaction logic for dashboard.xaml
+    /// Interaction logic for DashboardView.xaml
     /// </summary>
-    public partial class dashboard : Window, INotifyPropertyChanged
+    public partial class DashboardView : Window, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -70,10 +70,10 @@ namespace Projekt_HjemIS
 
         #endregion
 
-        public dashboard(UserNew currentUser)
+        public DashboardView(UserNew currentUser)
         {
             InitializeComponent();
-            userControl = new HomeViews();
+            userControl = new HomeView();
             repository = new LogViewRepository();
             GridContent.Children.Add(userControl);
 
@@ -131,14 +131,14 @@ namespace Projekt_HjemIS
 
         private void _Email_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new EmailViews(_locationsList);
+            userControl = new EmailView(_locationsList);
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
 
         private void _Home_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new HomeViews();
+            userControl = new HomeView();
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }
@@ -158,7 +158,7 @@ namespace Projekt_HjemIS
 
         private void _Users_Click(object sender, RoutedEventArgs e)
         {
-            userControl = new UsersViews();
+            userControl = new UsersView();
             GridContent.Children.Clear();
             GridContent.Children.Add(userControl);
         }

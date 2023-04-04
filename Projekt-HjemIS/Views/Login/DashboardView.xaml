@@ -1,4 +1,4 @@
-﻿<Window x:Class="Projekt_HjemIS.dashboard"
+﻿<Window x:Class="Projekt_HjemIS.DashboardView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -91,10 +91,10 @@
                             <Image Margin="0,-10,-55,-10">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
-                                        <Setter Property="Source" Value="Pictures/filesd.png"/>
+                                        <Setter Property="Source" Value="../../Pictures/filesd.png"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Path=LoadCompleted, Mode=TwoWay}" Value="True">
-                                                <Setter Property="Source" Value="Pictures\files.png"/>
+                                                <Setter Property="Source" Value="../../Pictures\files.png"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

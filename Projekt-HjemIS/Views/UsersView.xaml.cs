@@ -27,14 +27,14 @@ namespace Projekt_HjemIS.Views
     /// Hovedforfatter: Christian
     /// Interaction logic for UsersViews.xaml
     /// </summary>
-    public partial class UsersViews : UserControl
+    public partial class UsersView : UserControl
     {
         //// Contains all available users.
         public ObservableCollection<UserNew> InternalUsers { get; set; }
 
         private DatabaseHandler dh = new DatabaseHandler();
 
-        public UsersViews()
+        public UsersView()
         {
             InitializeComponent();
             InternalUsers = new ObservableCollection<UserNew>(dh.GetTable<UserNew>("SELECT * FROM Users"));
