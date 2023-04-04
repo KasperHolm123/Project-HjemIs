@@ -54,6 +54,51 @@ namespace Projekt_HjemIS.Views
             }
         }
 
+        private void RefreshGrid(string query)
+        {
+            try
+            {
+                _customers = new ObservableCollection<Customer>(dh.GetTable<Customer>(query));
+
+                customerInfoGrid.ItemsSource = _customers;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void SearchCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var query = "";
+
+                if (firstName_search.Text != "" && lastName_search.Text == "")
+                {
+                    query = $"SELECT * from Customers WHERE FirstName = '{firstName_search.Text}'";
+                }
+                if (lastName_search.Text != "" && firstName_search.Text == "")
+                {
+                    query = $"SELECT * from Customers WHERE LastName = '{lastName_search.Text}'";
+                }
+                if (firstName_search.Text != "" && lastName_search.Text != "")
+                {
+                    query = $"SELECT * from Customers WHERE FirstName = '{firstName_search.Text}' AND LastName = '{lastName_search.Text}'";
+                }
+                if (firstName_search.Text == "" && lastName_search.Text == "")
+                {
+                    query = "SELECT * FROM Customers";
+                }
+
+                RefreshGrid(query);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private void SelectCustomer_Click(object sender, MouseButtonEventArgs e)
         {
             try

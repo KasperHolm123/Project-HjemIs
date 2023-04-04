@@ -19,9 +19,9 @@
         <Label Content="Last Name" HorizontalAlignment="Left" Margin="218,37,0,0" VerticalAlignment="Top"/>
         <Label Content="First Name" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top"/>
         <Label Content="Search customer" HorizontalAlignment="Left" Margin="20,11,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108" />
-        <TextBox HorizontalAlignment="Left" Height="15" Margin="289,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108"/>
-        <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66"/>
+        <TextBox x:Name="firstName_search" HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108" />
+        <TextBox x:Name="lastName_search" HorizontalAlignment="Left" Height="15" Margin="289,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108"/>
+        <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66" Click="SearchCustomer_Click"/>
         <TextBox x:Name="firstName" HorizontalAlignment="Left" Height="22" Margin="605,122,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <TextBox x:Name="lastName" HorizontalAlignment="Left" Height="22" Margin="605,164,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <TextBox PreviewTextInput="NumericInputValidation" x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
