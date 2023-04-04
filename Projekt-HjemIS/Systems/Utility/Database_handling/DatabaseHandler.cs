@@ -100,7 +100,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <param name="query"></param>
         /// <param name="parameters"></param>
         /// <returns>The amount of rows affected</returns>
-        public int AddData(string query, SqlParameter[] parameters)
+        public int AddData(string query, SqlParameter[] parameters = null)
         {
             try
             {
@@ -108,7 +108,10 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddRange(parameters);
+                    if (parameters != null)
+                    {
+                        cmd.Parameters.AddRange(parameters);
+                    }
 
                     return cmd.ExecuteNonQuery();
                 }
@@ -301,6 +304,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 return false;
             }
             finally

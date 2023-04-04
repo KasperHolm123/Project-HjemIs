@@ -24,11 +24,11 @@
         <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66"/>
         <TextBox x:Name="firstName" HorizontalAlignment="Left" Height="22" Margin="605,122,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <TextBox x:Name="lastName" HorizontalAlignment="Left" Height="22" Margin="605,164,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox x:Name="streetCode" HorizontalAlignment="Left" Height="22" Margin="605,239,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox x:Name="countyCode" HorizontalAlignment="Left" Height="22" Margin="605,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <TextBox PreviewTextInput="NumericInputValidation" x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <TextBox PreviewTextInput="NumericInputValidation" x:Name="streetCode" HorizontalAlignment="Left" Height="22" Margin="605,239,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
+        <TextBox PreviewTextInput="NumericInputValidation" x:Name="countyCode" HorizontalAlignment="Left" Height="22" Margin="605,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
         <Button Content="Update customer info" HorizontalAlignment="Left" Height="50" Margin="639,365,0,0" VerticalAlignment="Top" Width="136" Click="UpdateCustomer_Click"/>
-        <Button Content="Delete Customer" Background="Red" HorizontalAlignment="Left" Height="50" Margin="454,365,0,0" VerticalAlignment="Top" Width="136"/>
+        <Button Content="Delete Customer" Click="DeleteCustomer_Click" Background="Red" HorizontalAlignment="Left" Height="50" Margin="454,365,0,0" VerticalAlignment="Top" Width="136"/>
         <Label Content="First name" HorizontalAlignment="Left" Height="37" Margin="511,118,0,0" VerticalAlignment="Top" Width="104" RenderTransformOrigin="-0.093,0.459"/>
         <Label Content="Last Name" HorizontalAlignment="Left" Height="37" Margin="511,160,0,0" VerticalAlignment="Top" Width="104"/>
         <Label Content="Phone Number" HorizontalAlignment="Left" Height="37" Margin="511,197,0,0" VerticalAlignment="Top" Width="104"/>

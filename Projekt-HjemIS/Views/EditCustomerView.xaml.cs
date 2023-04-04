@@ -18,6 +18,7 @@ using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Projekt_HjemIS.Views
 {
@@ -106,6 +107,22 @@ namespace Projekt_HjemIS.Views
             }
         }
 
+        private void DeleteCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(phoneNum.Text, out int result))
+            {
+                DeleteCustomer(result);
+
+                RefreshGrid();
+
+                MessageBox.Show("Customer deleted");
+            }
+            else
+            {
+                MessageBox.Show("Invalid input");
+            }
+        }
+
         public void UpdateCustomer()
         {
             string query = "UPDATE Customers " +
@@ -148,9 +165,27 @@ namespace Projekt_HjemIS.Views
             dh.AddData(query, parameters.ToArray());
         }
 
-        public void DeleteCustomer()
+        public void DeleteCustomer(int phoneNumber)
         {
+            var query = $"DELETE FROM Customers WHERE PhoneNumber = {phoneNumber}";
 
+            var result = dh.AddData(query);
+
+            if (result > 0)
+            {
+
+            }
         }
+
+        #region Validation
+
+        private void NumericInputValidation(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        #endregion
+
     }
 }
