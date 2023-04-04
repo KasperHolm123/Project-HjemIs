@@ -9,6 +9,6 @@
         Title="HjemIS | Login" Height="750" Width="1200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 
     <Grid>
-        <ContentControl Content="{Binding NavigationService.CurrentView}" />
+        <ContentControl Content="{Binding NavigationService.BaseView}" />
     </Grid>
 </Window>

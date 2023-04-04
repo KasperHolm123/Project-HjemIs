@@ -32,7 +32,7 @@ namespace Projekt_HjemIS.ViewModels
         public MainViewModel(INavigationService navService)
         {
             _navigationService = navService;
-            NavigationService.NavigateTo<LoginViewModel>();
+            NavigationService.ChangeBaseView<LoginViewModel>();
         }
     }
 }

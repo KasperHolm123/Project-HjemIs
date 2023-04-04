@@ -84,7 +84,7 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (exists)
                 {
-                    NavigationService.NavigateTo<DashboardViewModel>();
+                    NavigationService.ChangeBaseView<DashboardViewModel>();
                 }
                 else
                 {

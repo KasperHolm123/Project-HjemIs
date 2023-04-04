@@ -10,13 +10,26 @@ namespace Projekt_HjemIS.Services
     public interface INavigationService
     {
         BaseViewModel CurrentView { get; }
+        BaseViewModel BaseView { get; }
 
         void NavigateTo<T>() where T : BaseViewModel;
+        void ChangeBaseView<T>() where T : BaseViewModel;
     }
 
     public class NavigationService : ObservableObject, INavigationService
     {
         private readonly Func<Type, BaseViewModel> _viewModelFactory;
+
+        private BaseViewModel _baseView;
+        public BaseViewModel BaseView
+        {
+            get => _baseView;
+            private set
+            {
+                _baseView = value;
+                OnPropertyChanged();
+            }
+        }
 
         private BaseViewModel _currentView;
         public BaseViewModel CurrentView
@@ -39,6 +52,12 @@ namespace Projekt_HjemIS.Services
         {
             var viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
             CurrentView = viewModel;
+        }
+
+        public void ChangeBaseView<TViewModel>() where TViewModel : BaseViewModel
+        {
+            var viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
+            BaseView = viewModel;
         }
     }
 }
