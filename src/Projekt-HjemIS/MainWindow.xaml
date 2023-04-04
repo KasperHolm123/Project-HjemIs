@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Projekt_HjemIS"
         xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewmodels:MainViewModel}"
         Title="HjemIS | Login" Height="750" Width="1200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 
     <Grid>

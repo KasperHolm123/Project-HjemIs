@@ -27,7 +27,7 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private string _username;
+        private string _username = "";
         public string Username
         {
             get => _username;
@@ -38,7 +38,7 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private string _password;
+        private string _password = "";
         public string Password
         {
             get => _password;
@@ -88,7 +88,7 @@ namespace Projekt_HjemIS.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Username Or Password Is Incorrect, Please Try Again");
+                    MessageBox.Show("Incorrect credentials");
                 }
             }
             catch (Exception ex)
