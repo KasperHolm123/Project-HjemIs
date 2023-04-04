@@ -44,6 +44,11 @@ namespace Projekt_HjemIS.Views
 
         public List<Customer> messageRecipients { get; set; }
 
+        public EmailView()
+        {
+            InitializeComponent();
+        }
+
         public EmailView(List<Location> locations)
         {
             InitializeComponent();

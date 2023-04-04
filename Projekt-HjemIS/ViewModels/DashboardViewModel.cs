@@ -43,8 +43,28 @@ namespace Projekt_HjemIS.ViewModels
         {
             switch (viewModel)
             {
+                case "home":
+                    NavigationService.NavigateTo<HomeViewModel>();
+                    break;
+                case "send":
+                    NavigationService.NavigateTo<EmailViewModel>();
+                    break;
                 case "customer":
                     NavigationService.NavigateTo<EditCustomerViewModel>();
+                    break;
+                case "users":
+                    NavigationService.NavigateTo<UsersViewModel>();
+                    break;
+                case "products":
+                    NavigationService.NavigateTo<ProductsViewModel>();
+                    break;
+                case "emulator":
+                    NavigationService.NavigateTo<ProductsViewModel>();
+                    break;
+                case "log":
+                    // TODO: fix
+
+                    //NavigationService.NavigateTo<LogViewModel>();
                     break;
                 default:
                     break;

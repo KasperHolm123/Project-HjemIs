@@ -28,6 +28,12 @@ namespace Projekt_HjemIS.Services
             services.AddSingleton<EditCustomerViewModel>();
             services.AddSingleton<LoginViewModel>();
             services.AddSingleton<DashboardViewModel>();
+            services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<UsersViewModel>();
+            services.AddSingleton<ProductsViewModel>();
+            services.AddSingleton<EmailViewModel>();
+            services.AddSingleton<LogViewModel>();
+            services.AddSingleton<EmulatorViewModel>();
 
             return services;
         }

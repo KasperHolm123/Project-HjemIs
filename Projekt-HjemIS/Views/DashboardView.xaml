@@ -23,7 +23,7 @@
                 <Menu Background="{x:Null}">
 
                     <!--Home-->
-                    <MenuItem  Name="_Home" ToolTip="Home" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem  Name="_Home" ToolTip="Home" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10" Command="{Binding ChangePageCommand}" CommandParameter="home">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -33,7 +33,7 @@
                     </MenuItem>
 
                     <!--Mail-->
-                    <MenuItem Name="_Email" ToolTip="New message" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Email" ToolTip="New message" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10" Command="{Binding ChangePageCommand}" CommandParameter="send">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -56,7 +56,7 @@
                     </MenuItem>
 
                     <!--Users-->
-                    <MenuItem Name="_Users" ToolTip="Users" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Users" ToolTip="Users" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10" Command="{Binding ChangePageCommand}" CommandParameter="users">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -66,7 +66,7 @@
                     </MenuItem>
 
                     <!--Emulator-->
-                    <MenuItem Name="_Emulator" ToolTip="Sent message" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Emulator" ToolTip="Sent messages" FontSize="16" Foreground="White" Height="70" Width="80" Command="{Binding ChangePageCommand}" CommandParameter="emulator" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -76,7 +76,7 @@
                     </MenuItem>
 
                     <!--Products-->
-                    <MenuItem Name="_Products" ToolTip="Products" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Products" ToolTip="Products" FontSize="16" Foreground="White" Height="70" Width="80" Margin="10,10,10,10" Command="{Binding ChangePageCommand}" CommandParameter="products">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>
@@ -84,7 +84,7 @@
                             <Image Source="/Pictures/ice-cream.png" Margin="0,-10,-55,-10"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Name="_Logs" ToolTip="Message log" FontSize="16" Foreground="White" IsEnabled="{Binding Path=LoadCompleted, Mode=TwoWay}" Height="70" Width="80" Margin="10,10,10,10">
+                    <MenuItem Name="_Logs" ToolTip="Message log" FontSize="16" Foreground="White" IsEnabled="{Binding Path=LoadCompleted, Mode=TwoWay}" Command="{Binding ChangePageCommand}" CommandParameter="log" Height="70" Width="80" Margin="10,10,10,10">
                         <MenuItem.Background>
                             <ImageBrush/>
                         </MenuItem.Background>

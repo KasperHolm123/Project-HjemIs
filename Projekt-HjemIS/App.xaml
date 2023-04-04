@@ -18,6 +18,30 @@
             <views:DashboardView />
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
+            <views:HomeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ProductsViewModel}">
+            <views:ProductsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:UsersViewModel}">
+            <views:UsersView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:EmailViewModel}">
+            <views:EmailView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:LogViewModel}">
+            <views:LogView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:EmulatorViewModel}">
+            <views:EmulatorView />
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type viewmodels:EditCustomerViewModel}">
             <views:EditCustomerView />
         </DataTemplate>
