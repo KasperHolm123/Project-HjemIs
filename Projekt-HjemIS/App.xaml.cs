@@ -20,9 +20,9 @@ namespace Projekt_HjemIS
         public App()
         {
             IServiceCollection services = new ServiceCollection();
-            services.UseCustomViews()
+            services.UseCustomMiscServices()
                     .UseCustomViewModels()
-                    .UseCustomMiscServices();
+                    .UseCustomViews();
 
             _servicesProvider = services.BuildServiceProvider();
         }

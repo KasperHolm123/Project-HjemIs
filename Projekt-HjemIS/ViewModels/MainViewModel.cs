@@ -15,30 +15,31 @@ namespace Projekt_HjemIS.ViewModels
     public class MainViewModel : BaseViewModel
     {
         #region Fields
-        
-        public RelayCommand ChangePageCmd { get; set; }
 
-        private BaseViewModel _currentPage { get; set; }
-        public BaseViewModel CurrentPage
+        private INavigationService _navigationService;
+        public INavigationService NavigationService
         {
-            get => _currentPage;
+            get => _navigationService;
             set
             {
-                _currentPage = value;
+                _navigationService = value;
                 OnPropertyChanged();
             }
         }
 
         #endregion
 
-        public MainViewModel()
-        {
-            ChangePageCmd = new RelayCommand(p => ChangePage());
-        }
+        #region Commands
 
-        private void ChangePage()
+        public RelayCommand NavigationCommand { get; set; }
+
+        #endregion
+
+        public MainViewModel(INavigationService navService)
         {
-            CurrentPage = new EditCustomerViewModel();
+            _navigationService = navService;
+            NavigationCommand = new RelayCommand(
+                p => { NavigationService.NavigateTo<EditCustomerViewModel>(); }, p => true);
         }
     }
 }

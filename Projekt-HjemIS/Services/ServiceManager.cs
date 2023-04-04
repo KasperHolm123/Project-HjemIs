@@ -34,6 +34,7 @@ namespace Projekt_HjemIS.Services
             services.AddSingleton<Func<Type, BaseViewModel>>(
                 serviceProvider => viewModelType =>
                     (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
+            services.AddSingleton<INavigationService, NavigationService>();
 
             return services;
         }
