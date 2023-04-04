@@ -29,17 +29,10 @@ namespace Projekt_HjemIS.ViewModels
 
         #endregion
 
-        #region Commands
-
-        public RelayCommand NavigationCommand { get; set; }
-
-        #endregion
-
         public MainViewModel(INavigationService navService)
         {
             _navigationService = navService;
-            NavigationCommand = new RelayCommand(
-                p => { NavigationService.NavigateTo<EditCustomerViewModel>(); }, p => true);
+            NavigationService.NavigateTo<LoginViewModel>();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Projekt_HjemIS.ViewModels;
+using Projekt_HjemIS.Views.Login;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace Projekt_HjemIS.Services
         {
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<EditCustomerViewModel>();
+            services.AddSingleton<LoginViewModel>();
+            services.AddSingleton<DashboardViewModel>();
 
             return services;
         }
