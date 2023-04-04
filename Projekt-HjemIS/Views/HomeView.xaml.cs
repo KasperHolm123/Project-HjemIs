@@ -20,9 +20,9 @@ namespace Projekt_HjemIS.Views
     /// Hovedforfatter: Christian 
     /// Interaction logic for HomeViews.xaml
     /// </summary>
-    public partial class HomeViews : UserControl
+    public partial class HomeView : UserControl
     {
-        public HomeViews()
+        public HomeView()
         {
             InitializeComponent();
         }

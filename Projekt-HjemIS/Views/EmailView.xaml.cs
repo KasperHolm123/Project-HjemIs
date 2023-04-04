@@ -27,7 +27,7 @@ namespace Projekt_HjemIS.Views
     /// Hovedforfatter: Christian 
     /// Interaction logic for EmailViews.xaml
     /// </summary>
-    public partial class EmailViews : UserControl
+    public partial class EmailView : UserControl
     {
 
         // Contains all available locations.
@@ -44,7 +44,7 @@ namespace Projekt_HjemIS.Views
 
         public List<Customer> messageRecipients { get; set; }
 
-        public EmailViews(List<Location> locations)
+        public EmailView(List<Location> locations)
         {
             InitializeComponent();
 

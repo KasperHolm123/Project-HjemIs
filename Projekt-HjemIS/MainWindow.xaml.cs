@@ -54,7 +54,7 @@ namespace Projekt_HjemIS
 
                 if (exists)
                 {
-                    dashboard dashbord = new dashboard(new UserNew
+                    DashboardView dashbord = new DashboardView(new UserNew
                     {
                         admin = true,
                         username = username.Text,
@@ -76,14 +76,14 @@ namespace Projekt_HjemIS
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            Create create = new Create();
+            CreateUserView create = new CreateUserView();
             create.Show();
             this.Close();
         }
 
         private void btnForgot_Click(object sender, RoutedEventArgs e)
         {
-            ForgotPass forgotPass = new ForgotPass();
+            ForgotPasswordView forgotPass = new ForgotPasswordView();
             forgotPass.Show();
             this.Close();
         }

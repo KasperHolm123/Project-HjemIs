@@ -20,9 +20,9 @@ namespace Projekt_HjemIS
     /// Hovedforfatter: Christian 
     /// Interaction logic for Create.xaml
     /// </summary>
-    public partial class Create : Window
+    public partial class CreateUserView : Window
     {
-        public Create()
+        public CreateUserView()
         {
             InitializeComponent();
         }
