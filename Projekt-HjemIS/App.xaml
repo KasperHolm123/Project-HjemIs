@@ -6,11 +6,6 @@
              xmlns:views="clr-namespace:Projekt_HjemIS.Views"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
-            <local:dashboard />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:EditCustomerViewModel}">
-            <views:EditCustomerView />
-        </DataTemplate>
+        
     </Application.Resources>
 </Application>

@@ -42,7 +42,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
 
@@ -91,7 +91,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
         /// <summary>
@@ -119,7 +119,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
         #endregion
@@ -152,7 +152,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
         /// <summary>
@@ -181,7 +181,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
         /// <summary>
@@ -220,7 +220,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
         /// <summary>
@@ -271,7 +271,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             finally
             {
                 MessageBox.Show("Done");
-                connection.Dispose();
+                connection.Close();
             }
         }
 
@@ -281,13 +281,22 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             {
                 await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand(query, connection))
+                var outerQuery = "SELECT " +
+                                    "CASE WHEN EXISTS " +
+                                    "(" +
+                                        $"{query}" +
+                                    ") " +
+                                    "THEN CAST (1 AS BIT) " +
+                                    "ELSE CAST (0 AS BIT) " +
+                                    "END";
+
+                using (SqlCommand command = new SqlCommand(outerQuery, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
                     
                     var result = await command.ExecuteScalarAsync();
 
-                    return (bool)(result ?? false);
+                    return (bool)result;
                 }
             }
             catch (Exception ex)
@@ -296,7 +305,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
 
@@ -306,20 +315,30 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             {
                 await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand(query, connection))
+                var outerQuery = "SELECT " +
+                                    "CASE WHEN EXISTS " +
+                                    "(" +
+                                        $"{query}" +
+                                    ") " +
+                                    "THEN CAST (1 AS BIT) " +
+                                    "ELSE CAST (0 AS BIT) " +
+                                    "END";
+
+                using (SqlCommand command = new SqlCommand(outerQuery, connection))
                 {
                     var result = await command.ExecuteScalarAsync();
 
-                    return (bool)(result ?? false);
+                    return (bool)result;
                 }
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 return false;
             }
             finally
             {
-                connection.Dispose();
+                connection.Close();
             }
         }
     }

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Projekt_HjemIS.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid Background="White">
         <DataGrid x:Name="mainGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True" MouseDoubleClick="mainGrid_MouseDoubleClick">
             <DataGrid.Columns>
@@ -29,7 +30,7 @@
         <TextBox x:Name="discountedPriceTxt" HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="20" Margin="0,0,180,0" IsReadOnly="True"/>
 
         <Button Content="CLEAR" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,110,20" Click="ClearSelection_Click"/>
-        <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="UpdateProduct_Click"/>
+        <Button Content="UPDATE" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Margin="0,0,20,20" Click="UpdateProduct_Click" />
         <Button Content="DELETE" Background="Red" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Margin="20,0,0,20" Click="DeleteProduct_Click"/>
     </Grid>
 </UserControl>

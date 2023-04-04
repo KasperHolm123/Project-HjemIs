@@ -57,8 +57,7 @@ namespace Projekt_HjemIS.Views
         {
             try
             {
-                Customer selectedCustomer = customerInfoGrid.SelectedItem as Customer;
-                if (selectedCustomer != null)
+                if (customerInfoGrid.SelectedItem is Customer selectedCustomer)
                 {
                     firstName.Text = selectedCustomer.FirstName;
                     lastName.Text = selectedCustomer.LastName;
@@ -78,7 +77,7 @@ namespace Projekt_HjemIS.Views
         {
             try
             {
-                var phoneNumber = int.Parse(phoneNum.Text);
+                var phoneNumber = phoneNum.Text;
 
                 string query = $"SELECT 1 FROM Customers WHERE PhoneNumber = {phoneNumber}";
 

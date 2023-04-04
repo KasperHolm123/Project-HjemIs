@@ -39,7 +39,7 @@ namespace Projekt_HjemIS
         {
             try
             {
-                var query = "SELECT CAST(CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS bit) " +
+                var query = "SELECT 1 " +
                             "FROM Users " +
                             "WHERE Username = @Username " +
                             "AND [Password] = @Password";

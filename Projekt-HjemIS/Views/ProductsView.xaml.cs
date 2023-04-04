@@ -28,19 +28,23 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class ProductsView : UserControl
     {
+        #region Fields
+
         DatabaseHandler dh = new DatabaseHandler();
 
         public ObservableCollection<Product> InternalProducts { get; set; }
+
+        #endregion
 
         public ProductsView()
         {
             InitializeComponent();
 
             //Setup collections
-            UpdateGrid();
+            RefreshGrid();
         }
 
-        private void UpdateGrid()
+        private void RefreshGrid()
         {
             try
             {
@@ -83,7 +87,7 @@ namespace Projekt_HjemIS.Views
                     }
                 }
 
-                UpdateGrid();
+                RefreshGrid();
             }
             catch (Exception ex)
             {
@@ -107,7 +111,9 @@ namespace Projekt_HjemIS.Views
 
             dh.AddData(query, parameters.ToArray());
 
-            UpdateGrid();
+            RefreshGrid();
+
+            MessageBox.Show("Product updated!");
         }
 
         public void CreateProduct()
@@ -124,7 +130,7 @@ namespace Projekt_HjemIS.Views
 
             dh.AddData(query, parameters.ToArray());
 
-            UpdateGrid();
+            RefreshGrid();
         }
 
         private void DeleteProduct_Click(object sender, RoutedEventArgs e)
@@ -142,7 +148,7 @@ namespace Projekt_HjemIS.Views
                 
                 dh.AddData(query, parameters.ToArray());
                 
-                UpdateGrid();
+                RefreshGrid();
                 
                 MessageBox.Show("Produkt slettet.");
             }
@@ -156,8 +162,7 @@ namespace Projekt_HjemIS.Views
         {
             try
             {
-                Product selectedProduct = mainGrid.SelectedItem as Product;
-                if (selectedProduct != null)
+                if (mainGrid.SelectedItem is Product selectedProduct)
                 {
                     nameTxt.Text = selectedProduct.Name;
                     idTxt.Text = selectedProduct.ID.ToString();

@@ -185,7 +185,7 @@ namespace Projekt_HjemIS
         }
         #endregion
 
-        private void OnPropertyChanged(string prop)
+        private void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
