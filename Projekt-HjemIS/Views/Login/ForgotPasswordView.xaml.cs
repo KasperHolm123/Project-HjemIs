@@ -7,7 +7,7 @@ using System.IO;
 using System.Windows;
 
 
-namespace Projekt_HjemIS
+namespace Projekt_HjemIS.Views.Login
 {
     /// <summary>
     /// Hovedforfatter: Christian

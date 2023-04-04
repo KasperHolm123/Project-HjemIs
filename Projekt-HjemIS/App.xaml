@@ -3,9 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Projekt_HjemIS"
              xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
-             xmlns:views="clr-namespace:Projekt_HjemIS.Views"
-             StartupUri="MainWindow.xaml">
+             xmlns:views="clr-namespace:Projekt_HjemIS.Views">
     <Application.Resources>
-        
+
+        <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
+            <local:MainWindow />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:EditCustomerViewModel}">
+            <views:EditCustomerView />
+        </DataTemplate>
+
     </Application.Resources>
 </Application>

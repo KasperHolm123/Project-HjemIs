@@ -20,7 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Projekt_HjemIS
+namespace Projekt_HjemIS.Views.Login
 {
     /// <summary>
     /// Hovedforfatter: Christian 

@@ -2,6 +2,7 @@
 using Projekt_HjemIS.Systems;
 using Projekt_HjemIS.Systems.Utility.Database_handling;
 using Projekt_HjemIS.ViewModels;
+using Projekt_HjemIS.Views.Login;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

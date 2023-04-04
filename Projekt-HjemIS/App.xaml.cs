@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Projekt_HjemIS.Services;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,6 +15,24 @@ namespace Projekt_HjemIS
     /// </summary>
     public partial class App : Application
     {
+        private readonly ServiceProvider _servicesProvider;
 
+        public App()
+        {
+            IServiceCollection services = new ServiceCollection();
+            services.UseCustomViews()
+                    .UseCustomViewModels()
+                    .UseCustomMiscServices();
+
+            _servicesProvider = services.BuildServiceProvider();
+        }
+
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var mainWindow = _servicesProvider.GetRequiredService<MainWindow>();
+            MainWindow.Show();
+            base.OnStartup(e);
+        }
     }
 }
