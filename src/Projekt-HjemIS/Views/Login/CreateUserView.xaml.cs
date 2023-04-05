@@ -14,13 +14,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Projekt_HjemIS.Views.Login
+namespace Projekt_HjemIS.Views
 {
     /// <summary>
     /// Hovedforfatter: Christian 
     /// Interaction logic for Create.xaml
     /// </summary>
-    public partial class CreateUserView : Window
+    public partial class CreateUserView : UserControl
     {
         public CreateUserView()
         {
@@ -78,7 +78,6 @@ namespace Projekt_HjemIS.Views.Login
                         {
                             MainWindow mainWindow = new MainWindow();
                             mainWindow.Show();
-                            this.Close();
                         }
 
                     }
@@ -98,14 +97,12 @@ namespace Projekt_HjemIS.Views.Login
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
-            this.Close();
         }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
-            this.Close();
         }
     }
 }

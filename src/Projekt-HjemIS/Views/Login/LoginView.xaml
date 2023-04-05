@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Projekt_HjemIS.Views.Login"
+             xmlns:local="clr-namespace:Projekt_HjemIS.Views"
              xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewmodels:LoginViewModel}"
@@ -59,7 +59,7 @@
                     </Button>
                 </Grid>
                 <Grid Grid.Row="4" Grid.Column="1">
-                    <Button x:Name="btnCreate" Content="Create" Width="150" Height="30" FontWeight="Bold" FontSize="15">
+                    <Button x:Name="btnCreate" Command="{Binding ChangePageCommand}" CommandParameter="create" Content="Create" Width="150" Height="30" FontWeight="Bold" FontSize="15">
                         <Button.Background>
                             <SolidColorBrush Color="Yellow"/>
                         </Button.Background>
@@ -71,7 +71,7 @@
                     </Button>
                 </Grid>
                 <Grid Grid.Row="5" Grid.Column="1">
-                    <Button x:Name="btnForgot" Content="Forgot Password" Width="100" Height="20" BorderThickness="1" VerticalAlignment="Bottom">
+                    <Button x:Name="btnForgot" Command="{Binding ChangePageCommand}" CommandParameter="forgot" Content="Forgot Password" Width="100" Height="20" BorderThickness="1" VerticalAlignment="Bottom">
                         <Button.Background>
                             <SolidColorBrush Color="Transparent"/>
                         </Button.Background>

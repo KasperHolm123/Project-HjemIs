@@ -1,12 +1,7 @@
-﻿using Projekt_HjemIS.Models;
-using Projekt_HjemIS.Services;
-using Projekt_HjemIS.Views;
+﻿using Projekt_HjemIS.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Net.PeerToPeer;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -54,6 +49,7 @@ namespace Projekt_HjemIS.ViewModels
         #region Commands
 
         public RelayCommand LoginCommand { get; set; }
+        public RelayCommand ChangePageCommand { get; set; }
 
         #endregion
 
@@ -63,6 +59,7 @@ namespace Projekt_HjemIS.ViewModels
 
             // Bind RelayCommands
             LoginCommand = new RelayCommand(p => Login());
+            ChangePageCommand = new RelayCommand(p => ChangePage((string)p));
         }
 
         private async Task Login()
@@ -94,6 +91,21 @@ namespace Projekt_HjemIS.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ChangePage(string viewModel)
+        {
+            switch (viewModel)
+            {
+                case "create":
+                    NavigationService.ChangeBaseView<CreateUserViewModel>();
+                    break;
+                case "forgot":
+                    NavigationService.ChangeBaseView<ForgotPasswordViewModel>();
+                    break;
+                default:
+                    break;
             }
         }
     }

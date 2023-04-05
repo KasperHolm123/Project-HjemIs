@@ -46,5 +46,13 @@
             <views:EditCustomerView />
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewmodels:CreateUserViewModel}">
+            <views:CreateUserView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ForgotPasswordViewModel}">
+            <views:ForgotPasswordView />
+        </DataTemplate>
+
     </Application.Resources>
 </Application>

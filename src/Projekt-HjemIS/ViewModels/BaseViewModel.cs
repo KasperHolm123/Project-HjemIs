@@ -16,8 +16,5 @@ namespace Projekt_HjemIS.ViewModels
     public class BaseViewModel : ObservableObject, INotifyPropertyChanged
     {
         public static readonly DatabaseHandler dh = new DatabaseHandler();
-
-        public static readonly SqlConnection connection = new SqlConnection(
-            ConfigurationManager.ConnectionStrings["post"].ConnectionString);
     }
 }

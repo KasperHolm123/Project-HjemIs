@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Projekt_HjemIS.ViewModels;
-using Projekt_HjemIS.Views.Login;
+using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,8 @@ namespace Projekt_HjemIS.Services
             services.AddSingleton<EmailViewModel>();
             services.AddSingleton<LogViewModel>();
             services.AddSingleton<EmulatorViewModel>();
+            services.AddSingleton<CreateUserViewModel>();
+            services.AddSingleton<ForgotPasswordViewModel>();
 
             return services;
         }
