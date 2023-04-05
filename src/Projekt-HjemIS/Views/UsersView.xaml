@@ -29,14 +29,19 @@
                 <Label Content="Pick A User To Make/Or Demote Them Administator" Grid.Column="0" Margin="15,0,0,0"/>
                 <ComboBox x:Name="comboUsers" IsEditable="True" Width="150" Height="30" Grid.Column="1"/>
                 <DataGrid x:Name="dataUsers" ItemsSource="{Binding Users}" AutoGenerateColumns="False" Height="Auto" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="False" CanUserSortColumns="False" Grid.Column="0" Grid.Row="1">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding ChangeAdminStatusCommand}"
+                                      CommandParameter="{Binding ElementName=dataUsers, Path=SelectedItem}"/>
+                    </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Username" IsReadOnly="True" Binding="{Binding Username}" Width="180"/>
-                        <DataGridTextColumn Header="Is Admin" IsReadOnly="True" Binding="{Binding Admin}" Width="70"/>
+                        <DataGridTextColumn Header="Admin" Binding="{Binding Admin}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
         </StackPanel>
-        <Button x:Name="btnAdmin" Content="Confirm" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnAdmin_Click" Width="150" Height="50" FontSize="20" FontWeight="Bold">
+        <Button x:Name="btnAdmin" Content="Confirm" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Height="50" FontSize="20" FontWeight="Bold">
             <Button.Background>
                 <SolidColorBrush Color="LimeGreen"/>
             </Button.Background>
