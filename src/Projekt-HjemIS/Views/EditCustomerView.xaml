@@ -4,10 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Projekt_HjemIS.Views"
+             xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
+             d:DataContext="{d:DesignInstance viewmodels:EditCustomerViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <DataGrid x:Name="customerInfoGrid" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True" MouseDoubleClick="SelectCustomer_Click">
+        <DataGrid x:Name="customerInfoGrid" ItemsSource="{Binding Customers}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="400" Height="300" Margin="20,0,0,0" AutoGenerateColumns="False" SelectionUnit="FullRow" IsReadOnly="True">
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick"
+                              Command="{Binding SelectCustomerCommand}"
+                              CommandParameter="{Binding ElementName=customerInfoGrid, Path=SelectedItem}"/>
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"/>
@@ -21,14 +28,14 @@
         <Label Content="Search customer" HorizontalAlignment="Left" Margin="20,11,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="firstName_search" HorizontalAlignment="Left" Height="15" Margin="92,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108" />
         <TextBox x:Name="lastName_search" HorizontalAlignment="Left" Height="15" Margin="289,44,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="108"/>
-        <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66" Click="SearchCustomer_Click"/>
-        <TextBox x:Name="firstName" HorizontalAlignment="Left" Height="22" Margin="605,122,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox x:Name="lastName" HorizontalAlignment="Left" Height="22" Margin="605,164,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox PreviewTextInput="NumericInputValidation" x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox PreviewTextInput="NumericInputValidation" x:Name="streetCode" HorizontalAlignment="Left" Height="22" Margin="605,239,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <TextBox PreviewTextInput="NumericInputValidation" x:Name="countyCode" HorizontalAlignment="Left" Height="22" Margin="605,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="145"/>
-        <Button Content="Update customer info" HorizontalAlignment="Left" Height="50" Margin="639,365,0,0" VerticalAlignment="Top" Width="136" Click="UpdateCustomer_Click"/>
-        <Button Content="Delete Customer" Click="DeleteCustomer_Click" Background="Red" HorizontalAlignment="Left" Height="50" Margin="454,365,0,0" VerticalAlignment="Top" Width="136"/>
+        <Button Content="Search" HorizontalAlignment="Left" Height="26" Margin="420,37,0,0" VerticalAlignment="Top" Width="66"/>
+        <TextBox Text="{Binding SelectedCustomer.FirstName, Mode=TwoWay}" x:Name="firstName" HorizontalAlignment="Left" Height="22" Margin="605,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <TextBox Text="{Binding SelectedCustomer.LastName, Mode=TwoWay}" x:Name="lastName" HorizontalAlignment="Left" Height="22" Margin="605,164,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <TextBox Text="{Binding SelectedCustomer.PhoneNumber, Mode=TwoWay}" PreviewTextInput="NumericInputValidation" x:Name="phoneNum" HorizontalAlignment="Left" Height="22" Margin="605,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <TextBox Text="{Binding SelectedCustomer.StreetCode, Mode=TwoWay}" PreviewTextInput="NumericInputValidation" x:Name="streetCode" HorizontalAlignment="Left" Height="22" Margin="605,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <TextBox Text="{Binding SelectedCustomer.CountyCode, Mode=TwoWay}" PreviewTextInput="NumericInputValidation" x:Name="countyCode" HorizontalAlignment="Left" Height="22" Margin="605,271,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <Button Content="Update customer info" Command="{Binding SubmitCustomerChangesCommand}" HorizontalAlignment="Left" Height="50" Margin="639,365,0,0" VerticalAlignment="Top" Width="136" />
+        <Button Content="Delete Customer" Command="{Binding DeleteCustomerCommand}" Background="Red" HorizontalAlignment="Left" Height="50" Margin="454,365,0,0" VerticalAlignment="Top" Width="136"/>
         <Label Content="First name" HorizontalAlignment="Left" Height="37" Margin="511,118,0,0" VerticalAlignment="Top" Width="104" RenderTransformOrigin="-0.093,0.459"/>
         <Label Content="Last Name" HorizontalAlignment="Left" Height="37" Margin="511,160,0,0" VerticalAlignment="Top" Width="104"/>
         <Label Content="Phone Number" HorizontalAlignment="Left" Height="37" Margin="511,197,0,0" VerticalAlignment="Top" Width="104"/>

@@ -34,8 +34,6 @@ namespace Projekt_HjemIS.Views
         public EditCustomerView()
         {
             InitializeComponent();
-
-            RefreshGrid();
         }
 
         private void RefreshGrid()
