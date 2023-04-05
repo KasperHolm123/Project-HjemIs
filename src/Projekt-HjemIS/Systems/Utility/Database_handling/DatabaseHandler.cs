@@ -46,6 +46,43 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
         }
 
+        public async Task<T> GetEntry<T>(string query)
+        {
+            try
+            {
+                await connection.OpenAsync();
+
+                var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.PropertyType == typeof(string) || p.PropertyType == typeof(int) || p.PropertyType == typeof(bool))
+                    .Select(p => p.Name);
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        T obj = Activator.CreateInstance<T>();
+
+                        foreach (var property in properties)
+                        {
+                            int ordinal = reader.GetOrdinal(property);
+
+                            // this line causes an exception saying there is no data
+                            object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+
+                            typeof(T).GetProperty(property).SetValue(obj, value);
+                        }
+                        return obj;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return default;
+            }
+        }
+
         public List<T> GetTable<T>(string query)
         {
             try
@@ -56,7 +93,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
                     */
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(String) || p.PropertyType == typeof(int))
+                    .Where(p => p.PropertyType == typeof(string) || p.PropertyType == typeof(int))
                     .Select(p => p.Name);
 
                 SqlCommand cmd = new SqlCommand(query, connection);

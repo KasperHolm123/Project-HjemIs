@@ -19,6 +19,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         int AddData(string query, SqlParameter[] parameters);
 
         /// <summary>
+        /// Method for fetching a single entry.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns>Object of type T</returns>
+        Task<T> GetEntry<T>(string query);
+
+        /// <summary>
         /// Hovedforfatter: Kasper
         /// Gets a table from a database and returns it.
         /// </summary>
