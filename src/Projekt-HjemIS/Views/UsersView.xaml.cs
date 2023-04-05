@@ -37,11 +37,11 @@ namespace Projekt_HjemIS.Views
         public UsersView()
         {
             InitializeComponent();
-            InternalUsers = new ObservableCollection<UserNew>(dh.GetTable<UserNew>("SELECT * FROM Users"));
-            //bind combobox
-            comboUsers.ItemsSource = InternalUsers;
-            comboUsers.DisplayMemberPath = $"{nameof(User.userUsername)}";
-            FillDataGrid();
+            //InternalUsers = new ObservableCollection<UserNew>(dh.GetTable<UserNew>("SELECT * FROM Users"));
+            ////bind combobox
+            //comboUsers.ItemsSource = InternalUsers;
+            //comboUsers.DisplayMemberPath = $"{nameof(User.userUsername)}";
+            //FillDataGrid();
         }
         private void FillDataGrid()
         {

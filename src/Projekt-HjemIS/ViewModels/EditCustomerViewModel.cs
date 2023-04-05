@@ -76,9 +76,7 @@ namespace Projekt_HjemIS.ViewModels
             DeleteCustomerCommand = new RelayCommand(p => DeleteCustomer());
             SearchCommand = new RelayCommand(p => Search());
 
-
             Refresh();
-
         }
 
         private void SelectCustomer(object customer)

@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Projekt_HjemIS.Views"
-             mc:Ignorable="d" 
+             xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewmodels:UsersViewModel}"
              d:DesignHeight="720" d:DesignWidth="1090">
     <Grid>
         <StackPanel Orientation="Vertical"
@@ -26,15 +28,10 @@
                 </Grid.RowDefinitions>
                 <Label Content="Pick A User To Make/Or Demote Them Administator" Grid.Column="0" Margin="15,0,0,0"/>
                 <ComboBox x:Name="comboUsers" IsEditable="True" Width="150" Height="30" Grid.Column="1"/>
-                <DataGrid x:Name="dataUsers" AutoGenerateColumns="False" Height="Auto" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="False" CanUserSortColumns="False" BorderThickness="3" Grid.Column="0" Grid.Row="1">
-                    <DataGrid.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="5"/>
-                        </Style>
-                    </DataGrid.Resources>
+                <DataGrid x:Name="dataUsers" ItemsSource="{Binding Users}" AutoGenerateColumns="False" Height="Auto" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="False" CanUserSortColumns="False" Grid.Column="0" Grid.Row="1">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Username" IsReadOnly="True" Binding="{Binding [username]}" Width="180"/>
-                        <DataGridTextColumn Header="Is Admin" IsReadOnly="True" Binding="{Binding [admin]}" Width="70"/>
+                        <DataGridTextColumn Header="Username" IsReadOnly="True" Binding="{Binding Username}" Width="180"/>
+                        <DataGridTextColumn Header="Is Admin" IsReadOnly="True" Binding="{Binding Admin}" Width="70"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
