@@ -35,6 +35,28 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
+        private string _firstNameSearch = "";
+        public string FirstNameSearch
+        {
+            get => _firstNameSearch;
+            set
+            {
+                _firstNameSearch = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _lastNameSearch = "";
+        public string LastNameSearch
+        {
+            get => _lastNameSearch;
+            set
+            {
+                _lastNameSearch = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -42,6 +64,7 @@ namespace Projekt_HjemIS.ViewModels
         public RelayCommand SelectCustomerCommand { get; set; }
         public RelayCommand SubmitCustomerChangesCommand { get; set; }
         public RelayCommand DeleteCustomerCommand { get; set; }
+        public RelayCommand SearchCommand { get; set; }
 
         #endregion
 
@@ -51,6 +74,7 @@ namespace Projekt_HjemIS.ViewModels
             SelectCustomerCommand = new RelayCommand(p => SelectCustomer(p));
             SubmitCustomerChangesCommand = new RelayCommand(p => SubmitCustomerChanges());
             DeleteCustomerCommand = new RelayCommand(p => DeleteCustomer());
+            SearchCommand = new RelayCommand(p => Search());
 
 
             Refresh();
@@ -62,6 +86,37 @@ namespace Projekt_HjemIS.ViewModels
             if (customer is Customer)
             {
                 SelectedCustomer = customer as Customer;
+            }
+        }
+
+        private void Search()
+        {
+            try
+            {
+                var query = "";
+
+                if (FirstNameSearch != "" && LastNameSearch == "")
+                {
+                    query = $"SELECT * from Customers WHERE FirstName = '{FirstNameSearch}'";
+                }
+                if (LastNameSearch != "" && FirstNameSearch == "")
+                {
+                    query = $"SELECT * from Customers WHERE LastName = '{LastNameSearch}'";
+                }
+                if (FirstNameSearch != "" && LastNameSearch != "")
+                {
+                    query = $"SELECT * from Customers WHERE FirstName = '{FirstNameSearch}' AND LastName = '{LastNameSearch}'";
+                }
+                if (FirstNameSearch == "" && LastNameSearch == "")
+                {
+                    query = "SELECT * FROM Customers";
+                }
+
+                Customers = new ObservableCollection<Customer>(dh.GetTable<Customer>(query));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
