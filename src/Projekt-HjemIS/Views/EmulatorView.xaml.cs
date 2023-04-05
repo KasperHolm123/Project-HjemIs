@@ -22,65 +22,9 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class EmulatorView : UserControl
     {
-        public List<string> Messages { get; set; }
-        private string _rootPath = $@"\tempMessages\InternalMessages.txt";
-
         public EmulatorView()
         {
             InitializeComponent();
-
-            // Setup collections
-            Messages = new List<string>();
-
-            // Execute methods
-            ReadMessages();
-        }
-
-        private void ReadMessages()
-        {
-            using (StreamReader sr = new StreamReader($@"{GetCurrentDirectory()}{_rootPath}"))
-            {
-                string currentLine = string.Empty;
-                string currentMessage = string.Empty;
-
-                while ((currentLine = sr.ReadLine()) != null)
-                {
-                    if (currentLine == "")
-                        currentMessage += "\n";
-                    if (currentLine != "")
-                    {
-                        string sub = currentLine.Substring(0, 3);
-                        switch (sub)
-                        {
-                            case @"00/":
-                            case @"02/":
-                            case @"03/":
-                                currentMessage += currentLine.Substring(3) + "\n";
-                                break;
-                            case @"04/":
-                                mainListBox.Items.Add(currentMessage);
-                                currentMessage = string.Empty;
-                                break;
-                            default:
-                                currentMessage += currentLine + "\n";
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns current directory.
-        /// </summary>
-        /// <returns></returns>
-        private static string GetCurrentDirectory()
-        {
-            var rootPathChild = Directory.GetCurrentDirectory();
-            var rootPathParent = Directory.GetParent($"{rootPathChild}");
-            var rootPathFolder = Directory.GetParent($"{rootPathParent}");
-            var rootPath = rootPathFolder.ToString();
-            return rootPath;
         }
     }
 }

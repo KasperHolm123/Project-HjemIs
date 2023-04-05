@@ -19,4 +19,5 @@ namespace Projekt_HjemIS.Views
         {
             InitializeComponent();
         }
+    }
 }

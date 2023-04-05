@@ -59,7 +59,7 @@ namespace Projekt_HjemIS.ViewModels
                     NavigationService.NavigateTo<ProductsViewModel>();
                     break;
                 case "emulator":
-                    NavigationService.NavigateTo<ProductsViewModel>();
+                    NavigationService.NavigateTo<EmulatorViewModel>();
                     break;
                 case "log":
                     // TODO: fix
