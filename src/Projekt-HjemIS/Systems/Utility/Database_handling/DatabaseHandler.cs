@@ -93,7 +93,10 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
                     */
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(string) || p.PropertyType == typeof(int) || p.PropertyType == typeof(bool))
+                    .Where(p => p.PropertyType == typeof(string) || 
+                            p.PropertyType == typeof(int) ||
+                            p.PropertyType == typeof(bool) ||
+                            p.PropertyType == typeof(decimal))
                     .Select(p => p.Name);
 
                 SqlCommand cmd = new SqlCommand(query, connection);

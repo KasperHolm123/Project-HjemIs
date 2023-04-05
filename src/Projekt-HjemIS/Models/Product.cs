@@ -14,7 +14,13 @@ namespace Projekt_HjemIS.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
-        public int Discount { get; set; }
+        public decimal Discount { get; set; }
+        private decimal _discountedPrice;
+        public decimal DiscountedPrice
+        {
+            get => _discountedPrice;
+            set => _discountedPrice = value;
+        }
 
         public Product() { }
 
