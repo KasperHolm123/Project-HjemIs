@@ -118,6 +118,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
             catch (Exception ex)
             {   
+                MessageBox.Show(ex.Message);
                 return -1;
             }
             finally

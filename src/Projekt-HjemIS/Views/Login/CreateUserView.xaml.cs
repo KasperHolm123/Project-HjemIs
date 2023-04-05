@@ -33,24 +33,24 @@ namespace Projekt_HjemIS.Views
             connString.Open();
             try
             {
-                if (Username.Text == "" || Username.Text == "Username" || Password.Password == "" || Password2.Password == "" || Username.Text == "username")
+                if (Username.Text == "" || Username.Text == "Username" || Password.Text == "" || Password2.Text == "" || Username.Text == "username")
                 {
                     MessageBox.Show("Please Fill Out The Required Fields");
                     if (Username.Text == "" || Username.Text == "Username" || Username.Text == "username")
                     {
                         Username.BorderBrush = Brushes.Red;
                     }
-                    if (Password.Password == "")
+                    if (Password.Text == "")
                     {
                         Password.BorderBrush = Brushes.Red;
                     }
-                    if (Password2.Password == "")
+                    if (Password2.Text == "")
                     {
                         Password2.BorderBrush = Brushes.Red;
                     }
-                    
+
                 }
-                else if (Password.Password != Password2.Password)
+                else if (Password.Text != Password2.Text)
                 {
                     MessageBox.Show("Your Password Does Not Match");
                 }
@@ -70,8 +70,8 @@ namespace Projekt_HjemIS.Views
                     else
                     {
                         string b = string.Empty;
-                        
-                        SqlCommand command = new SqlCommand($"INSERT INTO Users (username, [Password], [Admin]) VALUES ('{Username.Text}', '{Password.Password}', '0')", connString);
+
+                        SqlCommand command = new SqlCommand($"INSERT INTO Users (username, [Password], [Admin]) VALUES ('{Username.Text}', '{Password.Text}', '0')", connString);
                         command.ExecuteNonQuery();
                         MessageBoxResult result = MessageBox.Show("User Has Been Created Succesfully", "User Record", MessageBoxButton.OK, MessageBoxImage.Information);
                         if (result == MessageBoxResult.OK)
@@ -91,18 +91,6 @@ namespace Projekt_HjemIS.Views
             {
                 connString.Close();
             }
-        }
-
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-        }
-
-        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
         }
     }
 }
