@@ -169,11 +169,14 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                             foreach (var propertyName in properties)
                             {
-                                int ordinal = reader.GetOrdinal(propertyName);
+                                if (reader.HasRows && reader.GetSchemaTable().Select($"ColumnName = '{propertyName}'").Length > 0)
+                                {
+                                    var ordinal = reader.GetOrdinal(propertyName);
+                                    
+                                    object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
 
-                                object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
-
-                                typeof(T).GetProperty(propertyName).SetValue(obj, value);
+                                    typeof(T).GetProperty(propertyName).SetValue(obj, value);
+                                }
                             }
 
                             internalTable.Add(obj);
@@ -200,7 +203,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <param name="query"></param>
         /// <param name="parameters"></param>
         /// <returns>The amount of rows affected</returns>
-        public int AddData(string query, SqlParameter[] parameters = null)
+        public async Task<int> AddData(string query, SqlParameter[] parameters = null)
         {
             try
             {

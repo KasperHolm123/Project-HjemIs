@@ -37,9 +37,9 @@ namespace Projekt_HjemIS.Systems
         {
             DatabaseHandler dh = new DatabaseHandler();
             string products = string.Empty;
-            if (message.Offers != null)
-                foreach (Product item in message.Offers)
-                    products += $"{item.Name}, ";
+            //if (message.Offers != null)
+                //foreach (Product item in message.Offers)
+                //    products += $"{item.Name}, ";
             using (StreamWriter sw = File.AppendText($@"{GetCurrentDirectory()}{_rootPath}"))
             {
                 if (typeof(T) == typeof(Message_SMS))
@@ -77,7 +77,7 @@ namespace Projekt_HjemIS.Systems
         {
             string internalMessage =
                 $"{sms.Body}\n" +
-                $"02/{PrintMessageDescription(sms.Offers)}\n" +
+                //$"02/{PrintMessageDescription(sms.Offers)}\n" +
                 $"03/{DateTime.Now}\n" +
                 $"04/";
             return internalMessage;
@@ -88,7 +88,7 @@ namespace Projekt_HjemIS.Systems
             string internalMessage =
                 $"00/{mail.Subject}\n" +
                 $"{mail.Body}\n" +
-                $"02/{PrintMessageDescription(mail.Offers)}\n" +
+                //$"02/{PrintMessageDescription(mail.Offers)}\n" +
                 $"03/{DateTime.Now}\n" +
                 $"04/";
             return internalMessage;

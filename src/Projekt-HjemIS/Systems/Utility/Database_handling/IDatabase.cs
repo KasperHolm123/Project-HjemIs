@@ -16,7 +16,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// Hovedforfatter: Kasper
         /// Send a small amount of data to a database.
         /// </summary>
-        int AddData(string query, SqlParameter[] parameters);
+        Task<int> AddData(string query, SqlParameter[] parameters);
 
         /// <summary>
         /// Method for fetching a single entry.
