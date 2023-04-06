@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Projekt_HjemIS.Views"
+             xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
+             d:DataContext="{d:DesignInstance viewmodels:EmailViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1090">
     <Grid>
@@ -21,9 +23,9 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Label Content="Street:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="95,32,0,0"/>
-                <TextBox x:Name="searchTxt" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
-                <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" Click="searchButton_Click"/>
-                <DataGrid x:Name="recipientsDataGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
+                <TextBox x:Name="searchTxt" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
+                <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" Command="{Binding SearchCommand}"/>
+                <DataGrid x:Name="recipientsDataGrid" ItemsSource="{Binding FilteredLocations.View}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}"/>

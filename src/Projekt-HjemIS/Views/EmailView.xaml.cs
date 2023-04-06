@@ -125,6 +125,7 @@ namespace Projekt_HjemIS.Views
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
+        //NOTE: moved to viewmodel
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
             if (SearchedLocations.Count != 0)
@@ -138,20 +139,6 @@ namespace Projekt_HjemIS.Views
             else
                 recipientsDataGrid.ItemsSource = InternalLocations;
         }
-
-        // Virker ikke
-        /*
-        private void recipientsDataGrid_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Location loc = recipientsDataGrid.SelectedItem as Location;
-            if (loc.IsRecipient)
-                RecipientsLocations.Add(loc);
-            else
-                if (RecipientsLocations.Contains(loc))
-                RecipientsLocations.Remove(loc);
-
-        }
-        */
 
         /// <summary>
         /// Create parameter for SQL command.
