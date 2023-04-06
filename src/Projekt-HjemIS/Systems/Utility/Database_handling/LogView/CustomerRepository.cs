@@ -27,7 +27,18 @@ namespace Projekt_HjemIS.Systems
             try
             {
                 await connection.OpenAsync();
-                string query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode FROM Customers
+                string query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode
+                                  FROM Customers
+                                  INNER JOIN (
+                                      SELECT CountyCode, StreetCode
+                                      FROM Locations
+                                      WHERE City LIKE @City
+                                      AND PostalCode LIKE @PostalCode
+                                      AND Street LIKE @Street
+                                  ) AS DT
+                                  ON DT.CountyCode = Customers.CountyCode
+                                  AND DT.StreetCode = Customers.StreetCode";
+                query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode FROM Customers
                                 INNER JOIN (SELECT CountyCode, StreetCode FROM Locations WHERE City LIKE '%{customer.Address.City}%' AND PostalCode LIKE '%{customer.Address.PostalCode}%' AND Street LIKE '%{customer.Address.Street}%') AS DT
                                 ON DT.CountyCode = Customers.CountyCode AND DT.StreetCode = Customers.StreetCode";
                 SqlCommand command = new SqlCommand(query, connection);

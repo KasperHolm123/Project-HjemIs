@@ -64,7 +64,7 @@ namespace Projekt_HjemIS.ViewModels
                 case "log":
                     // TODO: fix
 
-                    //NavigationService.NavigateTo<LogViewModel>();
+                    NavigationService.NavigateTo<LogViewModel>();
                     break;
                 default:
                     break;

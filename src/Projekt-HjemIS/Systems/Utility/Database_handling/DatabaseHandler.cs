@@ -138,6 +138,62 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 connection.Close();
             }
         }
+
+        public async Task<List<T>> GetTable<T>(string query, List<SqlParameter> parameters)
+        {
+            try
+            {
+                await connection.OpenAsync();
+
+                /* This line of code gets all relevant properties and selects them based on name.
+                    * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
+                    */
+                var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.PropertyType == typeof(string) ||
+                            p.PropertyType == typeof(int) ||
+                            p.PropertyType == typeof(bool) ||
+                            p.PropertyType == typeof(decimal))
+                    .Select(p => p.Name);
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add(parameters);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        var internalTable = new List<T>();
+
+                        while (reader.Read())
+                        {
+                            T obj = Activator.CreateInstance<T>();
+
+                            foreach (var propertyName in properties)
+                            {
+                                int ordinal = reader.GetOrdinal(propertyName);
+
+                                object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+
+                                typeof(T).GetProperty(propertyName).SetValue(obj, value);
+                            }
+
+                            internalTable.Add(obj);
+                        }
+
+                        return internalTable;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         /// <summary>
         /// Adds data to connected database
         /// </summary>

@@ -26,17 +26,17 @@ namespace Projekt_HjemIS.Views
     /// </summary>
     public partial class LogView : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         private LogViewRepository locationRepository;
         private CustomerRepository customerRepository;
-        private ObservableCollection<Location> _locations;
-        private ObservableCollection<Location> _streets;
-        private ObservableCollection<Message> _messages;
-        private ObservableCollection<Customer> _customers;
+        
         private bool SortOrder;
         private int _messagesFound;
+        
         public CollectionViewSource FilteredView { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        private ObservableCollection<Customer> _customers;
         public ObservableCollection<Customer> Customers
         {
             get { return _customers; }
@@ -47,6 +47,7 @@ namespace Projekt_HjemIS.Views
             }
         }
 
+        private ObservableCollection<Message> _messages;
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
@@ -58,6 +59,7 @@ namespace Projekt_HjemIS.Views
             }
         }
 
+        private ObservableCollection<Location> _streets;
         public ObservableCollection<Location> Streets
         {
             get { return _streets; }
@@ -67,6 +69,8 @@ namespace Projekt_HjemIS.Views
                 OnPropertyChanged("Streets");
             }
         }
+
+        private ObservableCollection<Location> _locations;
         public ObservableCollection<Location> Locations
         {
             get { return _locations; }
@@ -156,53 +160,86 @@ namespace Projekt_HjemIS.Views
         {
             get { return $"Messages found: " + _messagesFound; }
         }
+
         #endregion
+
+        public LogView()
+        {
+            InitializeComponent();
+        }
+
         public LogView(ref ObservableCollection<Location> locations)
         {
             InitializeComponent();
-            DataContext = this;
+
             locationRepository = new LogViewRepository(); 
             Locations = locations;
+            
             customerRepository = new CustomerRepository();
+            
             FilteredView = new CollectionViewSource();
-            Messages = new ObservableCollection<Message>();
             FilteredView.Source = Messages;
+            
+            Messages = new ObservableCollection<Message>();
+            /*
+            
             FilterAndSort();
+            */
         }
+
         private void FilterAndSort()
         {
             FilteredView.Filter += (s, e) =>
             {
                 Message msg = e.Item as Message;
                 e.Accepted = false;
-                if (msg.Date == null) e.Accepted = true;
-                if (msg.Date.Date >= _endDate.Date && DateTime.Now.Date >= msg.Date.Date) e.Accepted = true;
-                if (msg.Date.Date <= _endDate.Date && DateTime.Now.Date <= msg.Date.Date) e.Accepted = false;
+
+                if (msg.Date == null) 
+                {
+                    e.Accepted = true;
+                }
+
+                if (msg.Date.Date >= _endDate.Date && DateTime.Now.Date >= msg.Date.Date)
+                {
+                    e.Accepted = true;
+                }
+
+                if (msg.Date.Date <= _endDate.Date && DateTime.Now.Date <= msg.Date.Date)
+                {
+                    e.Accepted = false;
+                }
             };
+
             ListCollectionView view = FilteredView.View as ListCollectionView;
+
             view.CustomSort = new CustomMessageComparer();
         }
-        public void OnPropertyChanged(string prop)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
-        private void PreviewText(object sender, TextCompositionEventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            comboBox.IsDropDownOpen = true;
-        }
+
         //Event handlers related to streets
         #region 
         private async void FindStreets_Click(object sender, RoutedEventArgs e)
         {
             State = Views.QueryState.Executing;
+
             string[] input = _citySearchText.Split('-');
+            
             if (input.Length > 1)
             {
-                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = _streetSearchText };
+                Location loc = new Location()
+                {
+                    City = input[0],
+                    PostalCode = input[1],
+                    Street = _streetSearchText
+                };
+                
                 IEnumerable<Location> streets = await Task.Run(() => locationRepository.GetLocations(loc));
-                if (streets != null) Streets = new ObservableCollection<Location>(streets);
+
+                if (streets != null)
+                {
+                    Streets = new ObservableCollection<Location>(streets);
+                }
             }
+
             State = Views.QueryState.Finished;
             //Streets = new ObservableCollection<Location>(streets.ToList().GetRange(0, 50));
         }
@@ -215,6 +252,7 @@ namespace Projekt_HjemIS.Views
         private void SortList_Click(object sender, RoutedEventArgs e)
         {
             MessageLog.Items.SortDescriptions.Clear();
+
             if (SortOrder)
             {
                 MessageLog.Items.SortDescriptions.Add(new SortDescription("Date", ListSortDirection.Ascending));
@@ -226,39 +264,75 @@ namespace Projekt_HjemIS.Views
                 SortOrder = true;
             }
         }
+
         private void OnDateChanged(object sender, SelectionChangedEventArgs e)
         {
             FilteredView.View.Refresh();
         }
+
         private async void GetMessages(object sender, SelectionChangedEventArgs e)
         {
             State = Views.QueryState.Executing;
+
             ComboBox comboBox = (ComboBox)sender;
+            
             if (!comboBox.IsLoaded)
+            {
                 return;
+            }
+            
             if (comboBox.SelectedItem is Location)
             {
                 int index = comboBox.SelectedIndex;
+
                 Location loc = comboBox.Items[index] as Location;
+
                 IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
-                if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
-                else Messages.Clear();
+
+                if (msgs != null)
+                {
+                    Messages = new ObservableCollection<Message>(msgs);
+                }
+                else
+                {
+                    Messages.Clear();
+                }
             }
+
             State = Views.QueryState.Finished;
         }
+
         private async void FindMessages_Click(object sender, RoutedEventArgs e)
         {
             State = Views.QueryState.Executing;
+
             string[] input = _citySearchText.Split('-');
+            
             if (input.Length > 1)
             {
-                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = StreetSearchText };
+                Location loc = new Location()
+                {
+                    City = input[0],
+                    PostalCode = input[1],
+                    Street = StreetSearchText
+                };
+                
                 IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
-                if (msgs != null) Messages = new ObservableCollection<Message>(msgs);
-                else Messages.Clear();
+
+                if (msgs != null)
+                {
+                    Messages = new ObservableCollection<Message>(msgs);
+                }
+                else
+                {
+                    Messages.Clear();
+                }
+                
                 _messagesFound = Messages.Count;
+                
                 OnPropertyChanged("MsgsFound");
             }
+
             State = Views.QueryState.Finished;
         }
         #endregion
@@ -268,30 +342,63 @@ namespace Projekt_HjemIS.Views
         private async void GetCustomers_Click(object sender, RoutedEventArgs e)
         {
             State = Views.QueryState.Executing;
+
             string[] input = _citySearchText.Split('-');
+            
             if (input.Length > 1)
             {
-                Location loc = new Location() { City = input[0], PostalCode = input[1], Street = _streetSearchText };
-                Customer customer = new Customer() { Address = loc };
+                Location loc = new Location()
+                {
+                    City = input[0],
+                    PostalCode = input[1],
+                    Street = _streetSearchText
+                };
+
+                Customer customer = new Customer()
+                {
+                    Address = loc
+                };
+                
                 IEnumerable<Customer> cstms = await Task.Run(() => customerRepository.GetCustomers(customer));
-                if (cstms != null) Customers = new ObservableCollection<Customer>(cstms);
-                else Customers.Clear();
+
+                if (cstms != null)
+                {
+                    Customers = new ObservableCollection<Customer>(cstms);
+                }
+                else
+                {
+                    Customers.Clear();
+                }
             }
+
             State = Views.QueryState.Finished;
         }
+
         private async void CustomerBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             State = Views.QueryState.Executing;
+
             ComboBox comboBox = (ComboBox)sender;
+            
             if (!comboBox.IsLoaded)
+            {
                 return;
+            }
+            
             Customer customer;
+            
             if (comboBox.SelectedItem is Customer)
             {
                 int index = comboBox.SelectedIndex;
+
                 customer = await Task.Run(() => locationRepository.FindMessagesByCustomer(comboBox.Items[index] as Customer));
-                if (customer != null) Messages = new ObservableCollection<Message>(customer.MsgReceived);
+
+                if (customer != null)
+                {
+                    Messages = new ObservableCollection<Message>(customer.MsgReceived);
+                }
             }
+            
             State = Views.QueryState.Finished;
         }
         #endregion
@@ -310,7 +417,18 @@ namespace Projekt_HjemIS.Views
         }
         #endregion
 
+        private void PreviewText(object sender, TextCompositionEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            comboBox.IsDropDownOpen = true;
+        }
+
+        public void OnPropertyChanged(string prop)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
     }
+
     public enum QueryState
     {
         Standby = 0,

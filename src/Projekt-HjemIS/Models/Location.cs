@@ -27,36 +27,10 @@ namespace Projekt_HjemIS.Models
                 _street = CleanInput(value);
             }
         }
+
         public Location()
         {
 
-        }
-
-        public Location(object[] values)
-        {
-            StreetCode = values[0].ToString();
-            CountyCode = values[1].ToString();
-            Street = values[2].ToString();
-            PostalCode = values[3].ToString();
-            City = values[4].ToString();
-            PostalDistrict = values[5].ToString();
-        }
-
-        public Location(string streetCode, string countyCode, string street, string postalCode, string city, string postalDistrict)
-        {
-            StreetCode = streetCode;
-            CountyCode = countyCode;
-            Street = street;
-            PostalCode = postalCode;
-            City = city;
-            PostalDistrict = postalDistrict;
-        }
-
-
-        public override string ToString()
-        {
-            if (Street != null) return Street;
-            return City + "-" + PostalCode;
         }
         
         static string CleanInput(string strIn)

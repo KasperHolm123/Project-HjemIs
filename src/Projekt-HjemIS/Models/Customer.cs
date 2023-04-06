@@ -25,28 +25,5 @@ namespace Projekt_HjemIS.Models
             Address = new Location();
             MsgReceived = new List<Message>();
         }
-
-        public Customer(string firstName, string lastName, int phoneNumber, string streetCode, string countyCode)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            PhoneNumber = phoneNumber;
-            StreetCode = streetCode;
-            CountyCode = countyCode;
-        }
-
-        public Customer(object[] values)
-        {
-            FirstName = values[0].ToString();
-            LastName = values[1].ToString();
-            PhoneNumber = (int)values[2];
-            StreetCode = values[3].ToString();
-            CountyCode = values[4].ToString();
-        }
-
-        public override string ToString()
-        {
-            return $"{FirstName} {LastName}, {PhoneNumber}; ";
-        }
     }
 }
