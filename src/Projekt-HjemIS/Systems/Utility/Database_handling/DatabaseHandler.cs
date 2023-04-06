@@ -157,7 +157,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.Add(parameters);
+                    command.Parameters.AddRange(parameters.ToArray());
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {

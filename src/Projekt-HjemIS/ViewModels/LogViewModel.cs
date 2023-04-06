@@ -18,7 +18,7 @@ namespace Projekt_HjemIS.ViewModels
 
         #region Fields
 
-        private string _citySearch;
+        private string _citySearch = "";
         public string CitySearch
         {
             get => _citySearch;
@@ -29,7 +29,7 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private string _streetSearch;
+        private string _streetSearch = "";
         public string StreetSearch
         {
             get => _streetSearch;
@@ -69,6 +69,28 @@ namespace Projekt_HjemIS.ViewModels
             set
             {
                 _messages = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Location> _streets;
+        public ObservableCollection<Location> Streets
+        {
+            get { return _streets; }
+            set
+            {
+                _streets = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Location> _locations;
+        public ObservableCollection<Location> Locations
+        {
+            get { return _locations; }
+            set
+            {
+                _locations = value;
                 OnPropertyChanged();
             }
         }
@@ -143,11 +165,11 @@ namespace Projekt_HjemIS.ViewModels
 
             var query = @"SELECT 
                               c.PhoneNumber, 
-                              cm.ID, 
-                              m.Body, 
-                              m.Type, 
                               c.FirstName, 
                               c.LastName, 
+                              m.Body, 
+                              m.Type, 
+                              cm.ID, 
                               cm.Date
                           FROM Customers c
                           INNER JOIN Locations l 
