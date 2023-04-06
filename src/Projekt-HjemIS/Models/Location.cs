@@ -18,7 +18,6 @@ namespace Projekt_HjemIS.Models
         public string PostalCode { get; set; }
         public string City { get; set; }
         public string PostalDistrict { get; set; }
-        //public bool IsRecipient { get; set; }
         private string _street;
         public string Street
         {

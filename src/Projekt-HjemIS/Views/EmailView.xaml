@@ -69,8 +69,6 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
-                <CheckBox Grid.Row="2" x:Name="isSMS" Content="SMS" IsChecked="False" Height="20" Width="60" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="272,202,0,0" Grid.ColumnSpan="2"/>
-                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isMAIL" IsChecked="False" Content="E-Mail" VerticalAlignment="Top" HorizontalAlignment="Left" Height="20" Width="60" Margin="60,202,0,0"/>
                 <TextBox x:Name="subjectTxt" Text="{Binding Message.Subject}" Grid.Row="2" Width="150" Height="30" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="272,227,0,0" Grid.ColumnSpan="2"/>
             </Grid>
         </Grid>
