@@ -140,6 +140,7 @@ namespace Projekt_HjemIS.Views
         }
 
         // Virker ikke
+        /*
         private void recipientsDataGrid_LostFocus(object sender, RoutedEventArgs e)
         {
             Location loc = recipientsDataGrid.SelectedItem as Location;
@@ -150,6 +151,7 @@ namespace Projekt_HjemIS.Views
                 RecipientsLocations.Remove(loc);
 
         }
+        */
 
         /// <summary>
         /// Create parameter for SQL command.

@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Projekt_HjemIS.Views"
              xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
+             xmlns:models="clr-namespace:Projekt_HjemIS.Models"
+             d:DataContext="{d:DesignInstance viewmodels:LogViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
@@ -15,29 +17,36 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ComboBox x:Name="CityBox" IsEditable="True"  Text="{Binding CitySearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,25,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText">
+        <ComboBox x:Name="CityBox" IsEditable="True" SelectedItem="{Binding SelectedCity}"  Text="{Binding CitySearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,25,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:Location}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="{Binding City}" />
+                        <Label Grid.Column="1" Content="{Binding PostalCode}"/>
+                    </Grid>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox x:Name="StreetBox" SelectedItem="{Binding SelectedStreet}" Text="{Binding StreetSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="250,25,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type models:Location}">
+                    <Label Content="{Binding Street}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox x:Name="CustomerBox"  Text="{Binding CustomerSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" ItemsSource="{Binding Path=Customers}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,72,0,0" VerticalAlignment="Top" Width="120">
             <ComboBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel></VirtualizingStackPanel>
                 </ItemsPanelTemplate>
             </ComboBox.ItemsPanel>
         </ComboBox>
-        <ComboBox x:Name="StreetBox"  Text="{Binding StreetSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" ItemsSource="{Binding Path=Streets}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="250,25,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText">
-            <ComboBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel></VirtualizingStackPanel>
-                </ItemsPanelTemplate>
-            </ComboBox.ItemsPanel>
-        </ComboBox>
-        <ComboBox x:Name="CustomerBox"  Text="{Binding CustomerSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" ItemsSource="{Binding Path=Customers}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,72,0,0" VerticalAlignment="Top" Width="120" PreviewTextInput="PreviewText" SelectionChanged="CustomerBox_SelectionChanged">
-            <ComboBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel></VirtualizingStackPanel>
-                </ItemsPanelTemplate>
-            </ComboBox.ItemsPanel>
-        </ComboBox>
-        <DatePicker HorizontalAlignment="Right" Margin="0,70,340,0" SelectedDate="{Binding Path=EndDate}" SelectedDateChanged="OnDateChanged" IsTodayHighlighted="True" DisplayDate="05/23/2022" VerticalAlignment="Top" Name="datePicker1" />
-        <Button x:Name="SortListbox" HorizontalAlignment="Right" BorderBrush="White" Background="White" Margin="0,70,470,0" VerticalAlignment="Top" Click="SortList_Click">
+        <DatePicker HorizontalAlignment="Right" Margin="0,70,340,0" SelectedDate="{Binding Path=EndDate}" IsTodayHighlighted="True" DisplayDate="05/23/2022" VerticalAlignment="Top" Name="datePicker1" />
+        <Button x:Name="SortListbox" HorizontalAlignment="Right" BorderBrush="White" Background="White" Margin="0,70,470,0" VerticalAlignment="Top">
             <StackPanel>
                 <Image Source="/Pictures/sort.png" Width="20" Height="20" />
             </StackPanel>
@@ -45,7 +54,7 @@
         <Label Content="Cities"  HorizontalAlignment="Left" Margin="50,5,0,0" VerticalAlignment="Top"/>
         <Label Content="Streets"  HorizontalAlignment="Left" Margin="250,5,0,0" VerticalAlignment="Top"/>
         <Label Content="Customers"  HorizontalAlignment="Left" Margin="50,52,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="FindStreets" Content="Streets" IsEnabled="{Binding Path=CanExecute}"  HorizontalAlignment="Left" Margin="190,25,0,0" VerticalAlignment="Top" Click="FindStreets_Click"/>
+        <Button x:Name="FindStreets" Content="Streets" HorizontalAlignment="Left" Margin="190,25,0,0" VerticalAlignment="Top"/>
         <Button x:Name="FindMessages" Content="Search" IsEnabled="True"  HorizontalAlignment="Left" Margin="380,25,0,0" VerticalAlignment="Top" Command="{Binding GetMessagesCommand}"/>
         <Button x:Name="GetCustomers" Content="Customers" IsEnabled="True"  HorizontalAlignment="Left" Margin="435,25,0,0" VerticalAlignment="Top" Command="{Binding GetCustomersCommand}"/>
         <ListBox x:Name="MessageLog" Width="700" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="600" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="50,100,0,0" ItemsSource="{Binding Path=Messages}">
@@ -114,6 +123,6 @@
                 </Style>
             </Ellipse.Resources>
         </Ellipse>
-        <Label Content="{Binding Path=MsgsFound}"  HorizontalAlignment="Left" Margin="250,75,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding Messages.Count}"  HorizontalAlignment="Left" Margin="250,75,0,0" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

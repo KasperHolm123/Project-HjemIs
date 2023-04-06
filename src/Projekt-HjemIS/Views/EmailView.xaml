@@ -23,7 +23,7 @@
                 <Label Content="Street:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="95,32,0,0"/>
                 <TextBox x:Name="searchTxt" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
                 <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" Click="searchButton_Click"/>
-                <DataGrid x:Name="recipientsDataGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False" LostFocus="recipientsDataGrid_LostFocus" >
+                <DataGrid x:Name="recipientsDataGrid" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}"/>

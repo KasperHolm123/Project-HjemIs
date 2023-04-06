@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Projekt_HjemIS.Models
         public string PostalCode { get; set; }
         public string City { get; set; }
         public string PostalDistrict { get; set; }
-        public bool IsRecipient { get; set; }
+        //public bool IsRecipient { get; set; }
         private string _street;
         public string Street
         {
@@ -32,7 +33,12 @@ namespace Projekt_HjemIS.Models
         {
 
         }
-        
+
+        public override string ToString()
+        {
+            return $"{City}-{PostalCode}";
+        }
+
         static string CleanInput(string strIn)
         {
             // Replace invalid characters with empty strings.

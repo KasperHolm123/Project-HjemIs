@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -50,6 +51,30 @@ namespace Projekt_HjemIS.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private Location _selectedCity;
+        public Location SelectedCity
+        {
+            get => _selectedCity;
+            set
+            {
+                _selectedCity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Location _selectedStreet;
+        public Location SelectedStreet
+        {
+            get => _selectedStreet;
+            set
+            {
+                _selectedStreet = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region Collections
 
         private ObservableCollection<Customer> _customers;
         public ObservableCollection<Customer> Customers
@@ -97,6 +122,8 @@ namespace Projekt_HjemIS.ViewModels
 
         #endregion
 
+        #endregion
+
         #region Commands
 
         public RelayCommand GetCustomersCommand { get; set; }
@@ -108,6 +135,8 @@ namespace Projekt_HjemIS.ViewModels
         {
             GetCustomersCommand = new RelayCommand(p => GetCustomers());
             GetMessagesCommand = new RelayCommand(p => GetMessages());
+
+            Locations = new ObservableCollection<Location>(dh.GetTable<Location>("SELECT * FROM Locations"));
         }
 
 
