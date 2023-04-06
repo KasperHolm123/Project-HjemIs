@@ -145,13 +145,22 @@ namespace Projekt_HjemIS.ViewModels
                            ) AS DT
                            ON DT.CountyCode = Customers.CountyCode
                            AND DT.StreetCode = Customers.StreetCode";
+            
+            List<SqlParameter> parameters = new List<SqlParameter>();
 
-            var parameters = new List<SqlParameter>
+            try
             {
-                new SqlParameter("@City", SelectedLocation.City),
-                new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
-                new SqlParameter("@Street", SelectedLocation.Street)
-            };
+                parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@City", SelectedLocation.City),
+                    new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
+                    new SqlParameter("@Street", SelectedLocation.Street)
+                };
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             IEnumerable<Customer> customers = await Task.Run(() => dh.GetTable<Customer>(query, parameters));
 
@@ -192,12 +201,21 @@ namespace Projekt_HjemIS.ViewModels
                               AND l.PostalCode = @PostalCode 
                               AND l.Street = @Street";
 
-            var parameters = new List<SqlParameter>
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            try
             {
-                new SqlParameter("@City", SelectedLocation.City),
-                new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
-                new SqlParameter("@Street", SelectedLocation.Street)
-            };
+                parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@City", SelectedLocation.City),
+                    new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
+                    new SqlParameter("@Street", SelectedLocation.Street)
+                };
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             IEnumerable<Message> msgs = await Task.Run(() => dh.GetTable<Message>(query, parameters));
 

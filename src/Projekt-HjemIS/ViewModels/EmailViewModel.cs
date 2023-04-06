@@ -99,8 +99,6 @@ namespace Projekt_HjemIS.ViewModels
             };
             FilteredLocations.Filter += Search;
 
-            GetCustomersOnRecipient(Locations[0]);
-
             AddRecipientCommand = new RelayCommand(p => AddRecipient((Location)p));
             RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((Location)p));
             CreateMessageCommand = new RelayCommand(p => CreateMessage());
@@ -108,7 +106,8 @@ namespace Projekt_HjemIS.ViewModels
 
         private async void CreateMessage()
         {
-            var query = "INSERT INTO Messages ([Subject], Body)" +
+            var query = "INSERT INTO Messages ([Subject], Body) " +
+                        "OUTPUT Inserted.ID " +
                         "VALUES (@Subject, @Body)";
 
             var parameters = new List<SqlParameter>
@@ -117,12 +116,12 @@ namespace Projekt_HjemIS.ViewModels
                 new SqlParameter("@Body", Message.Body)
             };
 
-            await dh.AddData(query, parameters.ToArray());
+            var messageId = await dh.AddDataReturn(query, parameters);
 
-            //AddRecipientToMessage();
+            await AddRecipientToMessage(messageId);
         }
 
-        private async Task AddRecipientToMessage()
+        private async Task AddRecipientToMessage(int id)
         {
             foreach (var recipient in Recipients)
             {
@@ -130,7 +129,25 @@ namespace Projekt_HjemIS.ViewModels
                 
                 foreach (var phoneNumber in phoneNumbers)
                 {
-                    var query = "";
+                    var query = "INSERT INTO Recipients (MessageID, RecipientPhoneNumber) " +
+                                "VALUES (@ID, @PhoneNumber)";
+
+                    List<SqlParameter> parameters = new List<SqlParameter>();
+
+                    try
+                    {
+                        parameters.AddRange(new SqlParameter[]
+                        {
+                            new SqlParameter("@ID", id),
+                            new SqlParameter("@PhoneNumber", phoneNumber)
+                        });
+                    }
+                    catch
+                    {
+
+                    }
+
+                    await dh.AddData(query, parameters.ToArray());
                 }
             }
         }
@@ -153,7 +170,21 @@ namespace Projekt_HjemIS.ViewModels
                 new SqlParameter("@StreetCode", location.StreetCode)
             };
 
-            var customers = await dh.GetTable<Customer>(query, parameters);
+            List<Customer> customers = new List<Customer>();
+
+            try
+            {
+                customers = await dh.GetTable<Customer>(query, parameters);
+
+                if (customers.Count < 1)
+                {
+                    throw new Exception("No customers at chosen location");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             var phoneNumbers = customers.Select(x => x.PhoneNumber).ToList();
 

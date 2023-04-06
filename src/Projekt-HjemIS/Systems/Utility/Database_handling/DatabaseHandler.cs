@@ -262,6 +262,34 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 connection.Close();
             }
         }
+
+        public async Task<int> AddDataReturn(string query, List<SqlParameter> parameters)
+        {
+            try
+            {
+                connection.Open();
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddRange(parameters.ToArray());
+
+                    var result = await cmd.ExecuteScalarAsync();
+
+                    return (int)result;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+
+                return -1;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         /// <summary>
         /// Hovedforfatter: Jonas H
         /// Checks if any rows are present in the specified table

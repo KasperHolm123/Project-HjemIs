@@ -24,7 +24,7 @@
             <Grid Grid.Column="0">
                 <Label Content="Street:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="95,32,0,0"/>
                 <TextBox x:Name="searchTxt" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
-                <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" Command="{Binding SearchCommand}"/>
+                <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" />
                 <DataGrid x:Name="recipientsDataGrid" ItemsSource="{Binding FilteredLocations.View}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick"
