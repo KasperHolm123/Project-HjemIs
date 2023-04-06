@@ -74,7 +74,7 @@ namespace Projekt_HjemIS.ViewModels
 
             if (!exists)
             {
-                query = $"INSERT INTO Users (username, [Password], [Admin]) VALUES ('{Username}', '{Password}', '0')";
+                query = $"INSERT INTO Users (Username, [Password], [Admin]) VALUES ('{Username}', '{Password}', '0')";
 
                 dh.AddData(query);
 

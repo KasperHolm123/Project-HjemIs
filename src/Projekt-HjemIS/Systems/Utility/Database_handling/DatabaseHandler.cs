@@ -53,7 +53,10 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 await connection.OpenAsync();
 
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(string) || p.PropertyType == typeof(int) || p.PropertyType == typeof(bool))
+                    .Where(p => p.PropertyType == typeof(string) ||
+                            p.PropertyType == typeof(int) ||
+                            p.PropertyType == typeof(bool) ||
+                            p.PropertyType == typeof(decimal))
                     .Select(p => p.Name);
 
                 using (var command = new SqlCommand(query, connection))
@@ -64,6 +67,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                         foreach (var property in properties)
                         {
+                            // index of range exception
                             int ordinal = reader.GetOrdinal(property);
 
                             // this line causes an exception saying there is no data

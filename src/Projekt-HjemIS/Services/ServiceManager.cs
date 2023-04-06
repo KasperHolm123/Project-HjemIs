@@ -46,6 +46,7 @@ namespace Projekt_HjemIS.Services
                 serviceProvider => viewModelType =>
                     (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<LoginService>();
 
             return services;
         }

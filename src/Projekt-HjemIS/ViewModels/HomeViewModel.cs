@@ -8,5 +8,10 @@ namespace Projekt_HjemIS.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
+
+        public HomeViewModel()
+        {
+            
+        }
     }
 }

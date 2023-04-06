@@ -1,4 +1,5 @@
-﻿using Projekt_HjemIS.Services;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -81,6 +82,7 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (exists)
                 {
+                    //LoginService.CurrentUser = await dh.GetEntry<Product>($"SELECT 1 FROM Products WHERE ID = {id}");
                     NavigationService.ChangeBaseView<DashboardViewModel>();
                 }
                 else

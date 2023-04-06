@@ -36,7 +36,7 @@
                     </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Username" IsReadOnly="True" Binding="{Binding Username}" Width="180"/>
-                        <DataGridTextColumn Header="Admin" Binding="{Binding Admin}" />
+                        <DataGridTextColumn Header="Admin" IsReadOnly="True" Binding="{Binding Admin}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
