@@ -246,9 +246,6 @@ namespace Projekt_HjemIS.Views
 
         #endregion
 
-
-        //Event handlers related to messages
-        #region
         private void SortList_Click(object sender, RoutedEventArgs e)
         {
             MessageLog.Items.SortDescriptions.Clear();
@@ -270,38 +267,8 @@ namespace Projekt_HjemIS.Views
             FilteredView.View.Refresh();
         }
 
-        private async void GetMessages(object sender, SelectionChangedEventArgs e)
-        {
-            State = Views.QueryState.Executing;
-
-            ComboBox comboBox = (ComboBox)sender;
-            
-            if (!comboBox.IsLoaded)
-            {
-                return;
-            }
-            
-            if (comboBox.SelectedItem is Location)
-            {
-                int index = comboBox.SelectedIndex;
-
-                Location loc = comboBox.Items[index] as Location;
-
-                IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
-
-                if (msgs != null)
-                {
-                    Messages = new ObservableCollection<Message>(msgs);
-                }
-                else
-                {
-                    Messages.Clear();
-                }
-            }
-
-            State = Views.QueryState.Finished;
-        }
-
+        //NOTE: moved to viewmodel
+        #region FindMessages
         private async void FindMessages_Click(object sender, RoutedEventArgs e)
         {
             State = Views.QueryState.Executing;
@@ -337,8 +304,8 @@ namespace Projekt_HjemIS.Views
         }
         #endregion
 
-        //Event handlers related to customers
-        #region
+        //NOTE: moved to viewmodel
+        #region Customer events
         private async void GetCustomers_Click(object sender, RoutedEventArgs e)
         {
             State = Views.QueryState.Executing;

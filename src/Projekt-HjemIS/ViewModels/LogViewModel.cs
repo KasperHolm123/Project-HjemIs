@@ -1,4 +1,5 @@
 ﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Services;
 using Projekt_HjemIS.Systems;
 using System;
 using System.Collections.Generic;
@@ -74,13 +75,21 @@ namespace Projekt_HjemIS.ViewModels
 
         #endregion
 
+        #region Commands
+
+        public RelayCommand GetCustomersCommand { get; set; }
+        public RelayCommand GetMessagesCommand { get; set; }
+
+        #endregion
+
         public LogViewModel()
         {
-            
+            GetCustomersCommand = new RelayCommand(p => GetCustomers());
+            GetMessagesCommand = new RelayCommand(p => GetMessages());
         }
 
 
-        private async void GetCustomers_Click(object sender, RoutedEventArgs e)
+        private async void GetCustomers()
         {
             State = QueryState.Executing;
 
@@ -119,35 +128,56 @@ namespace Projekt_HjemIS.ViewModels
             State = QueryState.Finished;
         }
 
-        private async void FindMessages_Click(object sender, RoutedEventArgs e)
+        private async void GetMessages()
         {
             State = QueryState.Executing;
 
             string[] input = CitySearch.Split('-');
 
-            if (input.Length > 1)
+            Location loc = new Location()
             {
-                Location loc = new Location()
-                {
-                    City = input[0],
-                    PostalCode = input[1],
-                    Street = StreetSearch
-                };
+                City = input[0],
+                PostalCode = input[1],
+                Street = StreetSearch
+            };
 
-                /*
-                IEnumerable<Message> msgs = await Task.Run(() => locationRepository.FindMessages(loc));
+            var query = @"SELECT 
+                              c.PhoneNumber, 
+                              cm.ID, 
+                              m.Body, 
+                              m.Type, 
+                              c.FirstName, 
+                              c.LastName, 
+                              cm.Date
+                          FROM Customers c
+                          INNER JOIN Locations l 
+                              ON l.CountyCode = c.CountyCode 
+                              AND l.StreetCode = c.StreetCode
+                          INNER JOIN [Customers-Messages] cm 
+                              ON c.PhoneNumber = cm.PhoneNumber
+                          LEFT JOIN Messages m 
+                              ON cm.ID = m.ID
+                          WHERE 
+                              l.City = @City 
+                              AND l.PostalCode = @PostalCode 
+                              AND l.Street = @Street";
 
-                if (msgs != null)
-                {
-                    Messages = new ObservableCollection<Message>(msgs);
-                }
-                else
-                {
-                    Messages.Clear();
-                }
-                */
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@City", input[0]),
+                new SqlParameter("@PostalCode", input[1]),
+                new SqlParameter("@Street", StreetSearch)
+            };
 
-                OnPropertyChanged("MsgsFound");
+            IEnumerable<Message> msgs = await Task.Run(() => dh.GetTable<Message>(query, parameters));
+
+            if (msgs != null)
+            {
+                Messages = new ObservableCollection<Message>(msgs);
+            }
+            else
+            {
+                Messages.Clear();
             }
 
             State = QueryState.Finished;

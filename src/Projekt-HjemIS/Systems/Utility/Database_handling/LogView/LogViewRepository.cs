@@ -15,12 +15,14 @@ namespace Projekt_HjemIS.Systems
 {
     public class LogViewRepository
     {
-        private SqlConnection connection = new SqlConnection
-    (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
+        private SqlConnection connection = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["post"].ConnectionString);
+        
         public LogViewRepository()
         {
 
         }
+        
         /// <summary>
         /// Hovedforfatter: Jonas
         /// Gets all streets based on city/postalcode/street input from user
@@ -62,107 +64,7 @@ namespace Projekt_HjemIS.Systems
             }
             return null;
         }
-        /// <summary>
-        /// Hovedforfatter: Jonas 
-        /// Gets all customers related to a specific city, postalcode and street
-        /// </summary>
-        /// <param name="customer"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<Customer>> GetCustomers(Customer customer)
-        {
-            List<Customer> customers = new List<Customer>();
-            try
-            {
-                await connection.OpenAsync();
 
-                string query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode FROM Customers
-                                INNER JOIN (SELECT CountyCode, StreetCode FROM Locations WHERE City LIKE @City AND PostalCode LIKE @PostalCode AND Street LIKE @Street) AS DT
-                                ON DT.CountyCode = Customers.CountyCode AND DT.StreetCode = Customers.StreetCode";
-
-                var parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@City", "%{customer.Address.City}%"),
-                    new SqlParameter("@PostalCode", "%{customer.Address.PostalCode}%"),
-                    new SqlParameter("@Street", "%{customer.Address.Street}%")
-                };
-
-                using (var command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddRange(parameters.ToArray());
-                    command.CommandTimeout = 0;
-
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var firstName = reader.GetString(reader.GetOrdinal("FirstName")).Trim();
-                            var lastName = reader.GetString(reader.GetOrdinal("LastName")).Trim();
-                            var phoneNumber = reader.GetInt32(reader.GetOrdinal("PhoneNumber"));
-
-                            customers.Add(new Customer()
-                            {
-                                FirstName = firstName,
-                                LastName = lastName,
-                                PhoneNumber = phoneNumber
-                            });
-                        }
-                    }
-                    return customers;
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-        /// <summary>
-        /// Hovedforfatter: Jonas
-        /// Gets every unique pair of city and associated postalcode. This is what makes the combobox searchable
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<Location>> GetCities()
-        {
-            List<Location> locs = new List<Location>();
-            try
-            {
-                using(SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["post"].ConnectionString))
-                {
-                    await connection.OpenAsync();
-
-                    string query = $@"SELECT DISTINCT PostalCode, City FROM Locations WHERE PostalCode LIKE '%%' AND City LIKE '%%'";
-
-                    using (var command = new SqlCommand(query, connection))
-                    {
-                        command.CommandTimeout = 0;
-
-                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                var city = reader.GetString(reader.GetOrdinal("City")).Trim();
-                                var postalCode = reader.GetString(reader.GetOrdinal("PostalCode")).Trim();
-
-                                locs.Add(new Location()
-                                {
-                                    City = city,
-                                    PostalCode = postalCode
-                                });
-                            }
-                        }
-                    }
-                }
-                return locs;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-        }
         /// <summary>
         /// Hovedforfatter: Jonas
         /// Finds all messages and related customers in a specific geographical location, city/postalcode/street.
@@ -172,22 +74,9 @@ namespace Projekt_HjemIS.Systems
         public async Task<IEnumerable<Message>> FindMessages(Location location)
         {
             Dictionary<int, Message> msgs = new Dictionary<int, Message>();
+
             try
             {
-                /*
-                 string query2 = $@"SELECT Customers.PhoneNumber, [Messages].ID, [Messages].Body, [Messages].[Type], Customers.FirstName, Customers.LastName, DT.[Date] FROM 
-                                (SELECT DISTINCT [Customers-Messages].ID, PhoneNumber, [Customers-Messages].[Date]
-                                    FROM [Customers-Messages]
-                                    WHERE PhoneNumber IN
-                                (SELECT PhoneNumber
-                                    FROM Locations
-                                    CROSS APPLY(SELECT CountyCode, StreetCode, FirstName, LastName, PhoneNumber FROM Customers 
-                                    WHERE City LIKE '%{location.City}%' AND PostalCode LIKE '%{location.PostalCode}%' AND STREET LIKE '%{location.Street}%' AND Locations.CountyCode = Customers.CountyCode AND Locations.StreetCode = Customers.StreetCode)A)) AS DT
-                                LEFT JOIN [Messages] ON DT.ID = [Messages].ID
-                                LEFT JOIN Customers ON DT.PhoneNumber = Customers.PhoneNumber";
-
-                 */
-
                 await OpenAndSetArithAbort(connection);
 
                 var query = @"
@@ -234,7 +123,13 @@ namespace Projekt_HjemIS.Systems
 
                             if (!messages.ContainsKey(id))
                             {
-                                messages.Add(id, new Message() { ID = id, Body = body, Type = type, Date = date });
+                                messages.Add(id, new Message
+                                {
+                                    ID = id,
+                                    Body = body,
+                                    Type = type,
+                                    Date = date
+                                });
                             }
 
                             messages[id].Recipients.Add(customer);
@@ -252,6 +147,7 @@ namespace Projekt_HjemIS.Systems
             {
                 connection.Close();
             }
+
             return null;
         }
         /// <summary>
