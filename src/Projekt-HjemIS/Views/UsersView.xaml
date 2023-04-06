@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Projekt_HjemIS.Views.UsersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Projekt_HjemIS.Views"
+             xmlns:viewmodels="clr-namespace:Projekt_HjemIS.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewmodels:UsersViewModel}"
+             d:DesignHeight="720" d:DesignWidth="1090">
+    <Grid>
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <TextBlock FontSize="40" FontWeight="Bold" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Text="Users"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Width="500" Height="300">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Pick A User To Make/Or Demote Them Administator" Grid.Column="0" Margin="15,0,0,0"/>
+                <ComboBox x:Name="comboUsers" IsEditable="True" Width="150" Height="30" Grid.Column="1"/>
+                <DataGrid x:Name="dataUsers" ItemsSource="{Binding Users}" AutoGenerateColumns="False" Height="Auto" Width="auto" HorizontalAlignment="Center" VerticalAlignment="Center" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserAddRows="False" CanUserSortColumns="False" Grid.Column="0" Grid.Row="1">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding ChangeAdminStatusCommand}"
+                                      CommandParameter="{Binding ElementName=dataUsers, Path=SelectedItem}"/>
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Username" IsReadOnly="True" Binding="{Binding Username}" Width="180"/>
+                        <DataGridTextColumn Header="Admin" IsReadOnly="True" Binding="{Binding Admin}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </StackPanel>
+        <Button x:Name="btnAdmin" Content="Confirm" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Height="50" FontSize="20" FontWeight="Bold">
+            <Button.Background>
+                <SolidColorBrush Color="LimeGreen"/>
+            </Button.Background>
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="7"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+    </Grid>
+</UserControl>
