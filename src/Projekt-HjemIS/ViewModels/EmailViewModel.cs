@@ -126,26 +126,24 @@ namespace Projekt_HjemIS.ViewModels
             foreach (var recipient in Recipients)
             {
                 var phoneNumbers = await GetCustomersOnRecipient(recipient);
+
+                if (phoneNumbers.Count() < 1)
+                {
+                    var query = $"DELETE FROM Messages WHERE ID = {id}";
+
+                    await dh.AddData(query);
+                }
                 
                 foreach (var phoneNumber in phoneNumbers)
                 {
                     var query = "INSERT INTO Recipients (MessageID, RecipientPhoneNumber) " +
                                 "VALUES (@ID, @PhoneNumber)";
 
-                    List<SqlParameter> parameters = new List<SqlParameter>();
-
-                    try
+                    var parameters = new List<SqlParameter>
                     {
-                        parameters.AddRange(new SqlParameter[]
-                        {
-                            new SqlParameter("@ID", id),
-                            new SqlParameter("@PhoneNumber", phoneNumber)
-                        });
-                    }
-                    catch
-                    {
-
-                    }
+                        new SqlParameter("@ID", id),
+                        new SqlParameter("@PhoneNumber", phoneNumber)
+                    };
 
                     await dh.AddData(query, parameters.ToArray());
                 }

@@ -192,7 +192,7 @@ namespace Projekt_HjemIS.ViewModels
                           INNER JOIN Locations l 
                               ON l.CountyCode = c.CountyCode 
                               AND l.StreetCode = c.StreetCode
-                          INNER JOIN [Customers-Messages] cm 
+                          INNER JOIN Recipients cm 
                               ON c.PhoneNumber = cm.PhoneNumber
                           LEFT JOIN Messages m 
                               ON cm.ID = m.ID
