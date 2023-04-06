@@ -15,6 +15,6 @@ namespace Projekt_HjemIS.Models
         public string Name { get; set; }
         public int Price { get; set; }
         public decimal Discount { get; set; }
-        private decimal DiscountedPrice { get; set; }
+        public decimal DiscountedPrice { get; set; }
     }
 }
