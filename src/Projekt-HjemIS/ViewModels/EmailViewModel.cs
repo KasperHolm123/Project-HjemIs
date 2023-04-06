@@ -50,23 +50,57 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
+        private ObservableCollection<Location> _recipients;
+        public ObservableCollection<Location> Recipients
+        {
+            get => _recipients;
+            set
+            {
+                _recipients = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands
 
-        
+        public RelayCommand AddRecipientCommand { get; set; }
+        public RelayCommand RemoveRecipientCommand { get; set; }
 
         #endregion
 
         public EmailViewModel()
         {
             Locations = new ObservableCollection<Location>(dh.GetTable<Location>("SELECT * FROM Locations"));
+            Recipients = new ObservableCollection<Location>();
 
             FilteredLocations = new CollectionViewSource
             {
                 Source = Locations
             };
             FilteredLocations.Filter += Search;
+
+            AddRecipientCommand = new RelayCommand(p => AddRecipient((Location)p));
+            RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((Location)p));
+        }
+
+        private void AddRecipient(Location location)
+        {
+            if (location != null)
+            {
+                Recipients.Add(location);
+                Locations.Remove(location);
+            }
+        }
+
+        private void RemoveRecipient(Location location)
+        {
+            if (location != null)
+            {
+                Recipients.Remove(location);
+                Locations.Add(location);
+            }
         }
 
         private void Search(object sender, FilterEventArgs e)

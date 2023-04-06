@@ -14,7 +14,7 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="messageBodytxt" Grid.Row="1" Text="" FontSize="15" Width="850" Height="400" Margin="0,100,0,0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
+            <TextBox x:Name="messageBodytxt" Grid.Row="1" Text="" FontSize="15" Width="425" Height="400" Margin="-380,100,0,0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -26,20 +26,39 @@
                 <TextBox x:Name="searchTxt" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
                 <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" Command="{Binding SearchCommand}"/>
                 <DataGrid x:Name="recipientsDataGrid" ItemsSource="{Binding FilteredLocations.View}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding AddRecipientCommand}"
+                                      CommandParameter="{Binding ElementName=recipientsDataGrid, Path=SelectedItem}"/>
+                    </DataGrid.InputBindings>
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Street Code" Binding="{Binding Path=StreetCode}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="County Code" Binding="{Binding Path=CountyCode}" IsReadOnly="True" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid x:Name="recipientsGrid" ItemsSource="{Binding Recipients}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,-500,0" AutoGenerateColumns="False">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding RemoveRecipientCommand}"
+                                      CommandParameter="{Binding ElementName=recipientsGrid, Path=SelectedItem}"/>
+                    </DataGrid.InputBindings>
+                    
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}"/>
-                        <DataGridTextColumn Header="Street Code" Binding="{Binding Path=StreetCode}"/>
-                        <DataGridTextColumn Header="County Code" Binding="{Binding Path=CountyCode}"/>
-                        <DataGridCheckBoxColumn Header="Recipient" Binding="{Binding Path=IsRecipient}"/>
+                        <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Street Code" Binding="{Binding Path=StreetCode}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="County Code" Binding="{Binding Path=CountyCode}" IsReadOnly="True" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
             <Grid Grid.Column="1">
-                <Label Content="Subject:" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="0,243,280,0" />
-                <Button Content="Send" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" Height="40" Margin="0,180,10,0" Click="Button_Click"/>
+                <Label Content="Subject:" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="0,430,280,0" />
+                <Button Content="Send" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" Height="40" Margin="0,430,10,0" Click="Button_Click"/>
             </Grid>
-            
+
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -50,9 +69,9 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
-                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isSMS" Content="SMS" IsChecked="False" Height="20" Width="60" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,10,0,0"/>
-                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isMAIL" IsChecked="False" Content="E-Mail" VerticalAlignment="Top" HorizontalAlignment="Left" Height="20" Width="60" Margin="50,10,0,0"/>
-                <TextBox x:Name="subjectTxt" Grid.Row="2" Grid.Column="1" Text="" Width="150" Height="30" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,40,0,0"/>
+                <CheckBox Grid.Row="2" x:Name="isSMS" Content="SMS" IsChecked="False" Height="20" Width="60" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="272,202,0,0" Grid.ColumnSpan="2"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" x:Name="isMAIL" IsChecked="False" Content="E-Mail" VerticalAlignment="Top" HorizontalAlignment="Left" Height="20" Width="60" Margin="60,202,0,0"/>
+                <TextBox x:Name="subjectTxt" Grid.Row="2" Text="" Width="150" Height="30" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="272,227,0,0" Grid.ColumnSpan="2"/>
             </Grid>
         </Grid>
     </Grid>
