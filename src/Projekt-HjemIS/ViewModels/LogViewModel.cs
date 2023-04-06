@@ -126,6 +126,7 @@ namespace Projekt_HjemIS.ViewModels
             GetMessagesCommand = new RelayCommand(p => GetMessages());
 
             Locations = new ObservableCollection<Location>(dh.GetTable<Location>("SELECT * FROM Locations"));
+            Messages = new ObservableCollection<Message>(dh.GetTable<Message>("SELECT * FROM Messages"));
         }
 
 

@@ -49,7 +49,6 @@ namespace Projekt_HjemIS.Systems
                         "VALUES(@messageType, @body)";
                     SqlParameter[] sp = new SqlParameter[]
                     {
-                        CreateParameter("@messageType", sms.Type, SqlDbType.NVarChar),
                         CreateParameter("@body", sms.Body, SqlDbType.NVarChar)
                     };
                     sw.WriteLine(FormatSms(message as Message_SMS));
@@ -62,7 +61,6 @@ namespace Projekt_HjemIS.Systems
                         "VALUES (@messageType, @subject, @body)";
                     SqlParameter[] sp = new SqlParameter[]
                     {
-                        CreateParameter("@messageType", mail.Type, SqlDbType.NVarChar),
                         CreateParameter("@subject", mail.Subject, SqlDbType.NVarChar),
                         CreateParameter("@body", mail.Body, SqlDbType.NVarChar)
                     };

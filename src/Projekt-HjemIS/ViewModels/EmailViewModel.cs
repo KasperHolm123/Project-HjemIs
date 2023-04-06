@@ -82,6 +82,7 @@ namespace Projekt_HjemIS.ViewModels
 
         public RelayCommand AddRecipientCommand { get; set; }
         public RelayCommand RemoveRecipientCommand { get; set; }
+        public RelayCommand CreateMessageCommand { get; set; }
 
         #endregion
 
@@ -102,23 +103,23 @@ namespace Projekt_HjemIS.ViewModels
 
             AddRecipientCommand = new RelayCommand(p => AddRecipient((Location)p));
             RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((Location)p));
+            CreateMessageCommand = new RelayCommand(p => CreateMessage());
         }
 
         private async void CreateMessage()
         {
-            var query = "INSERT INTO Messages ([Subject], Body, [Type])" +
-                        "VALUES (@Subject, @Body, @Type)";
+            var query = "INSERT INTO Messages ([Subject], Body)" +
+                        "VALUES (@Subject, @Body)";
 
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@Subject", Message.Subject),
-                new SqlParameter("@Body", Message.Body),
-                new SqlParameter("@Type", Message.Type)
+                new SqlParameter("@Body", Message.Body)
             };
 
             await dh.AddData(query, parameters.ToArray());
 
-            AddRecipientToMessage();
+            //AddRecipientToMessage();
         }
 
         private async Task AddRecipientToMessage()
@@ -129,7 +130,7 @@ namespace Projekt_HjemIS.ViewModels
                 
                 foreach (var phoneNumber in phoneNumbers)
                 {
-                    
+                    var query = "";
                 }
             }
         }

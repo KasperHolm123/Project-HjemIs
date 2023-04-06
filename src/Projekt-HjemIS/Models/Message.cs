@@ -14,7 +14,6 @@ namespace Projekt_HjemIS.Models
     {
         public int ID { get; set; }
         public string Subject { get; set; }
-        public string Type { get; set; }
         public string Body { get; set; }
     }
 }
