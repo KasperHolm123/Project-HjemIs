@@ -52,24 +52,13 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private Location _selectedCity;
-        public Location SelectedCity
+        private Location _selectedLocation;
+        public Location SelectedLocation
         {
-            get => _selectedCity;
+            get => _selectedLocation;
             set
             {
-                _selectedCity = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Location _selectedStreet;
-        public Location SelectedStreet
-        {
-            get => _selectedStreet;
-            set
-            {
-                _selectedStreet = value;
+                _selectedLocation = value;
                 OnPropertyChanged();
             }
         }
@@ -144,25 +133,23 @@ namespace Projekt_HjemIS.ViewModels
         {
             State = QueryState.Executing;
 
-            string[] input = CitySearch.Split('-');
-
             var query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode
-                                FROM Customers
-                                INNER JOIN (
-                                    SELECT CountyCode, StreetCode
-                                    FROM Locations
-                                    WHERE City LIKE @City
-                                    AND PostalCode LIKE @PostalCode
-                                    AND Street LIKE @Street
-                                ) AS DT
-                                ON DT.CountyCode = Customers.CountyCode
-                                AND DT.StreetCode = Customers.StreetCode";
+                           FROM Customers
+                           INNER JOIN (
+                               SELECT CountyCode, StreetCode
+                               FROM Locations
+                               WHERE City LIKE @City
+                               AND PostalCode LIKE @PostalCode
+                               AND Street LIKE @Street
+                           ) AS DT
+                           ON DT.CountyCode = Customers.CountyCode
+                           AND DT.StreetCode = Customers.StreetCode";
 
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@City", input[0]),
-                new SqlParameter("@PostalCode", input[1]),
-                new SqlParameter("@Street", StreetSearch)
+                new SqlParameter("@City", SelectedLocation.City),
+                new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
+                new SqlParameter("@Street", SelectedLocation.Street)
             };
 
             IEnumerable<Customer> customers = await Task.Run(() => dh.GetTable<Customer>(query, parameters));
@@ -182,15 +169,6 @@ namespace Projekt_HjemIS.ViewModels
         private async void GetMessages()
         {
             State = QueryState.Executing;
-
-            string[] input = CitySearch.Split('-');
-
-            Location loc = new Location()
-            {
-                City = input[0],
-                PostalCode = input[1],
-                Street = StreetSearch
-            };
 
             var query = @"SELECT 
                               c.PhoneNumber, 
@@ -215,9 +193,9 @@ namespace Projekt_HjemIS.ViewModels
 
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@City", input[0]),
-                new SqlParameter("@PostalCode", input[1]),
-                new SqlParameter("@Street", StreetSearch)
+                new SqlParameter("@City", SelectedLocation.City),
+                new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
+                new SqlParameter("@Street", SelectedLocation.Street)
             };
 
             IEnumerable<Message> msgs = await Task.Run(() => dh.GetTable<Message>(query, parameters));

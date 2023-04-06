@@ -17,24 +17,19 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ComboBox x:Name="CityBox" IsEditable="True" SelectedItem="{Binding SelectedCity}"  Text="{Binding CitySearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,25,0,0" VerticalAlignment="Top" Width="120">
+        <ComboBox x:Name="CityBox" IsEditable="True" SelectedItem="{Binding SelectedLocation}"  Text="{Binding CitySearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="50,25,0,0" VerticalAlignment="Top" Width="250">
             <ComboBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type models:Location}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="{Binding City}" />
-                        <Label Grid.Column="1" Content="{Binding PostalCode}"/>
+                        <Label Grid.Column="0" Content="{Binding Street}"/>
+                        <Label Grid.Column="1" Content="{Binding City}" />
+                        <Label Grid.Column="2" Content="{Binding PostalCode}"/>
                     </Grid>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <ComboBox x:Name="StreetBox" SelectedItem="{Binding SelectedStreet}" Text="{Binding StreetSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" ItemsSource="{Binding Path=Locations}" IsTextSearchEnabled="True" HorizontalAlignment="Left" Margin="250,25,0,0" VerticalAlignment="Top" Width="120">
-            <ComboBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:Location}">
-                    <Label Content="{Binding Street}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
@@ -51,10 +46,8 @@
                 <Image Source="/Pictures/sort.png" Width="20" Height="20" />
             </StackPanel>
         </Button>
-        <Label Content="Cities"  HorizontalAlignment="Left" Margin="50,5,0,0" VerticalAlignment="Top"/>
-        <Label Content="Streets"  HorizontalAlignment="Left" Margin="250,5,0,0" VerticalAlignment="Top"/>
+        <Label Content="Location"  HorizontalAlignment="Left" Margin="50,5,0,0" VerticalAlignment="Top"/>
         <Label Content="Customers"  HorizontalAlignment="Left" Margin="50,52,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="FindStreets" Content="Streets" HorizontalAlignment="Left" Margin="190,25,0,0" VerticalAlignment="Top"/>
         <Button x:Name="FindMessages" Content="Search" IsEnabled="True"  HorizontalAlignment="Left" Margin="380,25,0,0" VerticalAlignment="Top" Command="{Binding GetMessagesCommand}"/>
         <Button x:Name="GetCustomers" Content="Customers" IsEnabled="True"  HorizontalAlignment="Left" Margin="435,25,0,0" VerticalAlignment="Top" Command="{Binding GetCustomersCommand}"/>
         <ListBox x:Name="MessageLog" Width="700" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Height="600" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="50,100,0,0" ItemsSource="{Binding Path=Messages}">

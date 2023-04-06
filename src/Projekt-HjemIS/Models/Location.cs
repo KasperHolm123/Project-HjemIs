@@ -36,7 +36,7 @@ namespace Projekt_HjemIS.Models
 
         public override string ToString()
         {
-            return $"{City}-{PostalCode}";
+            return $"{Street} {City}-{PostalCode}";
         }
 
         static string CleanInput(string strIn)
