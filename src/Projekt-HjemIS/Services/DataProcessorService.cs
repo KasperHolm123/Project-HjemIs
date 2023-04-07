@@ -31,15 +31,20 @@ namespace Projekt_HjemIS.Services
             { "013", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
             { "014", new int[] { 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
             { "015", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
+            { "999", new int[] { } }
         };
 
         public void ProcessData()
         {
             var path = "../../dropzone/sample_data.txt";
 
+            var timer = new Stopwatch();
+            timer.Start();
+
             using (var reader = new StreamReader(path))
             {
                 var currentLine = "";
+
 
                 while ((currentLine = reader.ReadLine()) != null)
                 {
@@ -57,7 +62,8 @@ namespace Projekt_HjemIS.Services
                 }
             }
 
-            //File.WriteAllText(path, "");
+            timer.Stop();
+            Debug.WriteLine(timer.Elapsed);
         }
     }
 }
