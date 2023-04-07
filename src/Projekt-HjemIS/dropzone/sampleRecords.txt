@@ -1,8 +1,0 @@
-00037071220220301
-00107790030Skive               Testvej0002         002 008 L7800Spøttrup            
-00107790031Skive               Testvej0002         002 008 L7800Spøttrup            
-00107790032Skive               Testvej0003         002 008 L7800Spøttrup            
-00107790033Skive               Testvej0004         002 008 L7800Spøttrup            
-00107790034Skive               Testvej0005         002 008 L7800Spøttrup            
-00107790035Skive               Testvej0006         002 008 L7800Spøttrup            
-99900211912

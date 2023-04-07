@@ -66,7 +66,7 @@ namespace Projekt_HjemIS.ViewModels
             {
                 query = $"SELECT * FROM Users WHERE Username = '{Username}'";
 
-                var result = await dh.GetEntry<UserNew>(query);
+                var result = await dh.GetEntry<User>(query);
 
                 MessageBox.Show(result.Password);
             }

@@ -14,8 +14,8 @@ namespace Projekt_HjemIS.ViewModels
     {
         #region Fields
 
-        private ObservableCollection<UserNew> _users;
-        public ObservableCollection<UserNew> Users
+        private ObservableCollection<User> _users;
+        public ObservableCollection<User> Users
         {
             get => _users;
             set
@@ -35,13 +35,13 @@ namespace Projekt_HjemIS.ViewModels
 
         public UsersViewModel()
         {
-            ChangeAdminStatusCommand = new RelayCommand(p => ChangeAdminStatus((UserNew)p));
+            ChangeAdminStatusCommand = new RelayCommand(p => ChangeAdminStatus((User)p));
 
 
             Refresh();
         }
 
-        private async void ChangeAdminStatus(UserNew user)
+        private async void ChangeAdminStatus(User user)
         {
             var query = $"SELECT 1 FROM Users WHERE Username = '{user.Username}'";
 
@@ -87,7 +87,7 @@ namespace Projekt_HjemIS.ViewModels
 
         private async Task Refresh()
         {
-            Users = new ObservableCollection<UserNew>(dh.GetTable<UserNew>("SELECT * FROM Users"));
+            Users = new ObservableCollection<User>(dh.GetTable<User>("SELECT * FROM Users"));
         }
     }
 }

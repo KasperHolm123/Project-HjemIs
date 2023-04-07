@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,8 +23,12 @@ namespace Projekt_HjemIS.Systems
 
 
         // Holds a single record.
-        private static List<string> RecordSegments = new List<string>() { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        private static List<string> RecordSegments = new List<string>()
+        {
+            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+            string.Empty
+        };
 
         // Record segments
         private static int[] _postDist = new int[] { 3, 4, 4, 20, 20, 4, 4, 1, 4, 20 };
@@ -31,7 +36,6 @@ namespace Projekt_HjemIS.Systems
         /// <summary>
         /// Populate a list with data from a .txt file.
         /// </summary>
-
         /// <returns></returns>
         public static List<Location> GetRecords(string fileName)
         {
@@ -84,17 +88,23 @@ namespace Projekt_HjemIS.Systems
         {
             Dictionary<string, Location> loc = new Dictionary<string, Location>();
 
-            
             DatabaseHandler dh = new DatabaseHandler();
+            
             object records = await Task.Run(() => dh.CheckTable("Locations"));
+            
             int numberOfRecords = (int)records;
-            string result = string.Empty;
+
             DataTable dt = ListToDataTableConverter.ToDataTable(locations);
+
             if (numberOfRecords > 0)
             {
                 int a = dh.UpdateBulkData(dt);
             }
-            else { dh.AddBulkData<Location>(dt, "Locations"); }
+            else
+            {
+                await dh.AddBulkData<Location>(dt, "Locations");
+            
+            }
             return "Indlæsning færdig";
         }
 
@@ -106,14 +116,17 @@ namespace Projekt_HjemIS.Systems
         private static List<string> SpliceRecord(string currentRecord, int[] recordType)
         {
             int currentCol = 0;
+
             for (int i = 0; i < recordType.Length; i++)
             {
                 if (currentRecord != null)
                 {
                     RecordSegments[i] = currentRecord.Substring(currentCol, recordType[i]);
+
                     currentCol += recordType[i];
                 }
             }
+
             return RecordSegments;
         }
 
@@ -132,10 +145,7 @@ namespace Projekt_HjemIS.Systems
             loc.PostalDistrict = record[9];
 
         }
-        private static void ReplaceChars(Location city)
-        {
-            //if (city.Street.Contains("å"))  
-        }
+
         /// <summary>
         /// Returns current directory.
         /// </summary>

@@ -93,6 +93,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\DataProcessorService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ObservableObject.cs" />
     <Compile Include="Services\LoginService.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\UserNew.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Systems\DropzoneObserver.cs" />
     <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
     <Compile Include="Systems\Utility\Database_handling\DatabaseHandler.cs" />
@@ -282,6 +283,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\files.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="dropzone\sample_data.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

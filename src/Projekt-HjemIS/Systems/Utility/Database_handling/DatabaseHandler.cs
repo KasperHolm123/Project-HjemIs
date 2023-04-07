@@ -25,6 +25,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             (ConfigurationManager.ConnectionStrings["post"].ConnectionString);
 
         #region IDatabase Implementation
+
         public void ClearTable(string tableName)
         {
             string query = $"DELETE FROM {tableName};";
@@ -53,10 +54,6 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                 await connection.OpenAsync();
 
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(string) ||
-                            p.PropertyType == typeof(int) ||
-                            p.PropertyType == typeof(bool) ||
-                            p.PropertyType == typeof(decimal))
                     .Select(p => p.Name);
 
                 using (var command = new SqlCommand(query, connection))
@@ -67,14 +64,19 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
 
                         foreach (var property in properties)
                         {
-                            // index of range exception
-                            int ordinal = reader.GetOrdinal(property);
+                            Debug.WriteLine(reader.GetSchemaTable().Select($"ColumnName = '{property}'"));
+                            if (reader.HasRows && reader.GetSchemaTable().Select($"ColumnName = '{property}'").Length > 0)
+                            {
+                                // index of range exception
+                                int ordinal = reader.GetOrdinal(property);
 
-                            // this line causes an exception saying there is no data
-                            object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+                                // this line causes an exception saying there is no data
+                                object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
 
-                            typeof(T).GetProperty(property).SetValue(obj, value);
+                                typeof(T).GetProperty(property).SetValue(obj, value);
+                            }
                         }
+
                         return obj;
                     }
                 }
@@ -97,35 +99,36 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
                     */
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(string) || 
-                            p.PropertyType == typeof(int) ||
-                            p.PropertyType == typeof(bool) ||
-                            p.PropertyType == typeof(decimal))
                     .Select(p => p.Name);
 
-                SqlCommand cmd = new SqlCommand(query, connection);
-                
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (var command = new SqlCommand(query, connection))
                 {
-                    var internalTable = new List<T>();
-
-                    while (reader.Read())
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        T obj = Activator.CreateInstance<T>();
+                        var internalTable = new List<T>();
 
-                        foreach (var propertyName in properties)
+                        while (reader.Read())
                         {
-                            int ordinal = reader.GetOrdinal(propertyName);
-                            
-                            object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+                            T obj = Activator.CreateInstance<T>();
 
-                            typeof(T).GetProperty(propertyName).SetValue(obj, value);
+                            foreach (var property in properties)
+                            {
+                                // Makes sure that we only try to get values from relevant properties
+                                if (reader.HasRows && reader.GetSchemaTable().Select($"ColumnName = '{property}'").Length > 0)
+                                {                                
+                                    int ordinal = reader.GetOrdinal(property);
+
+                                    object value = reader.IsDBNull(ordinal) ? null : reader.GetValue(ordinal);
+
+                                    typeof(T).GetProperty(property).SetValue(obj, value);
+                                }
+                            }
+
+                            internalTable.Add(obj);
                         }
 
-                        internalTable.Add(obj);
+                        return internalTable;
                     }
-
-                    return internalTable;
                 }
             }
             catch (Exception ex)
@@ -149,10 +152,6 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
                     */
                 var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.PropertyType == typeof(string) ||
-                            p.PropertyType == typeof(int) ||
-                            p.PropertyType == typeof(bool) ||
-                            p.PropertyType == typeof(decimal))
                     .Select(p => p.Name);
 
                 using (var command = new SqlCommand(query, connection))

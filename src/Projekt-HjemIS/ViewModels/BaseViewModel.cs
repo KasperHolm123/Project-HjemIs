@@ -11,12 +11,14 @@ using System.Configuration;
 using System.ComponentModel;
 using Projekt_HjemIS.Services;
 using System.IO;
+using System.Security.Cryptography.Xml;
 
 namespace Projekt_HjemIS.ViewModels
 {
     public class BaseViewModel : ObservableObject, INotifyPropertyChanged
     {
         public static readonly DatabaseHandler dh = new DatabaseHandler();
+        public static readonly DataProcessorService dataService= new DataProcessorService();
         public static LoginService LoginService = new LoginService();
 
         /// <summary>

@@ -28,11 +28,6 @@ namespace Projekt_HjemIS.Models
             }
         }
 
-        public Location()
-        {
-
-        }
-
         public override string ToString()
         {
             return $"{Street} {City}-{PostalCode}";
@@ -44,12 +39,12 @@ namespace Projekt_HjemIS.Models
             try
             {
                 return Regex.Replace(strIn, @"[^\w\.@-]", "",
-                                     RegexOptions.None, TimeSpan.FromSeconds(1.5));
+                    RegexOptions.None, TimeSpan.FromSeconds(1.5));
             }
-            // If we timeout when replacing invalid characters,
-            // we should return Empty.
             catch (RegexMatchTimeoutException)
             {
+                // If we timeout when replacing invalid characters,
+                // we should return Empty.
                 return String.Empty;
             }
         }

@@ -9,6 +9,6 @@ namespace Projekt_HjemIS.Services
 {
     public class LoginService
     {
-        public static UserNew CurrentUser { get; set; }
+        public static User CurrentUser { get; set; }
     }
 }

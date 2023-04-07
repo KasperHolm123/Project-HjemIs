@@ -82,7 +82,7 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (exists)
                 {
-                    //LoginService.CurrentUser = await dh.GetEntry<Product>($"SELECT 1 FROM Products WHERE ID = {id}");
+                    //LoginService.CurrentUser = await dh.GetEntry<UserNew>($"SELECT [Admin] FROM Users WHERE Username = {Username}");
                     NavigationService.ChangeBaseView<DashboardViewModel>();
                 }
                 else
