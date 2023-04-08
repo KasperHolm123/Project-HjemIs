@@ -11,6 +11,18 @@ namespace Projekt_HjemIS.Models
     {
         public string RecordType { get; set; }
     }
+    
+    public class RecordTypeLocation : Record
+    {
+        public int ID { get; set; }
+        public string StreetName { get; set; }
+	    public string CountyCode { get; set; }
+	    public string StreetCode { get; set; }
+	    public string HouseNumberFrom { get; set; }
+	    public string HouseNumberTo { get; set; }
+	    public string EvenOdd { get; set; }
+	    public string PostalCode { get; set; }
+    }
 
     public class RecordTypeOther : Record
     {

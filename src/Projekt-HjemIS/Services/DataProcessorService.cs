@@ -155,7 +155,7 @@ namespace Projekt_HjemIS.Services
                 new SqlParameter("@FromStreetCode", convertedRecord.FromStreetCode),
                 new SqlParameter("@ThereStart", convertedRecord.ThereStart),
                 new SqlParameter("@StreetAddrName", convertedRecord.StreetAddrName),
-                new SqlParameter("@StreetName", convertedRecord.StreetName),
+                new SqlParameter("@StreetName", convertedRecord.StreetName.Trim()),
             };
 
             await databaseHandler.AddData(query, parameters.ToArray());

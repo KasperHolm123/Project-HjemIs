@@ -18,7 +18,7 @@ namespace Projekt_HjemIS.ViewModels
     public class BaseViewModel : ObservableObject, INotifyPropertyChanged
     {
         public static readonly DatabaseHandler dh = new DatabaseHandler();
-        public static readonly DataProcessorService dataService= new DataProcessorService();
+        public static readonly DataProcessorService dataService = new DataProcessorService();
         public static LoginService LoginService = new LoginService();
 
         /// <summary>

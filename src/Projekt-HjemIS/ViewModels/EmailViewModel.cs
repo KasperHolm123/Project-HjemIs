@@ -32,8 +32,8 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private ObservableCollection<Location> _locations;
-        public ObservableCollection<Location> Locations
+        private ObservableCollection<RecordTypeLocation> _locations;
+        public ObservableCollection<RecordTypeLocation> Locations
         {
             get => _locations;
             set
@@ -54,8 +54,8 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private ObservableCollection<Location> _recipients;
-        public ObservableCollection<Location> Recipients
+        private ObservableCollection<RecordTypeLocation> _recipients;
+        public ObservableCollection<RecordTypeLocation> Recipients
         {
             get => _recipients;
             set
@@ -88,8 +88,8 @@ namespace Projekt_HjemIS.ViewModels
 
         public EmailViewModel()
         {
-            Locations = new ObservableCollection<Location>(dh.GetTable<Location>("SELECT * FROM Locations"));
-            Recipients = new ObservableCollection<Location>();
+            Locations = new ObservableCollection<RecordTypeLocation>(dh.GetTable<RecordTypeLocation>("SELECT * FROM Location"));
+            Recipients = new ObservableCollection<RecordTypeLocation>();
 
             Message = new Message();
 
@@ -99,8 +99,8 @@ namespace Projekt_HjemIS.ViewModels
             };
             FilteredLocations.Filter += Search;
 
-            AddRecipientCommand = new RelayCommand(p => AddRecipient((Location)p));
-            RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((Location)p));
+            AddRecipientCommand = new RelayCommand(p => AddRecipient((RecordTypeLocation)p));
+            RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((RecordTypeLocation)p));
             CreateMessageCommand = new RelayCommand(p => CreateMessage());
         }
 
@@ -150,7 +150,7 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private async Task<List<int>> GetCustomersOnRecipient(Location location)
+        private async Task<List<int>> GetCustomersOnRecipient(RecordTypeLocation location)
         {
             var query = "SELECT PhoneNumber FROM Customers " +
                         "INNER JOIN (" +
@@ -189,7 +189,7 @@ namespace Projekt_HjemIS.ViewModels
             return phoneNumbers;
         }
 
-        private void AddRecipient(Location location)
+        private void AddRecipient(RecordTypeLocation location)
         {
             if (location != null)
             {
@@ -198,7 +198,7 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private void RemoveRecipient(Location location)
+        private void RemoveRecipient(RecordTypeLocation location)
         {
             if (location != null)
             {
@@ -215,7 +215,7 @@ namespace Projekt_HjemIS.ViewModels
             }
             else
             {
-                e.Accepted = e.Item is Location item && item.Street.ToUpper().Contains(SearchQuery.ToUpper());
+                e.Accepted = e.Item is RecordTypeLocation item && item.StreetName.ToUpper().Contains(SearchQuery.ToUpper());
             }
         }
     }
