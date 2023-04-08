@@ -30,7 +30,7 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding StreetNameFilter}"
                          Width="150"
                          Height="25" />
             </Grid>
@@ -40,7 +40,7 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding PostalCodeFilter}"
                          Width="150"
                          Height="25" />
             </Grid>
@@ -50,7 +50,7 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding CountyCodeFilter}"
                          Width="150"
                          Height="25" />
             </Grid>
@@ -60,7 +60,7 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding StreetCodeFilter}"
                          Width="150"
                          Height="25" />
             </Grid>
@@ -70,7 +70,7 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding HouseNumberFromFilter}"
                          Width="150"
                          Height="25" />
             </Grid>
@@ -80,7 +80,7 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding HouseNumberToFilter}"
                          Width="150"
                          Height="25" />
             </Grid>
@@ -90,14 +90,21 @@
                        VerticalAlignment="Top"
                        FontSize="14"
                        FontStyle="Italic"/>
-                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding EvenOddFilter}"
                          Width="150"
                          Height="25" />
                 <Button Content="Search"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Width="60"
-                        Height="30" />
+                        Height="30"
+                        Command="{Binding SearchCommand}"/>
+                <Button Content="Clear"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Width="60"
+                    Height="30"
+                    Command="{Binding ClearSearchCommand}"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="1">

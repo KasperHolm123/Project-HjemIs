@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
@@ -20,17 +21,88 @@ namespace Projekt_HjemIS.ViewModels
 
         #region Fields
 
-        private string _searchQuery;
-        public string SearchQuery
+        #region Search fields
+
+        private string _streetNameFilter;
+        public string StreetNameFilter
         {
-            get => _searchQuery;
+            get => _streetNameFilter;
             set
             {
-                _searchQuery = value;
-                FilteredLocations.View.Refresh();
+                _streetNameFilter = value;
                 OnPropertyChanged();
             }
         }
+
+        private string _postalCodeFilter;
+        public string PostalCodeFilter
+        {
+            get => _postalCodeFilter;
+            set
+            {
+                _postalCodeFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _countyCodeFilter;
+        public string CountyCodeFilter
+        {
+            get => _countyCodeFilter;
+            set
+            {
+                _countyCodeFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _streetCodeFilter;
+        public string StreetCodeFilter
+        {
+            get => _streetCodeFilter;
+            set
+            {
+                _streetCodeFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _houseNumberFromFilter;
+        public string HouseNumberFromFilter
+        {
+            get => _houseNumberFromFilter;
+            set
+            {
+                _houseNumberFromFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _houseNumberToFilter;
+        public string HouseNumberToFilter
+        {
+            get => _houseNumberToFilter;
+            set
+            {
+                _houseNumberToFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _evenOddFilter;
+        public string EvenOddFilter
+        {
+            get => _evenOddFilter;
+            set
+            {
+                _evenOddFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Collections/Collection objects
 
         private ObservableCollection<RecordTypeLocation> _locations;
         public ObservableCollection<RecordTypeLocation> Locations
@@ -78,11 +150,16 @@ namespace Projekt_HjemIS.ViewModels
 
         #endregion
 
+        #endregion
+
         #region Commands
 
         public RelayCommand AddRecipientCommand { get; set; }
         public RelayCommand RemoveRecipientCommand { get; set; }
         public RelayCommand CreateMessageCommand { get; set; }
+        public RelayCommand SearchCommand { get; set; }
+        public RelayCommand ClearSearchCommand { get; set; }
+        
 
         #endregion
 
@@ -102,6 +179,8 @@ namespace Projekt_HjemIS.ViewModels
             AddRecipientCommand = new RelayCommand(p => AddRecipient((RecordTypeLocation)p));
             RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((RecordTypeLocation)p));
             CreateMessageCommand = new RelayCommand(p => CreateMessage());
+            SearchCommand = new RelayCommand(p => Search());
+            ClearSearchCommand = new RelayCommand(p => ClearSearch());
         }
 
         private async void CreateMessage()
@@ -207,16 +286,43 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
+        private void Search()
+        {
+            var filteredLocations = Locations.Where(location =>
+                (string.IsNullOrEmpty(StreetNameFilter) || location.StreetName.ToUpper().Contains(StreetNameFilter.ToUpper())) &&
+                (string.IsNullOrEmpty(PostalCodeFilter) || location.PostalCode.ToUpper().Contains(PostalCodeFilter.ToUpper())) &&
+                (string.IsNullOrEmpty(CountyCodeFilter) || location.CountyCode.ToUpper().Contains(CountyCodeFilter.ToUpper())) &&
+                (string.IsNullOrEmpty(StreetCodeFilter) || location.StreetCode.ToUpper().Contains(StreetCodeFilter.ToUpper())) &&
+                (string.IsNullOrEmpty(HouseNumberFromFilter) || location.HouseNumberFrom.ToUpper().Contains(HouseNumberFromFilter.ToUpper())) &&
+                (string.IsNullOrEmpty(HouseNumberToFilter) || location.HouseNumberTo.ToUpper().Contains(HouseNumberToFilter.ToUpper())) &&
+                (string.IsNullOrEmpty(EvenOddFilter) || location.EvenOdd.ToUpper().Contains(EvenOddFilter.ToUpper())));
+
+
+            FilteredLocations.Source = new ObservableCollection<RecordTypeLocation>(filteredLocations);
+        }
+
+        private void ClearSearch()
+        {
+            StreetNameFilter = "";
+            PostalCodeFilter = "";
+            CountyCodeFilter = "";
+            StreetCodeFilter = "";
+            HouseNumberFromFilter = "";
+            HouseNumberToFilter = "";
+            EvenOddFilter = "";
+        }
+
         private void Search(object sender, FilterEventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchQuery))
-            {
-                e.Accepted = true;
-            }
-            else
-            {
-                e.Accepted = e.Item is RecordTypeLocation item && item.StreetName.ToUpper().Contains(SearchQuery.ToUpper());
-            }
+            
+            //if (string.IsNullOrEmpty(SearchQuery))
+            //{
+            //    e.Accepted = true;
+            //}
+            //else
+            //{
+            //    e.Accepted = e.Item is RecordTypeLocation item && item.StreetName.ToUpper().Contains(SearchQuery.ToUpper());
+            //}
         }
     }
 }
