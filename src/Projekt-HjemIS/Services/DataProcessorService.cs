@@ -17,7 +17,7 @@ namespace Projekt_HjemIS.Services
     {
         private static readonly DatabaseHandler databaseHandler = new DatabaseHandler();
 
-        private static Dictionary<string, int[]> _recordTypes = new Dictionary<string, int[]>
+        private Dictionary<string, int[]> _recordTypes = new Dictionary<string, int[]>
         {
             // All records are made up of sections with a pre-assigned
             // max digits. The numbers in this dictionary represent
@@ -52,6 +52,9 @@ namespace Projekt_HjemIS.Services
             {
                 using (var reader = new StreamReader(path))
                 {
+                    var timer = new Stopwatch();
+                    timer.Start();
+
                     var currentLine = "";
                     while ((currentLine = reader.ReadLine()) != null)
                     {
@@ -78,6 +81,9 @@ namespace Projekt_HjemIS.Services
                             }
                         }
                     }
+
+                    timer.Stop();
+                    Debug.WriteLine(timer.Elapsed);
 
                     var timer1 = new Stopwatch();
                     timer1.Start();
@@ -211,22 +217,18 @@ namespace Projekt_HjemIS.Services
             await databaseHandler.AddData(query, parameters.ToArray());
         }
 
-        private static string[] ParseRecord(string loadedRecord, string type)
+        public string[] ParseRecord(string loadedRecord, string type)
         {
-            // used to keep track of which section we're at in the .
+            // used to keep track of which section we're at in the loaded record
             var readDigits = 0;
 
             var record = new string[_recordTypes[type].Length];
 
             for (int i = 0; i < record.Length; i++)
             {
-                // building the record section by section
-                foreach (var sectionLength in _recordTypes[type])
-                {
-                    record[i] = loadedRecord.Substring(readDigits, sectionLength);
-                    readDigits += sectionLength;
-                    i++;
-                }
+                var sectionLength = _recordTypes[type][i];
+                record[i] = loadedRecord.Substring(readDigits, sectionLength);
+                readDigits += sectionLength;
             }
 
             return record;
