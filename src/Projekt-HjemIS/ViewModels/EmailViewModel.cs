@@ -174,7 +174,6 @@ namespace Projekt_HjemIS.ViewModels
             {
                 Source = Locations
             };
-            FilteredLocations.Filter += Search;
 
             AddRecipientCommand = new RelayCommand(p => AddRecipient((RecordTypeLocation)p));
             RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((RecordTypeLocation)p));
@@ -310,19 +309,6 @@ namespace Projekt_HjemIS.ViewModels
             HouseNumberFromFilter = "";
             HouseNumberToFilter = "";
             EvenOddFilter = "";
-        }
-
-        private void Search(object sender, FilterEventArgs e)
-        {
-            
-            //if (string.IsNullOrEmpty(SearchQuery))
-            //{
-            //    e.Accepted = true;
-            //}
-            //else
-            //{
-            //    e.Accepted = e.Item is RecordTypeLocation item && item.StreetName.ToUpper().Contains(SearchQuery.ToUpper());
-            //}
         }
     }
 }

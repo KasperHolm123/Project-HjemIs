@@ -52,8 +52,8 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private Location _selectedLocation;
-        public Location SelectedLocation
+        private RecordTypeLocation _selectedLocation;
+        public RecordTypeLocation SelectedLocation
         {
             get => _selectedLocation;
             set
@@ -87,8 +87,8 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private ObservableCollection<Location> _streets;
-        public ObservableCollection<Location> Streets
+        private ObservableCollection<RecordTypeLocation> _streets;
+        public ObservableCollection<RecordTypeLocation> Streets
         {
             get { return _streets; }
             set
@@ -98,8 +98,8 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private ObservableCollection<Location> _locations;
-        public ObservableCollection<Location> Locations
+        private ObservableCollection<RecordTypeLocation> _locations;
+        public ObservableCollection<RecordTypeLocation> Locations
         {
             get { return _locations; }
             set
@@ -125,7 +125,7 @@ namespace Projekt_HjemIS.ViewModels
             GetCustomersCommand = new RelayCommand(p => GetCustomers());
             GetMessagesCommand = new RelayCommand(p => GetMessages());
 
-            Locations = new ObservableCollection<Location>(dh.GetTable<Location>("SELECT * FROM Locations"));
+            Locations = new ObservableCollection<RecordTypeLocation>(dh.GetTable<RecordTypeLocation>("SELECT * FROM Locations"));
             Messages = new ObservableCollection<Message>(dh.GetTable<Message>("SELECT * FROM Messages"));
         }
 
@@ -152,9 +152,9 @@ namespace Projekt_HjemIS.ViewModels
             {
                 parameters = new List<SqlParameter>
                 {
-                    new SqlParameter("@City", SelectedLocation.City),
+                    new SqlParameter("@City", SelectedLocation.CityName),
                     new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
-                    new SqlParameter("@Street", SelectedLocation.Street)
+                    new SqlParameter("@Street", SelectedLocation.StreetName)
                 };
             }
             catch (Exception ex)
@@ -207,9 +207,9 @@ namespace Projekt_HjemIS.ViewModels
             {
                 parameters = new List<SqlParameter>
                 {
-                    new SqlParameter("@City", SelectedLocation.City),
+                    new SqlParameter("@City", SelectedLocation.CityName),
                     new SqlParameter("@PostalCode", SelectedLocation.PostalCode),
-                    new SqlParameter("@Street", SelectedLocation.Street)
+                    new SqlParameter("@Street", SelectedLocation.StreetName)
                 };
             }
             catch (Exception ex)

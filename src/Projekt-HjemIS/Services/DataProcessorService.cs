@@ -1,4 +1,5 @@
 ﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Systems;
 using Projekt_HjemIS.Systems.Utility.Database_handling;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Projekt_HjemIS.Services
             // All records are made up of sections with a pre-assigned
             // max digits. The numbers in this dictionary represent
             // the max digits of each section in each record-type    
-            { "000", new int[] { } },
+            { "000", new int[] { 3 } },
             { "001", new int[] { 3, 4, 4, 12, 4, 4, 4, 4, 12, 20, 40 } },
             { "002", new int[] { 3, 4, 4, 4, 4, 2, 4, 12, 1, 12, 12, 34 } },
             { "003", new int[] { 3, 4, 4, 4, 4, 1, 12, 34 } },
@@ -37,58 +38,69 @@ namespace Projekt_HjemIS.Services
             { "013", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 20 } },
             { "014", new int[] { 3, 4, 4, 4, 4, 1, 12, 2, 30 } },
             { "015", new int[] { 3, 4, 4, 4, 4, 1, 12, 4, 30 } },
-            { "999", new int[] { } }
+            { "999", new int[] { 3 } }
         };
+
+        private static List<RecordTypeAKTVEJ> _aktvejRecords = new List<RecordTypeAKTVEJ>();
+        private static List<RecordTypeOther> _otherRecords = new List<RecordTypeOther>();
 
         public async Task ProcessData()
         {
-            var path = "../../dropzone/sample_data.txt";
+            var path = "../../dropzone/full_data.txt";
 
-            var timer = new Stopwatch();
-            timer.Start();
-
-            using (var reader = new StreamReader(path))
+            try
             {
-                var records = new List<Record>();
-
-                var currentLine = "";
-                while ((currentLine = reader.ReadLine()) != null)
+                using (var reader = new StreamReader(path))
                 {
-                    // all data (of correct format) starts with a record-type as it's 3 first digits.
-                    var recordType = currentLine.Substring(0, 3);
-
-                    var record = ParseRecord(currentLine, recordType);
-
-                    switch (record[0])
+                    var currentLine = "";
+                    while ((currentLine = reader.ReadLine()) != null)
                     {
-                        case "001":
-                            records.Add(new RecordTypeAKTVEJ(record));
-                            break;
-                        case "002":
-                            records.Add(new RecordTypeBOLIG());
-                            break;
-                        case "005":
-                            records.Add(new RecordTypeNOTATVEJ());
-                            break;
-                        case "000":
-                        case "999":
-                            break;
-                        default:
-                            records.Add(new RecordTypeOther(record));
-                            break;
+                        // all data (of correct format) starts with a record-type as it's 3 first digits.
+                        var recordType = currentLine.Substring(0, 3);
+
+                        if (recordType != "000" && recordType != "999")
+                        {
+                            var record = ParseRecord(currentLine, recordType);
+
+                            switch (record[0])
+                            {
+                                case "001":
+                                    _aktvejRecords.Add(new RecordTypeAKTVEJ(record));
+                                    break;
+                                case "002":
+                                case "005":
+                                case "000":
+                                case "999":
+                                    break;
+                                default:
+                                    _otherRecords.Add(new RecordTypeOther(record));
+                                    break;
+                            }
+                        }
                     }
 
-                    Debug.WriteLine("");
+                    var timer1 = new Stopwatch();
+                    timer1.Start();
+
+                    // upsert all parsed Record object to database
+                    await SendRecordsToStagingTables();
+
+                    timer1.Stop();
+                    Debug.WriteLine(timer1.Elapsed);
+
+                    var timer2 = new Stopwatch();
+                    timer2.Start();
+
+                    await BuildLocations();
+
+                    timer2.Stop();
+                    Debug.WriteLine(timer2.Elapsed);
                 }
-
-                // upsert all parsed Record object to database
-                await SaveToDatabase(records);
-
-                await BuildLocations();
             }
-
-            timer.Stop();
-            Debug.WriteLine(timer.Elapsed);
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
@@ -98,10 +110,10 @@ namespace Projekt_HjemIS.Services
         /// <returns></returns>
         private static async Task BuildLocations()
         {
-            var query = "INSERT INTO [Location] (StreetName, CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
+            var query = "INSERT INTO [location] (StreetName, CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
                         "SELECT AKTVEJ.StreetName, Other.CountyCode, Other.StreetCode, Other.HouseNumberFrom, Other.HouseNumberTo, Other.EvenOdd, Other.PostalCode " +
-                        "FROM RecordTypeAKTVEJ AS AKTVEJ " +
-                        "JOIN RecordTypeOther AS Other " +
+                        "FROM record_type_aktvej AS AKTVEJ " +
+                        "JOIN record_type_other AS Other " +
                         "ON AKTVEJ.CountyCode = Other.CountyCode " +
                         "AND AKTVEJ.StreetCode = Other.StreetCode " +
                         "WHERE AKTVEJ.CountyCode = Other.CountyCode " +
@@ -111,20 +123,18 @@ namespace Projekt_HjemIS.Services
             await databaseHandler.AddData(query);
         }
 
-        private static async Task SaveToDatabase(List<Record> records)
+        private async Task SendRecordsToStagingTables()
         {
-            foreach (var record in records)
-            {
-                // upload logic moved into separate methods for better readability
-                if (record.GetType() == typeof(RecordTypeAKTVEJ))
-                {
-                    await UploadAktvej(record);
-                }
-                else if (record.GetType() == typeof(RecordTypeOther))
-                {
-                    await UploadOther(record);
-                }
-            }
+            var otherDt = _otherRecords.ToDataTable();
+            await databaseHandler.AddBulkData<RecordTypeOther>(otherDt, "staging_record_type_other");
+            
+            var aktvejDt = _aktvejRecords.ToDataTable();
+            await databaseHandler.AddBulkData<RecordTypeAKTVEJ>(aktvejDt, "staing_record_type_aktvej");
+        }
+
+        private async Task FinalizeSavingRecords()
+        {
+
         }
 
         private static async Task UploadAktvej(Record record)
@@ -186,9 +196,9 @@ namespace Projekt_HjemIS.Services
                 new SqlParameter("@HouseNumberFrom", convertedRecord.HouseNumberFrom),
                 new SqlParameter("@HouseNumberTo", convertedRecord.HouseNumberTo),
                 new SqlParameter("@EvenOdd", convertedRecord.EvenOdd),
-                new SqlParameter("@Timestamp", convertedRecord.Timestamp)
+                new SqlParameter("@Timestamp", convertedRecord.Timestamp),
             };
-
+            
             if (convertedRecord.RecordType == "004")
             {
                 parameters.Add(new SqlParameter("@PostalCode", convertedRecord.PostalCode));

@@ -5,7 +5,7 @@
 
 # Custom directories
 miscfiles/
-
+src/Projekt-HjemIS/dropzone/full_data.txt
 
 # User-specific files
 *.rsuser

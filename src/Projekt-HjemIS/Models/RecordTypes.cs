@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Projekt_HjemIS.Models
 	    public string HouseNumberTo { get; set; }
 	    public string EvenOdd { get; set; }
 	    public string PostalCode { get; set; }
+        public string CityName { get; set; }
     }
 
     public class RecordTypeOther : Record
@@ -43,7 +45,14 @@ namespace Projekt_HjemIS.Models
             HouseNumberTo = record[4];
             EvenOdd = record[5];
             Timestamp = record[6];
-            PostalCode = record[7];
+            if (record[0] == "004")
+            {
+                PostalCode = record[7];
+            }
+            else
+            {
+                PostalCode = "";
+            }
         }
     }
 

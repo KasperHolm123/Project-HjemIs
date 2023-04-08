@@ -327,10 +327,10 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         {
             try
             {
+                ClearTable(tableName);
+
                 connection.Open();
 
-                ClearTable(tableName);
-            
                 using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
                 {
                     bulkCopy.DestinationTableName = tableName;

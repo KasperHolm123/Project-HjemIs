@@ -135,6 +135,9 @@
                                       CommandParameter="{Binding ElementName=locationsGrid, Path=SelectedItem}"/>
                     </DataGrid.InputBindings>
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="City"
+                                        Binding="{Binding Path=CityName}"
+                                        IsReadOnly="True" />
                         <DataGridTextColumn Header="Street"
                                         Binding="{Binding Path=StreetName}"
                                         IsReadOnly="True" />

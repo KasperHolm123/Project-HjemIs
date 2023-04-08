@@ -15,7 +15,7 @@ namespace Projekt_HjemIS.Systems
     /// </summary>
     public static class ListToDataTableConverter
     {
-        public static DataTable ToDataTable<T>(List<T> items)
+        public static DataTable ToDataTable<T>(this List<T> items)
         {
             DataTable dataTable = new DataTable(typeof(T).Name);
 
