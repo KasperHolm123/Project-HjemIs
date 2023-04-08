@@ -8,70 +8,227 @@
              d:DataContext="{d:DesignInstance viewmodels:EmailViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1090">
-    <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="3*"/>
-            </Grid.RowDefinitions>
-            <TextBox x:Name="messageBodytxt" Grid.Row="1" Text="{Binding Message.Body}" FontSize="15" Width="425" Height="400" Margin="-380,100,0,0" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"/>
-        </Grid>
-        <Grid>
+
+    <Grid Background="Gray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <Label Content="Street:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="95,32,0,0"/>
-                <TextBox x:Name="searchTxt" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30" Margin="-50,35,0,0"/>
-                <Button x:Name="searchButton" Content="Search" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="30" Margin="200,35,0,0" />
-                <DataGrid x:Name="recipientsDataGrid" ItemsSource="{Binding FilteredLocations.View}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,80,0,0" AutoGenerateColumns="False">
+                <Label Content="Street:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+            </Grid>
+            <Grid Grid.Column="1">
+                <Label Content="Postal Code:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+            </Grid>
+            <Grid Grid.Column="2">
+                <Label Content="County Code:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+            </Grid>
+            <Grid Grid.Column="3">
+                <Label Content="Street Code:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+            </Grid>
+            <Grid Grid.Column="4">
+                <Label Content="From Number:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+            </Grid>
+            <Grid Grid.Column="5">
+                <Label Content="To Number:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+            </Grid>
+            <Grid Grid.Column="6">
+                <Label Content="Even/Odd:"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         Height="25" />
+                <Button Content="Search"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Width="60"
+                        Height="30" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="250" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0"
+                  Grid.Row="0">
+                <Label Content="Locations"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <DataGrid x:Name="locationsGrid"
+                      Grid.Column="0"
+                      ItemsSource="{Binding FilteredLocations.View}"
+                      Width="500"
+                      Height="200"
+                      AutoGenerateColumns="False">
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick"
                                       Command="{Binding AddRecipientCommand}"
-                                      CommandParameter="{Binding ElementName=recipientsDataGrid, Path=SelectedItem}"/>
+                                      CommandParameter="{Binding ElementName=locationsGrid, Path=SelectedItem}"/>
                     </DataGrid.InputBindings>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Street" Binding="{Binding Path=StreetName}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="Street Code" Binding="{Binding Path=StreetCode}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="From Number" Binding="{Binding Path=HouseNumberFrom}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="To Number" Binding="{Binding Path=HouseNumberTo}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="Even/Odd" Binding="{Binding Path=EvenOdd}" IsReadOnly="True" />
-                        
+                        <DataGridTextColumn Header="Street"
+                                        Binding="{Binding Path=StreetName}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="Postal Code"
+                                        Binding="{Binding Path=PostalCode}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="County Code"
+                                        Binding="{Binding Path=CountyCode}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="Street Code"
+                                        Binding="{Binding Path=StreetCode}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="From Number"
+                                        Binding="{Binding Path=HouseNumberFrom}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="To Number"
+                                        Binding="{Binding Path=HouseNumberTo}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="Even/Odd"
+                                        Binding="{Binding Path=EvenOdd}"
+                                        IsReadOnly="True" />
+
                     </DataGrid.Columns>
                 </DataGrid>
-                <DataGrid x:Name="recipientsGrid" ItemsSource="{Binding Recipients}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="400" Height="200" Margin="0,500,-500,0" AutoGenerateColumns="False">
+            </Grid>
+            <Grid Grid.Column="1"
+                  Grid.Row="0">
+                <Label Content="Recipients"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <DataGrid x:Name="recipientsGrid"
+                      Grid.Column="0"
+                      ItemsSource="{Binding Recipients}"
+                      Width="500"
+                      Height="200"
+                      AutoGenerateColumns="False">
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick"
                                       Command="{Binding RemoveRecipientCommand}"
                                       CommandParameter="{Binding ElementName=recipientsGrid, Path=SelectedItem}"/>
                     </DataGrid.InputBindings>
-                    
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Street" Binding="{Binding Path=Street}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Postal Code" Binding="{Binding Path=PostalCode}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="Street Code" Binding="{Binding Path=StreetCode}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="County Code" Binding="{Binding Path=CountyCode}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Street"
+                                        Binding="{Binding Path=StreetName}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="Postal Code"
+                                        Binding="{Binding Path=PostalCode}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="County Code"
+                                        Binding="{Binding Path=CountyCode}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="Street Code"
+                                        Binding="{Binding Path=StreetCode}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="From Number"
+                                        Binding="{Binding Path=HouseNumberFrom}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="To Number"
+                                        Binding="{Binding Path=HouseNumberTo}"
+                                        IsReadOnly="True" />
+                        <DataGridTextColumn Header="Even/Odd"
+                                        Binding="{Binding Path=EvenOdd}"
+                                        IsReadOnly="True" />
+
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-            <Grid Grid.Column="1">
-                <Label Content="Subject:" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" FontWeight="Bold" Margin="0,430,280,0" />
-                <Button Content="Send" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" Height="40" Margin="0,430,10,0" Command="{Binding CreateMessageCommand}"/>
+            <Grid Grid.Row="1"
+                  Grid.Column="0">
+                <Label Content="Message Body"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic"/>
+                <TextBox Text="{Binding Message.Body}"
+                         FontSize="15"
+                         Width="500"
+                         Height="300"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         TextWrapping="Wrap"/>
             </Grid>
-
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="10*"/>
-                </Grid.RowDefinitions>
-                <TextBox x:Name="subjectTxt" Text="{Binding Message.Subject}" Grid.Row="2" Width="150" Height="30" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="272,227,0,0" Grid.ColumnSpan="2"/>
+            <Grid Grid.Row="1"
+                  Grid.Column="1">
+                <Label Content="Subject"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       FontSize="14"
+                       FontStyle="Italic" Margin="110,136,0,0"/>
+                <Button Content="Send"
+                        FontSize="24"
+                        Width="100"
+                        Height="40"
+                        Command="{Binding CreateMessageCommand}" Margin="323,165,122,165"/>
+                <TextBox Text="{Binding Message.Subject}"
+                         Width="150"
+                         Height="30"
+                         FontWeight="Bold"
+                         FontSize="15" Margin="70,170,325,170" />
             </Grid>
         </Grid>
     </Grid>

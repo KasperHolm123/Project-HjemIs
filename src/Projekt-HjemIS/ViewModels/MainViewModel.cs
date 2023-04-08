@@ -33,7 +33,6 @@ namespace Projekt_HjemIS.ViewModels
         {
             _navigationService = navService;
             NavigationService.ChangeBaseView<LoginViewModel>();
-            //dataService.ProcessData();
         }
     }
 }
