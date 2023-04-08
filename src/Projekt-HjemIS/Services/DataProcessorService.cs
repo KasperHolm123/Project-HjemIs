@@ -98,14 +98,15 @@ namespace Projekt_HjemIS.Services
         /// <returns></returns>
         private static async Task BuildLocations()
         {
-            var query = "INSERT INTO [Location] (StreetName, CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd) " +
-                        "SELECT AKTVEJ.StreetName, Other.CountyCode, Other.StreetCode, Other.HouseNumberFrom, Other.HouseNumberTo, Other.EvenOdd " +
+            var query = "INSERT INTO [Location] (StreetName, CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
+                        "SELECT AKTVEJ.StreetName, Other.CountyCode, Other.StreetCode, Other.HouseNumberFrom, Other.HouseNumberTo, Other.EvenOdd, Other.PostalCode " +
                         "FROM RecordTypeAKTVEJ AS AKTVEJ " +
                         "JOIN RecordTypeOther AS Other " +
                         "ON AKTVEJ.CountyCode = Other.CountyCode " +
                         "AND AKTVEJ.StreetCode = Other.StreetCode " +
                         "WHERE AKTVEJ.CountyCode = Other.CountyCode " +
-                        "AND AKTVEJ.StreetCode = Other.StreetCode;";
+                        "AND AKTVEJ.StreetCode = Other.StreetCode " +
+                        "AND Other.PostalCode != '';";
 
             await databaseHandler.AddData(query);
         }
@@ -166,8 +167,8 @@ namespace Projekt_HjemIS.Services
 
             var query = "INSERT INTO RecordTypeOther " +
                         "(RecordType, CountyCode, StreetCode, HouseNumberFrom, " +
-                        "HouseNumberTo, EvenOdd, [Timestamp]) " +
-                        "SELECT @RecordType, @CountyCode, @StreetCode, @HouseNumberFrom, @HouseNumberTo, @EvenOdd, @Timestamp " +
+                        "HouseNumberTo, EvenOdd, [Timestamp], PostalCode) " +
+                        "SELECT @RecordType, @CountyCode, @StreetCode, @HouseNumberFrom, @HouseNumberTo, @EvenOdd, @Timestamp, @PostalCode " +
                         "WHERE NOT EXISTS ( " +
                             "SELECT 1 FROM RecordTypeOther " +
                             "WHERE CountyCode = @CountyCode " +
@@ -185,8 +186,17 @@ namespace Projekt_HjemIS.Services
                 new SqlParameter("@HouseNumberFrom", convertedRecord.HouseNumberFrom),
                 new SqlParameter("@HouseNumberTo", convertedRecord.HouseNumberTo),
                 new SqlParameter("@EvenOdd", convertedRecord.EvenOdd),
-                new SqlParameter("@Timestamp", convertedRecord.Timestamp),
+                new SqlParameter("@Timestamp", convertedRecord.Timestamp)
             };
+
+            if (convertedRecord.RecordType == "004")
+            {
+                parameters.Add(new SqlParameter("@PostalCode", convertedRecord.PostalCode));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@PostalCode", ""));
+            }
 
             await databaseHandler.AddData(query, parameters.ToArray());
         }

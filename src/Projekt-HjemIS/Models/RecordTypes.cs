@@ -20,6 +20,7 @@ namespace Projekt_HjemIS.Models
         public string HouseNumberTo { get; set; }
         public string EvenOdd { get; set; }
         public string Timestamp { get; set; }
+        public string PostalCode { get; set; }
 
         public RecordTypeOther(string[] record)
         {
@@ -30,6 +31,7 @@ namespace Projekt_HjemIS.Models
             HouseNumberTo = record[4];
             EvenOdd = record[5];
             Timestamp = record[6];
+            PostalCode = record[7];
         }
     }
 
