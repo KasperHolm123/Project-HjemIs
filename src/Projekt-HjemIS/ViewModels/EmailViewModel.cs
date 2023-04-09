@@ -115,17 +115,6 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private CollectionViewSource _filteredLocations;
-        public CollectionViewSource FilteredLocations
-        {
-            get => _filteredLocations;
-            set
-            {
-                _filteredLocations = value;
-                OnPropertyChanged();
-            }
-        }
-
         private ObservableCollection<RecordTypeLocation> _recipients;
         public ObservableCollection<RecordTypeLocation> Recipients
         {
@@ -165,24 +154,25 @@ namespace Projekt_HjemIS.ViewModels
 
         public EmailViewModel()
         {
-            Locations = new ObservableCollection<RecordTypeLocation>(dh.GetTable<RecordTypeLocation>("SELECT * FROM Location"));
+            Task.Run(() => LoadCollectionsAsync());
             Recipients = new ObservableCollection<RecordTypeLocation>();
 
             Message = new Message();
 
-            FilteredLocations = new CollectionViewSource
-            {
-                Source = Locations
-            };
-
             AddRecipientCommand = new RelayCommand(p => AddRecipient((RecordTypeLocation)p));
             RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((RecordTypeLocation)p));
-            CreateMessageCommand = new RelayCommand(p => CreateMessage());
+            CreateMessageCommand = new RelayCommand(p => CreateMessageAsync());
             SearchCommand = new RelayCommand(p => Search());
             ClearSearchCommand = new RelayCommand(p => ClearSearch());
         }
 
-        private async void CreateMessage()
+        private async Task LoadCollectionsAsync()
+        {
+            var locations = await dh.GetTable<RecordTypeLocation>("SELECT * FROM Location");
+            Locations = new ObservableCollection<RecordTypeLocation>(locations);
+        }
+
+        private async void CreateMessageAsync()
         {
             var query = "INSERT INTO Messages ([Subject], Body) " +
                         "OUTPUT Inserted.ID " +
@@ -196,20 +186,20 @@ namespace Projekt_HjemIS.ViewModels
 
             var messageId = await dh.AddDataReturn(query, parameters);
 
-            await AddRecipientToMessage(messageId);
+            await AddRecipientToMessageAsync(messageId);
         }
 
-        private async Task AddRecipientToMessage(int id)
+        private async Task AddRecipientToMessageAsync(int id)
         {
             foreach (var recipient in Recipients)
             {
-                var phoneNumbers = await GetCustomersOnRecipient(recipient);
+                var phoneNumbers = await GetCustomersOnRecipientAsync(recipient);
 
                 if (phoneNumbers.Count() < 1)
                 {
                     var query = $"DELETE FROM Messages WHERE ID = {id}";
 
-                    await dh.AddData(query);
+                    await dh.AddDataAsync(query);
                 }
                 
                 foreach (var phoneNumber in phoneNumbers)
@@ -223,12 +213,12 @@ namespace Projekt_HjemIS.ViewModels
                         new SqlParameter("@PhoneNumber", phoneNumber)
                     };
 
-                    await dh.AddData(query, parameters.ToArray());
+                    await dh.AddDataAsync(query, parameters.ToArray());
                 }
             }
         }
 
-        private async Task<List<int>> GetCustomersOnRecipient(RecordTypeLocation location)
+        private async Task<List<int>> GetCustomersOnRecipientAsync(RecordTypeLocation location)
         {
             var query = "SELECT PhoneNumber FROM Customers " +
                         "INNER JOIN (" +
@@ -297,7 +287,7 @@ namespace Projekt_HjemIS.ViewModels
                 (string.IsNullOrEmpty(EvenOddFilter) || location.EvenOdd.ToUpper().Contains(EvenOddFilter.ToUpper())));
 
 
-            FilteredLocations.Source = new ObservableCollection<RecordTypeLocation>(filteredLocations);
+            Locations = new ObservableCollection<RecordTypeLocation>(filteredLocations);
         }
 
         private void ClearSearch()

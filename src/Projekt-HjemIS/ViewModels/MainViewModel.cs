@@ -1,4 +1,5 @@
-﻿using Projekt_HjemIS.Services;
+﻿using Projekt_HjemIS.Models;
+using Projekt_HjemIS.Services;
 using Projekt_HjemIS.Views;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -33,7 +35,11 @@ namespace Projekt_HjemIS.ViewModels
         {
             _navigationService = navService;
             NavigationService.ChangeBaseView<LoginViewModel>();
-            dataService.ProcessData();
+            var result = MessageBox.Show("Data detected", "Notice!", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                dataService.ProcessDataAsync();
+            }
         }
     }
 }

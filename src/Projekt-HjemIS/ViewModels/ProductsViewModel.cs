@@ -52,27 +52,27 @@ namespace Projekt_HjemIS.ViewModels
         public ProductsViewModel()
         {
             SelectProductCommand = new RelayCommand(p => SelectProduct((Product)p));
-            SubmitProductChangesCommand = new RelayCommand(p => SubmitProductChanges((Product)p));
-            DeleteProductCommand = new RelayCommand(p => DeleteProduct());
+            SubmitProductChangesCommand = new RelayCommand(p => SubmitProductChangesAsync((Product)p));
+            DeleteProductCommand = new RelayCommand(p => DeleteProductAsync());
             ClearSelectedProductCommand = new RelayCommand(p => ClearSelectedProduct());
 
             SelectedProduct = new Product();
 
-            Refresh();
+            Task.Run(() => RefreshAsync());
         }
 
-        private async Task SubmitProductChanges(Product product)
+        private async Task SubmitProductChangesAsync(Product product)
         {
             // temp setup of product
             product.DiscountedPrice = product.Price * (1 - (product.Discount / 100));
 
-            var query = $"SELECT 1 FROM Products WHERE ID = {product.ID}";
+            var query = $"SELECT 1 FROM product WHERE ID = {product.ID}";
 
             var exists = await dh.ExistsAsync(query);
 
             if (exists)
             {
-                UpdateProduct(product);
+                await UpdateProductAsync(product);
             }
             else
             {
@@ -81,16 +81,16 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    CreateProduct(product);
+                    await CreateProductAsync(product);
                 }
             }
 
-            Refresh();
+            await RefreshAsync();
         }
 
-        private void UpdateProduct(Product product)
+        private async Task UpdateProductAsync(Product product)
         {
-            string query = "UPDATE Products " +
+            string query = "UPDATE product " +
                     "SET [Name] = @Name, Price = @Price, Discount = @Discount, DiscountedPrice = @DiscountedPrice " +
                     "WHERE ID = @ID";
 
@@ -103,14 +103,14 @@ namespace Projekt_HjemIS.ViewModels
                 new SqlParameter("@ID", product.ID)
             };
 
-            dh.AddData(query, parameters.ToArray());
+            await dh.AddDataAsync(query, parameters.ToArray());
 
             MessageBox.Show("Product updated!");
         }
 
-        private void CreateProduct(Product product)
+        private async Task CreateProductAsync(Product product)
         {
-            string query = "INSERT INTO Products ([Name], Price, Discount, DiscountedPrice) " +
+            string query = "INSERT INTO product ([Name], Price, Discount, DiscountedPrice) " +
                             "VALUES(@Name, @Price, @Discount, @DiscountedPrice);";
 
             var parameters = new List<SqlParameter>
@@ -121,16 +121,16 @@ namespace Projekt_HjemIS.ViewModels
                 new SqlParameter("@DiscountedPrice", product.DiscountedPrice)
             };
 
-            dh.AddData(query, parameters.ToArray());
+            await dh.AddDataAsync(query, parameters.ToArray());
         }
 
-        private async Task DeleteProduct()
+        private async Task DeleteProductAsync()
         {
-            string query = $"DELETE FROM Products WHERE ID = {SelectedProduct.ID}";
+            string query = $"DELETE FROM product WHERE ID = {SelectedProduct.ID}";
 
-            dh.AddData(query);
+            await dh.AddDataAsync(query);
 
-            Refresh();
+            await RefreshAsync();
 
             MessageBox.Show("Produkt slettet.");
         }
@@ -140,15 +140,16 @@ namespace Projekt_HjemIS.ViewModels
             SelectedProduct = product;
         }
 
-        private void Refresh()
+        private async Task RefreshAsync()
         {
             try
             {
-                Products = new ObservableCollection<Product>(dh.GetTable<Product>("SELECT * FROM Products"));
+                var products = await dh.GetTable<Product>("SELECT * FROM product");
+                Products = new ObservableCollection<Product>(products);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No products found");
+                MessageBox.Show(ex.Message);
             }
         }
 

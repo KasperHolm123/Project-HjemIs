@@ -10,7 +10,7 @@ namespace Projekt_HjemIS.Models
 
     public class Record
     {
-        public string RecordType { get; set; }
+
     }
     
     public class RecordTypeLocation : Record
@@ -33,18 +33,15 @@ namespace Projekt_HjemIS.Models
         public string HouseNumberFrom { get; set; }
         public string HouseNumberTo { get; set; }
         public string EvenOdd { get; set; }
-        public string Timestamp { get; set; }
         public string PostalCode { get; set; }
 
         public RecordTypeOther(string[] record)
         {
-            RecordType = record[0];
             CountyCode = record[1];
             StreetCode = record[2];
             HouseNumberFrom = record[3];
             HouseNumberTo = record[4];
             EvenOdd = record[5];
-            Timestamp = record[6];
             if (record[0] == "004")
             {
                 PostalCode = record[7];
@@ -60,7 +57,6 @@ namespace Projekt_HjemIS.Models
     {
         public string CountyCode { get; set; }
         public string StreetCode { get; set; }
-        public string Timestamp { get; set; }
         public string ToCountyCode { get; set; }
         public string ToStreetCode { get; set; }
         public string FromCountyCode { get; set; }
@@ -71,10 +67,8 @@ namespace Projekt_HjemIS.Models
 
         public RecordTypeAKTVEJ(string[] record)
         {
-            RecordType = record[0];
             CountyCode = record[1];
             StreetCode = record[2];
-            Timestamp = record[3];
             ToCountyCode = record[4];
             ToStreetCode = record[5];
             FromCountyCode = record[6];

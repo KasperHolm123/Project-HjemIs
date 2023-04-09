@@ -35,15 +35,15 @@ namespace Projekt_HjemIS.ViewModels
 
         public UsersViewModel()
         {
-            ChangeAdminStatusCommand = new RelayCommand(p => ChangeAdminStatus((User)p));
+            ChangeAdminStatusCommand = new RelayCommand(p => ChangeAdminStatusAsync((User)p));
 
 
-            Refresh();
+            Task.Run(() => RefreshAsync());
         }
 
-        private async void ChangeAdminStatus(User user)
+        private async Task ChangeAdminStatusAsync(User user)
         {
-            var query = $"SELECT 1 FROM Users WHERE Username = '{user.Username}'";
+            var query = $"SELECT 1 FROM [user] WHERE Username = '{user.Username}'";
 
             var exists = await dh.ExistsAsync(query);
 
@@ -65,29 +65,30 @@ namespace Projekt_HjemIS.ViewModels
                 {
                     if (!user.Admin)
                     {
-                        query = $"UPDATE Users SET [Admin] = 1 WHERE Username = '{user.Username}'";
+                        query = $"UPDATE [user] SET [Admin] = 1 WHERE Username = '{user.Username}'";
 
-                        dh.AddData(query);
+                        await dh.AddDataAsync(query);
 
                         MessageBox.Show($"{user.Username} is now an administrator");
                     }
                     else
                     {
-                        query = $"UPDATE Users SET [Admin] = 0 WHERE Username = '{user.Username}'";
+                        query = $"UPDATE [user] SET [Admin] = 0 WHERE Username = '{user.Username}'";
 
-                        dh.AddData(query);
+                        await dh.AddDataAsync(query);
 
                         MessageBox.Show($"{user.Username} is no longer an administrator");
                     }
 
-                    await Refresh();
+                    await RefreshAsync();
                 }
             }
         }
 
-        private async Task Refresh()
+        private async Task RefreshAsync()
         {
-            Users = new ObservableCollection<User>(dh.GetTable<User>("SELECT * FROM Users"));
+            var users = await dh.GetTable<User>("SELECT * FROM [user]");
+            Users = new ObservableCollection<User>(users);
         }
     }
 }

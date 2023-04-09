@@ -44,7 +44,7 @@ namespace Projekt_HjemIS.Services
         private static List<RecordTypeAKTVEJ> _aktvejRecords = new List<RecordTypeAKTVEJ>();
         private static List<RecordTypeOther> _otherRecords = new List<RecordTypeOther>();
 
-        public async Task ProcessData()
+        public async Task ProcessDataAsync()
         {
             var path = "../../dropzone/full_data.txt";
 
@@ -52,9 +52,6 @@ namespace Projekt_HjemIS.Services
             {
                 using (var reader = new StreamReader(path))
                 {
-                    var timer = new Stopwatch();
-                    timer.Start();
-
                     var currentLine = "";
                     while ((currentLine = reader.ReadLine()) != null)
                     {
@@ -82,25 +79,10 @@ namespace Projekt_HjemIS.Services
                         }
                     }
 
-                    timer.Stop();
-                    Debug.WriteLine(timer.Elapsed);
-
-                    var timer1 = new Stopwatch();
-                    timer1.Start();
-
                     // upsert all parsed Record object to database
                     await SendRecordsToStagingTables();
 
-                    timer1.Stop();
-                    Debug.WriteLine(timer1.Elapsed);
-
-                    var timer2 = new Stopwatch();
-                    timer2.Start();
-
                     await BuildLocations();
-
-                    timer2.Stop();
-                    Debug.WriteLine(timer2.Elapsed);
                 }
             }
             catch (Exception ex)
@@ -118,103 +100,51 @@ namespace Projekt_HjemIS.Services
         {
             var query = "INSERT INTO [location] (StreetName, CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
                         "SELECT AKTVEJ.StreetName, Other.CountyCode, Other.StreetCode, Other.HouseNumberFrom, Other.HouseNumberTo, Other.EvenOdd, Other.PostalCode " +
-                        "FROM record_type_aktvej AS AKTVEJ " +
-                        "JOIN record_type_other AS Other " +
+                        "FROM staging_record_type_aktvej AS AKTVEJ " +
+                        "JOIN staging_record_type_other AS Other " +
                         "ON AKTVEJ.CountyCode = Other.CountyCode " +
                         "AND AKTVEJ.StreetCode = Other.StreetCode " +
                         "WHERE AKTVEJ.CountyCode = Other.CountyCode " +
                         "AND AKTVEJ.StreetCode = Other.StreetCode " +
-                        "AND Other.PostalCode != '';";
+                        "AND Other.PostalCode != ''" +
+                        "AND Other.PostalCode != '9999';";
 
-            await databaseHandler.AddData(query);
+            await databaseHandler.AddDataAsync(query);
+
+            Debug.WriteLine("Locations done");
         }
 
         private async Task SendRecordsToStagingTables()
         {
             var otherDt = _otherRecords.ToDataTable();
             await databaseHandler.AddBulkData<RecordTypeOther>(otherDt, "staging_record_type_other");
-            
+            await FinalizeSavingOtherRecordsAsync();
+            Debug.WriteLine("Others done");
+
             var aktvejDt = _aktvejRecords.ToDataTable();
-            await databaseHandler.AddBulkData<RecordTypeAKTVEJ>(aktvejDt, "staing_record_type_aktvej");
+            await databaseHandler.AddBulkData<RecordTypeAKTVEJ>(aktvejDt, "staging_record_type_aktvej");
+            await FinalizeSavingAktvejRecordsAsync();
+            Debug.WriteLine("Aktvej done");
         }
 
-        private async Task FinalizeSavingRecords()
+        private async Task FinalizeSavingOtherRecordsAsync()
         {
+            // query i SSMS. duplicate-key error
+            var query = $"INSERT INTO record_type_other (CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
+                        "SELECT DISTINCT staged.CountyCode, staged.StreetCode, staged.HouseNumberFrom, staged.HouseNumberTo, staged.EvenOdd, staged.PostalCode " +
+                        $"FROM staging_record_type_other AS staged";
 
+            await databaseHandler.AddDataAsync(query);
         }
 
-        private static async Task UploadAktvej(Record record)
+        private async Task FinalizeSavingAktvejRecordsAsync()
         {
-            var convertedRecord = (RecordTypeAKTVEJ)record;
+            // query i SSMS. duplicate-key error
+            var query = $"INSERT INTO record_type_aktvej (CountyCode, StreetCode, ToCountyCode, ToStreetCode, FromCountyCode, FromStreetCode, ThereStart, StreetAddrName, StreetName) " +
+                $"SELECT DISTINCT CountyCode, StreetCode, ToCountyCode, ToStreetCode, FromCountyCode, FromStreetCode, ThereStart, StreetAddrName, StreetName " +
+                $"FROM staging_record_type_aktvej";
 
-            var query = "INSERT INTO RecordTypeAKTVEJ " +
-                        "(RecordType, CountyCode, StreetCode, [Timestamp], " +
-                        "ToCountyCode, ToStreetCode, FromCountyCode, FromStreetCode, " +
-                        "ThereStart, StreetAddrName, StreetName) " +
-                            "SELECT @RecordType, @CountyCode, @StreetCode, @Timestamp, " +
-                            "@ToCountyCode, @ToStreetCode, @FromCountyCode, @FromStreetCode," +
-                            " @ThereStart, @StreetAddrName, @StreetName " +
-                            "WHERE NOT EXISTS ( " +
-                            "SELECT 1 FROM RecordTypeAKTVEJ " +
-                            "WHERE StreetName = @StreetName " +
-                        ")";
-
-            var parameters = new List<SqlParameter>
-            {
-                new SqlParameter("@RecordType", convertedRecord.RecordType),
-                new SqlParameter("@CountyCode", convertedRecord.CountyCode),
-                new SqlParameter("@StreetCode", convertedRecord.StreetCode),
-                new SqlParameter("@Timestamp", convertedRecord.Timestamp),
-                new SqlParameter("@ToCountyCode", convertedRecord.ToCountyCode),
-                new SqlParameter("@ToStreetCode", convertedRecord.ToStreetCode),
-                new SqlParameter("@FromCountyCode", convertedRecord.FromCountyCode),
-                new SqlParameter("@FromStreetCode", convertedRecord.FromStreetCode),
-                new SqlParameter("@ThereStart", convertedRecord.ThereStart),
-                new SqlParameter("@StreetAddrName", convertedRecord.StreetAddrName),
-                new SqlParameter("@StreetName", convertedRecord.StreetName.Trim()),
-            };
-
-            await databaseHandler.AddData(query, parameters.ToArray());
-        }
-
-        private static async Task UploadOther(Record record)
-        {
-            var convertedRecord = (RecordTypeOther)record;
-
-            var query = "INSERT INTO RecordTypeOther " +
-                        "(RecordType, CountyCode, StreetCode, HouseNumberFrom, " +
-                        "HouseNumberTo, EvenOdd, [Timestamp], PostalCode) " +
-                        "SELECT @RecordType, @CountyCode, @StreetCode, @HouseNumberFrom, @HouseNumberTo, @EvenOdd, @Timestamp, @PostalCode " +
-                        "WHERE NOT EXISTS ( " +
-                            "SELECT 1 FROM RecordTypeOther " +
-                            "WHERE CountyCode = @CountyCode " +
-                            "AND StreetCode = @StreetCode " +
-                            "AND HouseNumberFrom = @HouseNumberFrom " +
-                            "AND HouseNumberTo = @HouseNumberTo " +
-                            "AND EvenOdd = @EvenOdd " +
-                        ")";
-
-            var parameters = new List<SqlParameter>
-            {
-                new SqlParameter("@RecordType", convertedRecord.RecordType),
-                new SqlParameter("@CountyCode", convertedRecord.CountyCode),
-                new SqlParameter("@StreetCode", convertedRecord.StreetCode),
-                new SqlParameter("@HouseNumberFrom", convertedRecord.HouseNumberFrom),
-                new SqlParameter("@HouseNumberTo", convertedRecord.HouseNumberTo),
-                new SqlParameter("@EvenOdd", convertedRecord.EvenOdd),
-                new SqlParameter("@Timestamp", convertedRecord.Timestamp),
-            };
-            
-            if (convertedRecord.RecordType == "004")
-            {
-                parameters.Add(new SqlParameter("@PostalCode", convertedRecord.PostalCode));
-            }
-            else
-            {
-                parameters.Add(new SqlParameter("@PostalCode", ""));
-            }
-
-            await databaseHandler.AddData(query, parameters.ToArray());
+            await databaseHandler.AddDataAsync(query);
         }
 
         public string[] ParseRecord(string loadedRecord, string type)

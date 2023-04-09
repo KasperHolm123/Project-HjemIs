@@ -125,7 +125,7 @@
                        FontStyle="Italic"/>
                 <DataGrid x:Name="locationsGrid"
                       Grid.Column="0"
-                      ItemsSource="{Binding FilteredLocations.View}"
+                      ItemsSource="{Binding Locations}"
                       Width="500"
                       Height="200"
                       AutoGenerateColumns="False">

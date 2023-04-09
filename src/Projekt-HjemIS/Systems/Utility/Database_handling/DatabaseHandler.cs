@@ -89,11 +89,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
             }
         }
 
-        public List<T> GetTable<T>(string query)
+        public async Task<List<T>> GetTable<T>(string query)
         {
             try
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 /* This line of code gets all relevant properties and selects them based on name.
                     * This ensure that we can use the GetOrdinal() method on an SqlDataReader object.
@@ -202,11 +202,11 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// <param name="query"></param>
         /// <param name="parameters"></param>
         /// <returns>The amount of rows affected</returns>
-        public async Task<int> AddData(string query, SqlParameter[] parameters = null)
+        public async Task<int> AddDataAsync(string query, SqlParameter[] parameters = null)
         {
             try
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {

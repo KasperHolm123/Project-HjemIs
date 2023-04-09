@@ -68,7 +68,7 @@ namespace Projekt_HjemIS.ViewModels
             try
             {
                 var query = "SELECT 1 " +
-                            "FROM Users " +
+                            "FROM [user] " +
                             "WHERE Username = @Username " +
                 "AND [Password] = @Password";
 
@@ -82,7 +82,7 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (exists)
                 {
-                    //LoginService.CurrentUser = await dh.GetEntry<UserNew>($"SELECT [Admin] FROM Users WHERE Username = {Username}");
+                    //LoginService.CurrentUser = await dh.GetEntry<User>($"SELECT [Admin] FROM [user] WHERE Username = {Username}");
                     NavigationService.ChangeBaseView<DashboardViewModel>();
                 }
                 else

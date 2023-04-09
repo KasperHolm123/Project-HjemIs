@@ -122,11 +122,19 @@ namespace Projekt_HjemIS.ViewModels
 
         public LogViewModel()
         {
+            Task.Run(() => LoadCollectionsAsync());
+
             GetCustomersCommand = new RelayCommand(p => GetCustomers());
             GetMessagesCommand = new RelayCommand(p => GetMessages());
+        }
 
-            Locations = new ObservableCollection<RecordTypeLocation>(dh.GetTable<RecordTypeLocation>("SELECT * FROM Locations"));
-            Messages = new ObservableCollection<Message>(dh.GetTable<Message>("SELECT * FROM Messages"));
+        private async Task LoadCollectionsAsync()
+        {
+            var locations = await dh.GetTable<RecordTypeLocation>("SELECT * FROM [location]");
+            Locations = new ObservableCollection<RecordTypeLocation>(locations);
+
+            var messages = await dh.GetTable<Message>("SELECT * FROM message");
+            Messages = new ObservableCollection<Message>(messages);
         }
 
 
@@ -135,16 +143,16 @@ namespace Projekt_HjemIS.ViewModels
             State = QueryState.Executing;
 
             var query = $@"SELECT FirstName, LastName, PhoneNumber, DT.CountyCode, DT.StreetCode
-                           FROM Customers
+                           FROM customer
                            INNER JOIN (
                                SELECT CountyCode, StreetCode
-                               FROM Locations
+                               FROM [location]
                                WHERE City LIKE @City
                                AND PostalCode LIKE @PostalCode
                                AND Street LIKE @Street
                            ) AS DT
-                           ON DT.CountyCode = Customers.CountyCode
-                           AND DT.StreetCode = Customers.StreetCode";
+                           ON DT.CountyCode = customer.CountyCode
+                           AND DT.StreetCode = customer.StreetCode";
             
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -188,13 +196,13 @@ namespace Projekt_HjemIS.ViewModels
                               m.Type, 
                               cm.ID, 
                               cm.Date
-                          FROM Customers c
-                          INNER JOIN Locations l 
+                          FROM customer c
+                          INNER JOIN [location] l 
                               ON l.CountyCode = c.CountyCode 
                               AND l.StreetCode = c.StreetCode
                           INNER JOIN Recipients cm 
                               ON c.PhoneNumber = cm.PhoneNumber
-                          LEFT JOIN Messages m 
+                          LEFT JOIN message m 
                               ON cm.ID = m.ID
                           WHERE 
                               l.City = @City 

@@ -68,15 +68,15 @@ namespace Projekt_HjemIS.ViewModels
 
         private async Task CreateUser()
         {
-            var query = $"SELECT 1 from Users WHERE [username] = '{Username}'";
+            var query = $"SELECT 1 from [user] WHERE [username] = '{Username}'";
 
             var exists = await dh.ExistsAsync(query);
 
             if (!exists)
             {
-                query = $"INSERT INTO Users (Username, [Password], [Admin]) VALUES ('{Username}', '{Password}', '0')";
+                query = $"INSERT INTO [user] (Username, [Password], [Admin]) VALUES ('{Username}', '{Password}', '0')";
 
-                dh.AddData(query);
+                dh.AddDataAsync(query);
 
                 MessageBox.Show("User created successfully");
                 NavigationService.ChangeBaseView<LoginViewModel>();

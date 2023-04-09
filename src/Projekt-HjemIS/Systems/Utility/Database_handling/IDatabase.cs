@@ -16,7 +16,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// Hovedforfatter: Kasper
         /// Send a small amount of data to a database.
         /// </summary>
-        Task<int> AddData(string query, SqlParameter[] parameters);
+        Task<int> AddDataAsync(string query, SqlParameter[] parameters);
 
         /// <summary>
         /// Method for fetching a single entry.
@@ -32,7 +32,7 @@ namespace Projekt_HjemIS.Systems.Utility.Database_handling
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        List<T> GetTable<T>(string query);
+        Task<List<T>> GetTable<T>(string query);
 
         /// <summary>
         /// Hovedforfatter: Kasper

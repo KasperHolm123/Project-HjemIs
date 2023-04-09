@@ -58,13 +58,13 @@ namespace Projekt_HjemIS.ViewModels
 
         private async Task RequestPassword()
         {
-            var query = $"SELECT 1 FROM Users WHERE Username = '{Username}'";
+            var query = $"SELECT 1 FROM [user] WHERE Username = '{Username}'";
 
             var exists = await dh.ExistsAsync(query);
 
             if (exists)
             {
-                query = $"SELECT * FROM Users WHERE Username = '{Username}'";
+                query = $"SELECT * FROM [user] WHERE Username = '{Username}'";
 
                 var result = await dh.GetEntry<User>(query);
 

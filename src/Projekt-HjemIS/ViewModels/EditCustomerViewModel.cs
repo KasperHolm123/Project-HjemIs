@@ -76,7 +76,7 @@ namespace Projekt_HjemIS.ViewModels
             DeleteCustomerCommand = new RelayCommand(p => DeleteCustomer());
             SearchCommand = new RelayCommand(p => Search());
 
-            Refresh();
+            Task.Run(() => Refresh());
         }
 
         private void SelectCustomer(object customer)
@@ -87,7 +87,7 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private void Search()
+        private async Task Search()
         {
             try
             {
@@ -95,22 +95,22 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (FirstNameSearch != "" && LastNameSearch == "")
                 {
-                    query = $"SELECT * from Customers WHERE FirstName = '{FirstNameSearch}'";
+                    query = $"SELECT * from customer WHERE FirstName = '{FirstNameSearch}'";
                 }
                 if (LastNameSearch != "" && FirstNameSearch == "")
                 {
-                    query = $"SELECT * from Customers WHERE LastName = '{LastNameSearch}'";
+                    query = $"SELECT * from customer WHERE LastName = '{LastNameSearch}'";
                 }
                 if (FirstNameSearch != "" && LastNameSearch != "")
                 {
-                    query = $"SELECT * from Customers WHERE FirstName = '{FirstNameSearch}' AND LastName = '{LastNameSearch}'";
+                    query = $"SELECT * from customer WHERE FirstName = '{FirstNameSearch}' AND LastName = '{LastNameSearch}'";
                 }
                 if (FirstNameSearch == "" && LastNameSearch == "")
                 {
-                    query = "SELECT * FROM Customers";
+                    query = "SELECT * FROM customer";
                 }
 
-                Customers = new ObservableCollection<Customer>(dh.GetTable<Customer>(query));
+                Customers = new ObservableCollection<Customer>(await dh.GetTable<Customer>(query));
             }
             catch (Exception ex)
             {
@@ -124,7 +124,7 @@ namespace Projekt_HjemIS.ViewModels
             {
                 var phoneNumber = SelectedCustomer.PhoneNumber;
 
-                string query = $"SELECT 1 FROM Customers WHERE PhoneNumber = {phoneNumber}";
+                string query = $"SELECT 1 FROM customer WHERE PhoneNumber = {phoneNumber}";
 
                 var exists = await dh.ExistsAsync(query);
 
@@ -155,7 +155,7 @@ namespace Projekt_HjemIS.ViewModels
 
         public void UpdateCustomer()
         {
-            string query = "UPDATE Customers " +
+            string query = "UPDATE customer " +
                            "SET FirstName = @firstName, LastName = @lastName, PhoneNumber = @phoneNum, " +
                            "StreetCode = @streetCode, CountyCode = @countyCode " +
                            "WHERE PhoneNumber = @phoneNum AND CountyCode = @countyCode AND StreetCode = @streetCode";
@@ -169,7 +169,7 @@ namespace Projekt_HjemIS.ViewModels
                 new SqlParameter("@countyCode", SelectedCustomer.CountyCode)
             };
 
-            dh.AddData(query, parameters.ToArray());
+            dh.AddDataAsync(query, parameters.ToArray());
         }
 
         public void CreateCustomer()
@@ -179,7 +179,7 @@ namespace Projekt_HjemIS.ViewModels
              * Customer with a (StreetCode, CountyCode) combination that doesn't exist
              * in the Locations table
              */
-            string query = "INSERT INTO Customers (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
+            string query = "INSERT INTO customer (FirstName, LastName, PhoneNumber, StreetCode, CountyCode) " +
                                 "VALUES (@firstName, @lastName, @phoneNum, @streetCode, @countyCode);";
             //TODO: Add validation on PhoneNumber, StreetCode, and CountyCode
 
@@ -192,20 +192,20 @@ namespace Projekt_HjemIS.ViewModels
                 new SqlParameter("@countyCode", SelectedCustomer.CountyCode)
             };
 
-            dh.AddData(query, parameters.ToArray());
+            dh.AddDataAsync(query, parameters.ToArray());
         }
 
         public async Task DeleteCustomer()
         {
-            var query = $"SELECT 1 FROM Customers WHERE PhoneNumber = {SelectedCustomer.PhoneNumber}";
+            var query = $"SELECT 1 FROM customer WHERE PhoneNumber = {SelectedCustomer.PhoneNumber}";
 
             var exists = await dh.ExistsAsync(query);
 
             if (exists)
             {
-                query = $"DELETE FROM Customers WHERE PhoneNumber = {SelectedCustomer.PhoneNumber}";
+                query = $"DELETE FROM customer WHERE PhoneNumber = {SelectedCustomer.PhoneNumber}";
 
-                dh.AddData(query);
+                dh.AddDataAsync(query);
 
                 Refresh();
 
@@ -217,13 +217,13 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
-        private void Refresh()
+        private async Task Refresh()
         {
             try
             {
-                var query = "SELECT * FROM Customers";
+                var query = "SELECT * FROM customer";
 
-                Customers = new ObservableCollection<Customer>(dh.GetTable<Customer>(query));
+                Customers = new ObservableCollection<Customer>(await dh.GetTable<Customer>(query));
             }
             catch (Exception ex)
             {
