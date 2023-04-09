@@ -124,11 +124,12 @@
                        FontSize="14"
                        FontStyle="Italic"/>
                 <DataGrid x:Name="locationsGrid"
-                      Grid.Column="0"
-                      ItemsSource="{Binding Locations}"
-                      Width="500"
-                      Height="200"
-                      AutoGenerateColumns="False">
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                          Grid.Column="0"
+                          ItemsSource="{Binding Locations}"
+                          Width="500"
+                          Height="200"
+                          AutoGenerateColumns="False">
                     <DataGrid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick"
                                       Command="{Binding AddRecipientCommand}"

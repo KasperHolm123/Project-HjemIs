@@ -17,7 +17,7 @@ namespace Projekt_HjemIS.Services
     {
         private static readonly DatabaseHandler databaseHandler = new DatabaseHandler();
 
-        private Dictionary<string, int[]> _recordTypes = new Dictionary<string, int[]>
+        private static readonly Dictionary<string, int[]> _recordTypes = new Dictionary<string, int[]>
         {
             // All records are made up of sections with a pre-assigned
             // max digits. The numbers in this dictionary represent
@@ -80,9 +80,10 @@ namespace Projekt_HjemIS.Services
                     }
 
                     // upsert all parsed Record object to database
-                    await SendRecordsToStagingTables();
+                    await SendRecordsToStagingTablesAsync();
 
-                    await BuildLocations();
+                    // merge record staging tables into a combined location table
+                    await BuildLocationsAsync();
                 }
             }
             catch (Exception ex)
@@ -96,7 +97,7 @@ namespace Projekt_HjemIS.Services
         /// and upserts them to database
         /// </summary>
         /// <returns></returns>
-        private static async Task BuildLocations()
+        private static async Task BuildLocationsAsync()
         {
             var query = "INSERT INTO [location] (StreetName, CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
                         "SELECT AKTVEJ.StreetName, Other.CountyCode, Other.StreetCode, Other.HouseNumberFrom, Other.HouseNumberTo, Other.EvenOdd, Other.PostalCode " +
@@ -114,7 +115,7 @@ namespace Projekt_HjemIS.Services
             Debug.WriteLine("Locations done");
         }
 
-        private async Task SendRecordsToStagingTables()
+        private async Task SendRecordsToStagingTablesAsync()
         {
             var otherDt = _otherRecords.ToDataTable();
             await databaseHandler.AddBulkData<RecordTypeOther>(otherDt, "staging_record_type_other");
@@ -129,7 +130,6 @@ namespace Projekt_HjemIS.Services
 
         private async Task FinalizeSavingOtherRecordsAsync()
         {
-            // query i SSMS. duplicate-key error
             var query = $"INSERT INTO record_type_other (CountyCode, StreetCode, HouseNumberFrom, HouseNumberTo, EvenOdd, PostalCode) " +
                         "SELECT DISTINCT staged.CountyCode, staged.StreetCode, staged.HouseNumberFrom, staged.HouseNumberTo, staged.EvenOdd, staged.PostalCode " +
                         $"FROM staging_record_type_other AS staged";
@@ -139,7 +139,6 @@ namespace Projekt_HjemIS.Services
 
         private async Task FinalizeSavingAktvejRecordsAsync()
         {
-            // query i SSMS. duplicate-key error
             var query = $"INSERT INTO record_type_aktvej (CountyCode, StreetCode, ToCountyCode, ToStreetCode, FromCountyCode, FromStreetCode, ThereStart, StreetAddrName, StreetName) " +
                 $"SELECT DISTINCT CountyCode, StreetCode, ToCountyCode, ToStreetCode, FromCountyCode, FromStreetCode, ThereStart, StreetAddrName, StreetName " +
                 $"FROM staging_record_type_aktvej";

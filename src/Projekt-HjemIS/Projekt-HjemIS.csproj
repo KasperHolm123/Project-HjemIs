@@ -100,6 +100,7 @@
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\RelayCommand.cs" />
     <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Systems\InverseBooleanConverter.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\EmailViewModel.cs" />
     <Compile Include="ViewModels\EmulatorViewModel.cs" />

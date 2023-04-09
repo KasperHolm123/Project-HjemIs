@@ -17,6 +17,23 @@ namespace Projekt_HjemIS.ViewModels
 {
     public class BaseViewModel : ObservableObject, INotifyPropertyChanged
     {
+        
+        private bool _isBusy;
+        /// <summary>
+        /// used to keep track of whether or not any actions that might
+        /// prevent the user from interacting with the UI, or do any
+        /// database operations are currently active.
+        /// </summary>
+        public bool IsBusy
+        {
+            get => _isBusy;
+            protected set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
+            }
+        }
+
         public static readonly DatabaseHandler dh = new DatabaseHandler();
         public static readonly DataProcessorService dataService = new DataProcessorService();
         public static LoginService LoginService = new LoginService();

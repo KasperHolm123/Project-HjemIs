@@ -168,8 +168,12 @@ namespace Projekt_HjemIS.ViewModels
 
         private async Task LoadCollectionsAsync()
         {
+            IsBusy = true;
+
             var locations = await dh.GetTable<RecordTypeLocation>("SELECT * FROM Location");
             Locations = new ObservableCollection<RecordTypeLocation>(locations);
+            
+            IsBusy = false;
         }
 
         private async void CreateMessageAsync()
