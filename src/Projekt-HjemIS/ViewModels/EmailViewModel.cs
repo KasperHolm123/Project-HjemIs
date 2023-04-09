@@ -155,8 +155,8 @@ namespace Projekt_HjemIS.ViewModels
         public EmailViewModel()
         {
             Task.Run(() => LoadCollectionsAsync());
-            Recipients = new ObservableCollection<RecordTypeLocation>();
 
+            Recipients = new ObservableCollection<RecordTypeLocation>();
             Message = new Message();
 
             AddRecipientCommand = new RelayCommand(p => AddRecipient((RecordTypeLocation)p));
@@ -170,7 +170,7 @@ namespace Projekt_HjemIS.ViewModels
         {
             IsBusy = true;
 
-            var locations = await dh.GetTable<RecordTypeLocation>("SELECT * FROM Location");
+            var locations = await dh.GetTable<RecordTypeLocation>("SELECT * FROM [location]");
             Locations = new ObservableCollection<RecordTypeLocation>(locations);
             
             IsBusy = false;
@@ -178,7 +178,7 @@ namespace Projekt_HjemIS.ViewModels
 
         private async void CreateMessageAsync()
         {
-            var query = "INSERT INTO Messages ([Subject], Body) " +
+            var query = "INSERT INTO [message] ([Subject], Body) " +
                         "OUTPUT Inserted.ID " +
                         "VALUES (@Subject, @Body)";
 
@@ -201,14 +201,14 @@ namespace Projekt_HjemIS.ViewModels
 
                 if (phoneNumbers.Count() < 1)
                 {
-                    var query = $"DELETE FROM Messages WHERE ID = {id}";
+                    var query = $"DELETE FROM [message] WHERE ID = {id}";
 
                     await dh.AddDataAsync(query);
                 }
                 
                 foreach (var phoneNumber in phoneNumbers)
                 {
-                    var query = "INSERT INTO Recipients (MessageID, RecipientPhoneNumber) " +
+                    var query = "INSERT INTO recipient (MessageID, RecipientPhoneNumber) " +
                                 "VALUES (@ID, @PhoneNumber)";
 
                     var parameters = new List<SqlParameter>
@@ -224,10 +224,10 @@ namespace Projekt_HjemIS.ViewModels
 
         private async Task<List<int>> GetCustomersOnRecipientAsync(RecordTypeLocation location)
         {
-            var query = "SELECT PhoneNumber FROM Customers " +
+            var query = "SELECT PhoneNumber FROM customer " +
                         "INNER JOIN (" +
                         "SELECT CountyCode, StreetCode " +
-                        "FROM Locations " +
+                        "FROM [location] " +
                         "WHERE CountyCode = @CountyCode " +
                         "AND StreetCode = @StreetCode" +
                         ") AS l " +
