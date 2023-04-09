@@ -41,6 +41,14 @@ namespace Projekt_HjemIS.Services
             { "999", new int[] { 3 } }
         };
 
+        private static readonly string[] _badRecordTypes = new string[]
+        {
+            "000",
+            "002",
+            "005",
+            "999"
+        };
+
         private static List<RecordTypeAKTVEJ> _aktvejRecords = new List<RecordTypeAKTVEJ>();
         private static List<RecordTypeOther> _otherRecords = new List<RecordTypeOther>();
 
@@ -58,7 +66,7 @@ namespace Projekt_HjemIS.Services
                         // all data (of correct format) starts with a record-type as it's 3 first digits.
                         var recordType = currentLine.Substring(0, 3);
 
-                        if (recordType != "000" && recordType != "999")
+                        if (!_badRecordTypes.Contains(recordType))
                         {
                             var record = ParseRecord(currentLine, recordType);
 
@@ -66,11 +74,6 @@ namespace Projekt_HjemIS.Services
                             {
                                 case "001":
                                     _aktvejRecords.Add(new RecordTypeAKTVEJ(record));
-                                    break;
-                                case "002":
-                                case "005":
-                                case "000":
-                                case "999":
                                     break;
                                 default:
                                     _otherRecords.Add(new RecordTypeOther(record));

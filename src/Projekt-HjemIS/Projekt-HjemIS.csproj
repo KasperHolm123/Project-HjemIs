@@ -124,7 +124,6 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Systems\DropzoneObserver.cs" />
     <Compile Include="Systems\Utility\Database_handling\IDatabase.cs" />
     <Compile Include="Systems\Utility\Database_handling\DatabaseHandler.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
@@ -168,7 +167,6 @@
     </Page>
     <Compile Include="Models\Location.cs" />
     <Compile Include="Systems\ListToDataTableConverter.cs" />
-    <Compile Include="Systems\RecordHandler.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
