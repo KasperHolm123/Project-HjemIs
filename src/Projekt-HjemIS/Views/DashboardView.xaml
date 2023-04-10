@@ -89,18 +89,7 @@
                             <ImageBrush/>
                         </MenuItem.Background>
                         <MenuItem.Icon>
-                            <Image Margin="0,-10,-55,-10">
-                                <Image.Style>
-                                    <Style TargetType="{x:Type Image}">
-                                        <Setter Property="Source" Value="../Pictures/filesd.png"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=LoadCompleted, Mode=TwoWay}" Value="True">
-                                                <Setter Property="Source" Value="../Pictures\files.png"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
+                            <Image Margin="0,-10,-55,-10" Source="../Pictures\files.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </Menu>

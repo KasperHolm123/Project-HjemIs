@@ -126,7 +126,7 @@
                 <DataGrid x:Name="locationsGrid"
                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                           Grid.Column="0"
-                          ItemsSource="{Binding Locations}"
+                          ItemsSource="{Binding FilteredLocations.View}"
                           Width="500"
                           Height="200"
                           AutoGenerateColumns="False">

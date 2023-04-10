@@ -115,6 +115,17 @@ namespace Projekt_HjemIS.ViewModels
             }
         }
 
+        private CollectionViewSource _filteredLocations;
+        public CollectionViewSource FilteredLocations
+        {
+            get => _filteredLocations;
+            set
+            {
+                _filteredLocations = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<RecordTypeLocation> _recipients;
         public ObservableCollection<RecordTypeLocation> Recipients
         {
@@ -154,10 +165,12 @@ namespace Projekt_HjemIS.ViewModels
 
         public EmailViewModel()
         {
-            Task.Run(() => LoadCollectionsAsync());
-
+            FilteredLocations = new CollectionViewSource();
             Recipients = new ObservableCollection<RecordTypeLocation>();
             Message = new Message();
+
+            Task.Run(() => LoadCollectionsAsync());
+
 
             AddRecipientCommand = new RelayCommand(p => AddRecipient((RecordTypeLocation)p));
             RemoveRecipientCommand = new RelayCommand(p => RemoveRecipient((RecordTypeLocation)p));
@@ -172,6 +185,11 @@ namespace Projekt_HjemIS.ViewModels
 
             var locations = await dh.GetTable<RecordTypeLocation>("SELECT * FROM [location]");
             Locations = new ObservableCollection<RecordTypeLocation>(locations);
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                FilteredLocations.Source = Locations;
+            });
             
             IsBusy = false;
         }
@@ -281,7 +299,7 @@ namespace Projekt_HjemIS.ViewModels
 
         private void Search()
         {
-            var filteredLocations = Locations.Where(location =>
+            FilteredLocations.Source = Locations.Where(location =>
                 (string.IsNullOrEmpty(StreetNameFilter) || location.StreetName.ToUpper().Contains(StreetNameFilter.ToUpper())) &&
                 (string.IsNullOrEmpty(PostalCodeFilter) || location.PostalCode.ToUpper().Contains(PostalCodeFilter.ToUpper())) &&
                 (string.IsNullOrEmpty(CountyCodeFilter) || location.CountyCode.ToUpper().Contains(CountyCodeFilter.ToUpper())) &&
@@ -289,9 +307,6 @@ namespace Projekt_HjemIS.ViewModels
                 (string.IsNullOrEmpty(HouseNumberFromFilter) || location.HouseNumberFrom.ToUpper().Contains(HouseNumberFromFilter.ToUpper())) &&
                 (string.IsNullOrEmpty(HouseNumberToFilter) || location.HouseNumberTo.ToUpper().Contains(HouseNumberToFilter.ToUpper())) &&
                 (string.IsNullOrEmpty(EvenOddFilter) || location.EvenOdd.ToUpper().Contains(EvenOddFilter.ToUpper())));
-
-
-            Locations = new ObservableCollection<RecordTypeLocation>(filteredLocations);
         }
 
         private void ClearSearch()
